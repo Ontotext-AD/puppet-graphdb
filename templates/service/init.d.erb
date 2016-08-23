@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+### BEGIN INIT INFO
+# Provides:          graphdb-<%= @title %>
+# Required-Start:    $network $remote_fs $named
+# Required-Stop:     $network $remote_fs $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts graphdb-<%= @name %>
+# Description:       Starts graphdb-<%= @name %> using start-stop-daemon
+### END INIT INFO
+
+
+NAME=graphdb-<%= scope.lookupvar('title') %>
+GRAPHDB_USER=<%= scope.lookupvar('graphdb::graphdb_user') %>
+DESC="GraphDB Server <%= @name %>"
+
+
+export JAVA_HOME=<%= scope.lookupvar('graphdb::java_location') %>
+export GRAPHDB_PID=/var/run/$NAME.pid
+export GRAPHDB_INSTALL_DIR=<%= scope.lookupvar('graphdb::install_dir') %>
+export GRAPHDB_INSTANCE_DIR=$GRAPHDB_INSTALL_DIR/instances/<%= @title %>
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script"
+	exit 1
+fi
+
+case $1 in
+
+  start|run)
+    printf "%-50s" "Starting $DESC..."
+    if su $GRAPHDB_USER -s /bin/bash -c "$GRAPHDB_INSTALL_DIR/dist/bin/graphdb -d -p $GRAPHDB_PID -Dgraphdb.home=$GRAPHDB_INSTANCE_DIR"; then
+       printf "%s\n" "$DESC started"
+    else
+       printf "%s\n" "Fail to start $DESC"
+    fi
+    ;;
+
+    stop)
+    printf "%-50s" "Stopping $DESC..."
+    if [ -f $GRAPHDB_PID ]; then
+        read kpid < $GRAPHDB_PID
+        if su $GRAPHDB_USER -s /bin/bash -c "kill $kpid"; then
+           i=0
+           while [ -n "`ps axf | grep ${kpid} | grep -v grep`" ]; do
+            sleep 10
+            if [ $i -eq 5 ]; then
+                printf "%s\n" "Fail to stop $DESC"
+                exit 1
+            fi
+            let i=i+1
+           done
+           rm -f $GRAPHDB_PID
+           printf "%s\n" "$DESC stopped"
+        else
+           printf "%s\n" "Fail to stop $DESC"
+           exit 1
+        fi
+    else
+        printf "%s\n" "Pidfile: $GRAPHDB_PID not found"
+    fi
+    ;;
+
+  restart)
+    $0 stop
+    $0 start
+    ;;
+
+  status)
+        printf "%-50s" "Checking $DESC..."
+        if [ -f $GRAPHDB_PID ]; then
+            PID=`cat $GRAPHDB_PID`
+            if [ -z "`kill -0 $PID`" ]; then
+                echo "$DESC is running"
+            else
+                printf "%s\n" "Process dead but pidfile: $GRAPHDB_PID exists"
+            fi
+        else
+            printf "%s\n" "$DESC not running"
+        fi
+    ;;
+ *)
+    echo "Usage: $0 {status|start|run|stop|restart}"
+    exit 1
+
+esac
+exit 0

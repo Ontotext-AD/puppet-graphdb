@@ -1,0 +1,41 @@
+#
+# Sesame configuration template for an GraphDB SE Monitor repository
+#
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rep: <http://www.openrdf.org/config/repository#>.
+@prefix sr: <http://www.openrdf.org/config/repository/sail#>.
+@prefix sail: <http://www.openrdf.org/config/sail#>.
+@prefix owlim: <http://www.ontotext.com/trree/owlim#>.
+
+[] a rep:Repository ;
+    rep:repositoryID "<%= @repository_id %>" ;
+    rdfs:label "<%= @repository_label %>" ;
+    rep:repositoryImpl [
+        rep:repositoryType "owlim:MonitorRepository" ;
+        sr:sailImpl [
+            sail:sailType "owlim:Sail" ;
+
+            owlim:defaultNS "<%= @defaultNS %>" ;
+            owlim:entity-index-size "<%= @entity_index_size %>" ;
+            owlim:entity-id-size  "<%= @entity_id_size %>" ;
+            owlim:imports "<%= @imports %>" ;
+		    owlim:repository-type "file-repository" ;
+            owlim:ruleset "<%= @ruleset %>" ;
+            owlim:storage-folder "<%= @storage_folder %>" ;
+
+            owlim:enable-context-index "<%= @enable_context_index %>" ;
+            owlim:enablePredicateList "<%= @enablePredicateList %>" ;
+
+            owlim:in-memory-literal-properties "<%= @in_memory_literal_properties %>" ;
+            owlim:enable-literal-index "<%= @enable_literal_index %>" ;
+
+            owlim:check-for-inconsistencies "<%= @check_for_inconsistencies %>" ;
+            owlim:disable-sameAs  "<%= @disable_sameAs %>" ;
+            owlim:transaction-mode "<%= @transaction_mode %>" ;
+            owlim:transaction-isolation "<%= @transaction_isolation %>" ;
+            owlim:query-timeout  "<%= @query_timeout %>" ;
+            owlim:query-limit-results  "<%= @query_limit_results %>" ;
+            owlim:throw-QueryEvaluationException-on-timeout "<%= @throw_QueryEvaluationException_on_timeout %>" ;
+            owlim:read-only "<%= @read_only %>" ;
+        ]
+    ].
