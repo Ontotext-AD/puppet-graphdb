@@ -2,11 +2,13 @@ define graphdb::instance (
   $license,
   $http_port          = '8080',
   $kill_timeout       = '180',
+  $jolokia_secret     = undef,
   $extra_properties   = undef,
 ){
   include graphdb::install
 
   validate_string($license)
+  validate_string($jolokia_secret)
 
   File {
     owner => $graphdb::graphdb_user,
@@ -44,7 +46,8 @@ define graphdb::instance (
   graphdb::config { $title:
     license          => $licence_file_destination,
     http_port        => $http_port,
-    extra_properties =>$extra_properties,
+    jolokia_secret   => $jolokia_secret,
+    extra_properties => $extra_properties,
   }
 
   graphdb::service { $title:

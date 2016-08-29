@@ -1,7 +1,7 @@
 define graphdb::config (
   $license,
   $http_port,
-  $log_configuration_file = undef,
+  $jolokia_secret         = undef,
   $extra_properties       = undef,
 ) {
 
@@ -14,7 +14,11 @@ define graphdb::config (
     'graphdb.connector.port' => $http_port,
   }
 
-  $final_graphdb_properties = merge($default_properties, $extra_properties)
+  if $jolokia_secret {
+    $jolokia_secret_property = { 'graphdb.jolokia.secret' => $jolokia_secret }
+  }
+
+  $final_graphdb_properties = merge($default_properties, $jolokia_secret_property, $extra_properties)
 
   file { "${instance_home_dir}/conf":
     ensure => 'directory',

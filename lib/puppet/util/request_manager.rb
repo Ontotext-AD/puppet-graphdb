@@ -53,6 +53,14 @@ module Puppet
         request.content_type = parameters[:content_type] if parameters.key?(:content_type)
         request['Accept'] = parameters[:accept_type] if parameters.key?(:accept_type)
 
+        if parameters.key?(:auth)
+          auth = parameters[:auth]
+          raise ArgumentError, 'You must pass user with auth parameter' unless auth.key?(:user)
+          raise ArgumentError, 'You must pass password with auth parameter' unless auth.key?(:password)
+
+          request.basic_auth(auth[:user], auth[:password])
+        end
+
         Puppet.debug('Final request:')
         Puppet.debug("Uri: #{uri}")
         Puppet.debug("Method: #{request.method}")
@@ -78,7 +86,7 @@ module Puppet
         begin
           response = http.request(request)
         rescue Exception => e
-          Puppet.debug "Error ocured while making request: #{e.resson}"
+          Puppet.debug "Error ocured while making request: #{e}"
           return nil
         end
 
@@ -95,6 +103,7 @@ module Puppet
 
       def self.matches_expectations(response, expectations)
         raise ArgumentError, 'You must pass at least one expected status code' unless expectations.key?(:codes)
+        return false if response.nil?
 
         Puppet.debug 'Expected status codes:'
         for expected_code in expectations[:codes]

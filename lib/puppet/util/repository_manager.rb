@@ -34,7 +34,10 @@ module Puppet
           Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] missing")
           return false
         end
-        result = Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { messages: ['.*'], codes: [200] }, timeout)
+        expected_codes = [200, 500]
+        expected_messages = ['No workers configured', '\d+']
+
+        result = Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { messages: expected_messages, codes: expected_codes }, timeout)
         if result
           Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] up and running")
         else
