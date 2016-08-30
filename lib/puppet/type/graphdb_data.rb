@@ -26,7 +26,7 @@ Puppet::Type.newtype(:graphdb_data) do
   newparam(:endpoint) do
     desc 'Sesame endpoint of GraphDB instance'
     validate do |value|
-      raise 'endpoint should be valid url' unless URI(value)
+      raise(ArgumentError, "Endpoint should be valid url #{value}") unless URI(value)
     end
     munge do |value|
       URI(value)
@@ -49,23 +49,23 @@ Puppet::Type.newtype(:graphdb_data) do
     note#1: if context for data not provided data_context is used
     note#2: if format for data not provided data_format is used"
     validate do |value|
-      raise 'you shoud pass data or data_source, not both' unless resource.value(:data_source).nil?
+      raise(ArgumentError, "You shoud pass data or data_source, not both: #{value} and #{resource.value(:data_source)}") unless resource.value(:data_source).nil?
 
       if value.is_a?(String)
-        raise 'you should pass data_format' if resource.value(:data_format).nil?
+        raise(ArgumentError, 'You should pass data_format') if resource.value(:data_format).nil?
       elsif value.is_a?(Array)
         value.each do |data|
           if data.is_a?(Hash)
-            raise 'you should provide data content through content' unless data.key?(:content)
+            raise(ArgumentError, 'You should provide data content through content') unless data.key?(:content)
             if !data.key?(:format) && resource.value(:data_format).nil?
-              raise "you should provide data format for #{data[:content]} through format or data_format"
+              raise(ArgumentError, "You should provide data format for #{data[:content]} through format or data_format")
             end
           else
-            raise 'you should pass data_format' if resource.value(:data_format).nil?
+            raise(ArgumentError, 'You should pass data_format') if resource.value(:data_format).nil?
           end
         end
       else
-        raise 'data should be string or array'
+        raise(ArgumentError, "Data should be string or array: #{value}")
       end
     end
 
@@ -84,7 +84,7 @@ Puppet::Type.newtype(:graphdb_data) do
             elsif !resource.value(:data_format).nil?
               resulted_hash[:format] = resource.value(:data_format)
             else
-              raise "you should provide data format for #{data[:content]} through format or data_format"
+              raise(ArgumentError, "You should provide data format for #{data[:content]} through format or data_format")
             end
             resulted_array << resulted_hash
           else
@@ -110,26 +110,26 @@ Puppet::Type.newtype(:graphdb_data) do
     note#2: if format for file not provided trying to resolve format from file if fails data_format is used"
 
     validate do |data_sources|
-      raise 'you shoud pass data or data_source, not both' unless resource.value(:data).nil?
+      raise(ArgumentError, "You shoud pass data or data_source, not both: #{data_sources} and #{resource.value(:data)}") unless resource.value(:data).nil?
 
       if data_sources.is_a?(String)
         check_absolute_source_path(data_sources)
       elsif data_sources.is_a?(Array)
         data_sources.each do |data_source|
           if data_source.is_a?(Hash)
-            raise 'you should provide source through source' unless data_source.key?('source')
+            raise(ArgumentError, "You should provide source through source: #{data_source}") unless data_source.key?('source')
             check_absolute_source_path(data_source['source'])
           else
             check_absolute_source_path(data_source)
           end
         end
       else
-        raise 'data_source should be string or array'
+        raise(ArgumentError, "data_source should be string or array: #{data_sources}")
       end
     end
 
     def check_absolute_source_path(path)
-      raise "#{path} is not absolute path" unless Puppet::Util::FileUtils.is_absolute_path(path)
+      raise(ArgumentError, "#{path} is not absolute path") unless Puppet::Util::FileUtils.is_absolute_path(path)
     end
 
     munge do |data_source|
@@ -157,7 +157,7 @@ Puppet::Type.newtype(:graphdb_data) do
     desc 'The context you want to load your data into; default: null'
     defaultto('null')
     validate do |value|
-      raise 'data_context should be not empty string' unless value.is_a?(String) && !value.empty?
+      raise(ArgumentError, "data_context should be not empty string: #{value}") unless value.is_a?(String) && !value.empty?
     end
     munge(&:strip)
   end
@@ -182,7 +182,7 @@ Puppet::Type.newtype(:graphdb_data) do
     desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds'
     defaultto 60
     validate do |value|
-      raise 'timeout should be valid integer' unless Integer(value)
+      raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
     end
     munge do |value|
       Integer(value)

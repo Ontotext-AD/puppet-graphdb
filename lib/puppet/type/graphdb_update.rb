@@ -22,7 +22,7 @@ Puppet::Type.newtype(:graphdb_update) do
   newparam(:endpoint) do
     desc 'Sesame endpoint of GraphDB instance'
     validate do |value|
-      raise 'endpoint should be valid url' unless URI(value)
+      raise(ArgumentError, "endpoint should be valid url: #{value}") unless URI(value)
     end
     munge do |value|
       URI(value)
@@ -54,7 +54,7 @@ Puppet::Type.newtype(:graphdb_update) do
     desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds.'
     defaultto 60
     validate do |value|
-      raise 'timeout should be valid integer' unless Integer(value)
+		raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
     end
     munge do |value|
       Integer(value)

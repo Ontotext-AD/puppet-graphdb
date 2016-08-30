@@ -23,7 +23,7 @@ Puppet::Type.newtype(:graphdb_link) do
   newparam(:master_endpoint) do
     desc 'Sesame endpoint of GraphDB master instance'
     validate do |value|
-      raise 'master_endpoint should be valid url' unless URI(value)
+      raise(ArgumentError, "master_endpoint should be valid url: #{value}") unless URI(value)
     end
     munge do |value|
       URI(value)
@@ -40,7 +40,7 @@ Puppet::Type.newtype(:graphdb_link) do
   newparam(:worker_endpoint) do
     desc 'Sesame endpoint of GraphDB worker instance'
     validate do |value|
-      raise 'worker_endpoint should be valid url' unless URI(value)
+      raise(ArgumentError, "worker_endpoint should be valid url: value") unless URI(value)
     end
     munge do |value|
       URI(value)
@@ -51,18 +51,7 @@ Puppet::Type.newtype(:graphdb_link) do
     desc 'The port for replications that master and worker will use; default: 0'
     defaultto 0
     validate do |value|
-      raise 'replication_port should be valid integer' unless Integer(value)
-    end
-    munge do |value|
-      Integer(value)
-    end
-  end
-
-  newparam(:timeout) do
-    desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds'
-    defaultto 60
-    validate do |value|
-      raise 'timeout should be valid integer' unless Integer(value)
+      raise(ArgumentError, "replication_port should be valid integer: #{value}") unless Integer(value)
     end
     munge do |value|
       Integer(value)

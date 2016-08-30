@@ -15,6 +15,6 @@ Puppet::Type.type(:graphdb_validator).provide(:graphdb_validator) do
     # If `#create` is called, that means that `#exists?` returned false, which
     # means that the connection could not be established... so we need to
     # cause a failure here.
-    raise Puppet::Error, "GraphDB check failed [#{resource[:endpoint]}]!"
+    raise "GraphDB check failed [#{resource[:endpoint]}]!"
   end
 end
