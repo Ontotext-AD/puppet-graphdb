@@ -10,7 +10,7 @@ define graphdb::se::repository (
   # Repository title
   $repository_label = 'GraphdDB SE repository',
   # Default namespaces for imports(';' delimited)
-  $defaultNS = '',
+  $default_ns = '',
   # Entity index size
   $entity_index_size = '200000',
   # Entity ID bit-size
@@ -24,7 +24,7 @@ define graphdb::se::repository (
   # Use context index
   $enable_context_index = false,
   # Use predicate indices
-  $enablePredicateList = false,
+  $enable_predicate_list = false,
   # Cache literal language tags
   $in_memory_literal_properties = false,
   # Enable literal index
@@ -32,7 +32,7 @@ define graphdb::se::repository (
   # Check for inconsistencies
   $check_for_inconsistencies = false,
   # Disable OWL sameAs optimisation
-  $disable_sameAs = false,
+  $disable_same_as = false,
   # Transaction mode
   $transaction_mode = 'safe',
   # Transaction isolation
@@ -42,7 +42,7 @@ define graphdb::se::repository (
   # Limit query results
   $query_limit_results = '0',
   # Throw exception on query time-out
-  $throw_QueryEvaluationException_on_timeout = false,
+  $throw_query_evaluation_exception_on_timeout = false,
   # Read-only
   $read_only = false,
 ) {

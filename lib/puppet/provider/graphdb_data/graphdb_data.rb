@@ -12,33 +12,50 @@ Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
   end
 
   def create
-    if !resource[:data].nil?
-      resource[:data].each do |data|
-        repository_manager.load_data(data[:content], data[:format], data[:context], resource[:data_overwrite], resource[:timeout])
-      end
-    else
-      resource[:data_source].each do |data_source|
-        if File.directory?(data_source[:source])
-          Dir.glob(data_source[:source] + '/**/*').each do |file|
-            format = !data_source.key?(:format) || data_source[:data_format].nil? ? resolve_file_format(file) : data_source[:data_format]
-            repository_manager.load_data(File.read(file), format, data_source[:context], resource[:data_overwrite], resource[:timeout])
-          end
-        else
-          format = !data_source.key?(:format) || data_source[:data_format].nil? ? resolve_file_format(data_source[:source]) : data_source[:data_format]
-          repository_manager.load_data(File.read(data_source[:source]), format, data_source[:context], resource[:data_overwrite], resource[:timeout])
-        end
-      end
-    end
+    handle_data(resource[:data]) unless resource[:data].nil?
+    handle_data_source(resource[:data_source])
   end
 
 private
 
-  def resolve_file_format(file_path)
-    if !get_file_format(file_path).nil?
-      return get_file_format(file_path)
-    else
-      raise "automatic format detection fail for [#{file_path}], you should provide per source format or data_format"
+  def handle_data(data)
+    call_load_data(data[:content], data[:format])
+  end
+
+  def handle_data_source(data_sources)
+    data_sources.each do |data_source|
+      handle_data_directory(data_source[:source]) if File.directory?(data_source[:source])
+      handle_data_file(data_source)
     end
+  end
+
+  def handle_data_directory(directory)
+    Dir.glob(directory + '/**/*').each do |file|
+      format = if directory.key?(:format) && !directory[:data_format].nil?
+                 directory[:data_format]
+               else
+                 resolve_file_format(file)
+               end
+      repository_manager.load_data(File.read(file), format)
+    end
+  end
+
+  def handle_data_file(file)
+    format = !file.key?(:format) || file[:data_format].nil? ? resolve_file_format(file[:source]) : file[:data_format]
+    repository_manager.load_data(File.read(file[:source]), format)
+  end
+
+  def call_load_data(data, data_format)
+    repository_manager.load_data(data,
+                                 data_format,
+                                 data_source[:context],
+                                 resource[:data_overwrite],
+                                 resource[:timeout])
+  end
+
+  def resolve_file_format(file_path)
+    return get_file_format(file_path) unless get_file_format(file_path).nil?
+    raise "automatic format detection fail for [#{file_path}], you should provide per source format or data_format"
   end
 
   def get_file_format(file_path)

@@ -40,7 +40,7 @@ Puppet::Type.newtype(:graphdb_link) do
   newparam(:worker_endpoint) do
     desc 'Sesame endpoint of GraphDB worker instance'
     validate do |value|
-      raise(ArgumentError, "worker_endpoint should be valid url: value") unless URI(value)
+      raise(ArgumentError, 'worker_endpoint should be valid url: value') unless URI(value)
     end
     munge do |value|
       URI(value)
@@ -60,11 +60,12 @@ Puppet::Type.newtype(:graphdb_link) do
 
   # Autorequire the relevant graphdb_repository
   autorequire(:graphdb_repository) do
-    catalog.resources.select do |res|
+    repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
       res if (res[:endpoint] == self[:master_endpoint] && res[:repository_id] == self[:master_repository_id]) ||
              (res[:endpoint] == self[:worker_endpoint] && res[:repository_id] == self[:worker_repository_id])
-    end.collect do |res|
+    end
+    repositories.collect do |res|
       res[:name]
     end
   end

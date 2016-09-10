@@ -24,7 +24,7 @@ class graphdb (
 
   #version
   if versioncmp($version, '7.0.0') < 0 {
-    fail("This module supprort GraphDB version 7.0.0 and up")
+    fail('This module supprort GraphDB version 7.0.0 and up')
   }
 
   if ! ($edition in [ 'se', 'ee' ]) {
@@ -77,8 +77,8 @@ class graphdb (
   }
 
   user { $graphdb_user:
-    ensure     => $graphdb_user_ensure,
-    comment    => 'graphdb service user',
+    ensure  => $graphdb_user_ensure,
+    comment => 'graphdb service user',
   }
 
   if $ensure == 'present' {

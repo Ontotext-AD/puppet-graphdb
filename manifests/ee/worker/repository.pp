@@ -10,7 +10,7 @@ define graphdb::ee::worker::repository(
   # Repository title
   $repository_label = 'GraphDB EE worker repository',
   # Default namespaces for imports(';' delimited)
-  $defaultNS = '',
+  $default_ns = '',
   # Entity index size
   $entity_index_size = '200000',
   # Entity ID bit-size
@@ -24,7 +24,7 @@ define graphdb::ee::worker::repository(
   # Use context index
   $enable_context_index = false,
   # Use predicate indices
-  $enablePredicateList = false,
+  $enable_predicate_list = false,
   # Cache literal language tags
   $in_memory_literal_properties = false,
   # Enable literal index
@@ -32,7 +32,7 @@ define graphdb::ee::worker::repository(
   # Check for inconsistencies
   $check_for_inconsistencies = false,
   # Disable OWL sameAs optimisation
-  $disable_sameAs = false,
+  $disable_sameas = false,
   # Transaction mode
   $transaction_mode = 'safe',
   # Transaction isolation
@@ -42,9 +42,9 @@ define graphdb::ee::worker::repository(
   # Limit query results
   $query_limit_results = '0',
   # Throw exception on query time-out
-  $throw_QueryEvaluationException_on_timeout = false,
+  $throw_query_evaluation_exception_on_timeout = false,
   # Non-interpretable predicates
-  $nonInterpretablePredicates = 'http://www.w3.org/2000/01/rdf-schema#label;http://www.w3.org/1999/02/22-rdf-syntax-ns#type;http://www.ontotext.com/owlim/ces#gazetteerConfig;http://www.ontotext.com/owlim/ces#metadataConfig',
+  $non_interpretable_predicates = 'http://www.w3.org/2000/01/rdf-schema#label;http://www.w3.org/1999/02/22-rdf-syntax-ns#type;http://www.ontotext.com/owlim/ces#gazetteerConfig;http://www.ontotext.com/owlim/ces#metadataConfig',
   # Read-only
   $read_only = false,
 ){

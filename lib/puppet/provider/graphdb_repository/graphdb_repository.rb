@@ -10,7 +10,11 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
   end
 
   def create
-    result = repository_manager.create_repository(resource[:repository_template], resource[:repository_context], resource[:timeout])
+    result = repository_manager.create_repository(
+      resource[:repository_template],
+      resource[:repository_context],
+      resource[:timeout]
+    )
     result = exists? if result
     result
   end

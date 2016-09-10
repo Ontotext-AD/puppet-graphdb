@@ -49,8 +49,10 @@ Puppet::Type.newtype(:graphdb_data) do
     note#1: if context for data not provided data_context is used
     note#2: if format for data not provided data_format is used"
     validate do |value|
-      raise(ArgumentError, "You shoud pass data or data_source, not both: #{value} and #{resource.value(:data_source)}") unless resource.value(:data_source).nil?
-
+      unless resource.value(:data_source).nil?
+        raise(ArgumentError, "You shoud pass data or data_source, not both: #{value}
+        and #{resource.value(:data_source)}")
+      end
       if value.is_a?(String)
         raise(ArgumentError, 'You should pass data_format') if resource.value(:data_format).nil?
       elsif value.is_a?(Array)
@@ -60,8 +62,8 @@ Puppet::Type.newtype(:graphdb_data) do
             if !data.key?(:format) && resource.value(:data_format).nil?
               raise(ArgumentError, "You should provide data format for #{data[:content]} through format or data_format")
             end
-          else
-            raise(ArgumentError, 'You should pass data_format') if resource.value(:data_format).nil?
+          elsif resource.value(:data_format).nil?
+            raise(ArgumentError, 'You should pass data_format')
           end
         end
       else
@@ -88,7 +90,9 @@ Puppet::Type.newtype(:graphdb_data) do
             end
             resulted_array << resulted_hash
           else
-            resulted_array << [{ content: data, format: resource.value(:data_format), context: resource.value(:data_context) }]
+            resulted_array << [{ content: data,
+                                 format: resource.value(:data_format),
+                                 context: resource.value(:data_context) }]
           end
         end
         return resulted_array
@@ -110,14 +114,18 @@ Puppet::Type.newtype(:graphdb_data) do
     note#2: if format for file not provided trying to resolve format from file if fails data_format is used"
 
     validate do |data_sources|
-      raise(ArgumentError, "You shoud pass data or data_source, not both: #{data_sources} and #{resource.value(:data)}") unless resource.value(:data).nil?
-
+      unless resource.value(:data).nil?
+        raise(ArgumentError, "You shoud pass data or data_source, not both: #{data_sources}
+        and #{resource.value(:data)}")
+      end
       if data_sources.is_a?(String)
         check_absolute_source_path(data_sources)
       elsif data_sources.is_a?(Array)
         data_sources.each do |data_source|
           if data_source.is_a?(Hash)
-            raise(ArgumentError, "You should provide source through source: #{data_source}") unless data_source.key?('source')
+            unless data_source.key?('source')
+              raise(ArgumentError, "You should provide source through source: #{data_source}")
+            end
             check_absolute_source_path(data_source['source'])
           else
             check_absolute_source_path(data_source)
@@ -129,7 +137,7 @@ Puppet::Type.newtype(:graphdb_data) do
     end
 
     def check_absolute_source_path(path)
-      raise(ArgumentError, "#{path} is not absolute path") unless Puppet::Util::FileUtils.is_absolute_path(path)
+      raise(ArgumentError, "#{path} is not absolute path") unless Puppet::Util::FileUtils.absolute_path?(path)
     end
 
     munge do |data_source|
@@ -157,7 +165,8 @@ Puppet::Type.newtype(:graphdb_data) do
     desc 'The context you want to load your data into; default: null'
     defaultto('null')
     validate do |value|
-      raise(ArgumentError, "data_context should be not empty string: #{value}") unless value.is_a?(String) && !value.empty?
+      raise(ArgumentError, "data_context should be not empty string: #{value}") unless value.is_a?(String) &&
+                                                                                       !value.empty?
     end
     munge(&:strip)
   end
@@ -191,10 +200,11 @@ Puppet::Type.newtype(:graphdb_data) do
 
   # Autorequire the relevant graphdb_repository
   autorequire(:graphdb_repository) do
-    catalog.resources.select do |res|
+    repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
       res if res[:endpoint] == self[:endpoint] && res[:repository_id] == self[:repository_id]
-    end.collect do |res|
+    end
+    repositories.collect do |res|
       res[:name]
     end
   end

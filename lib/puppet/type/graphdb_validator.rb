@@ -21,10 +21,11 @@ Puppet::Type.newtype(:graphdb_validator) do
   end
 
   newparam(:timeout) do
-    desc 'The max number of seconds that the validator should wait before giving up and deciding that the GraphDB is not running; default: 60 seconds.'
+    desc 'The max number of seconds that the validator should wait before giving up
+				and deciding that the GraphDB is not running; default: 60 seconds.'
     defaultto 60
-	validate do |value|
-		raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
+    validate do |value|
+      raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
     end
     munge do |value|
       Integer(value)

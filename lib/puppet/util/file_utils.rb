@@ -1,15 +1,22 @@
 module Puppet
   module Util
+    # File operation related utils
     class FileUtils
-      @@SLASH = '[\\\\/]'.freeze
-      @@NAME = '[^\\\\/]+'.freeze
-      @@REGEXES = {
-        windows: /^(([A-Z]:#{@@SLASH})|(#{@@SLASH}#{@@SLASH}#{@@NAME}#{@@SLASH}#{@@NAME})|(#{@@SLASH}#{@@SLASH}\?#{@@SLASH}#{@@NAME}))/i,
-        posix: %r{^/}
+      @slash = '[\\\\/]'.freeze
+      @name = '[^\\\\/]+'.freeze
+      @regexes = {
+        windows: Regexp.new(/^(([A-Z]:#{@slash})|(#{@slash}#{@slash}#{@name}#{@slash}#{@name})
+        |(#{@slash}#{@slash}\?#{@slash}#{@name}))/i),
+        posix: Regexp.new(%r{^/})
       }.freeze
 
-      def self.is_absolute_path(path)
-        !!(path =~ @@REGEXES[:posix]) || !!(path =~ @@REGEXES[:windows])
+      def self.absolute_path?(path)
+        begin
+          return true if (@regexes[:posix] =~ path) || (@regexes[:windows] =~ path)
+        rescue TypeError
+          false
+        end
+        false
       end
     end
   end

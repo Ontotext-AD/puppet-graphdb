@@ -54,7 +54,7 @@ Puppet::Type.newtype(:graphdb_update) do
     desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds.'
     defaultto 60
     validate do |value|
-		raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
+      raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
     end
     munge do |value|
       Integer(value)
@@ -63,10 +63,11 @@ Puppet::Type.newtype(:graphdb_update) do
 
   # Autorequire the relevant graphdb_repository
   autorequire(:graphdb_repository) do
-    catalog.resources.select do |res|
+    repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
       res if res[:endpoint] == self[:endpoint] && res[:repository_id] == self[:repository_id]
-    end.collect do |res|
+    end
+    repositories.collect do |res|
       res[:name]
     end
   end
