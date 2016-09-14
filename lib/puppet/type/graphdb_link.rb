@@ -15,15 +15,19 @@ Puppet::Type.newtype(:graphdb_link) do
 
   newparam(:master_repository_id) do
     desc 'The id of the master repository'
-    defaultto do
-      resource.value(:name)
+    validate do |value|
+      value.is_a?(String)
     end
   end
 
   newparam(:master_endpoint) do
     desc 'Sesame endpoint of GraphDB master instance'
     validate do |value|
-      raise(ArgumentError, "master_endpoint should be valid url: #{value}") unless URI(value)
+      begin
+        URI(value)
+      rescue StandardError
+        raise(ArgumentError, "master_endpoint should be valid url: #{value}")
+      end
     end
     munge do |value|
       URI(value)
@@ -32,15 +36,19 @@ Puppet::Type.newtype(:graphdb_link) do
 
   newparam(:worker_repository_id) do
     desc 'The id of the worker repository'
-    defaultto do
-      resource.value(:name)
+    validate do |value|
+      value.is_a?(String)
     end
   end
 
   newparam(:worker_endpoint) do
     desc 'Sesame endpoint of GraphDB worker instance'
     validate do |value|
-      raise(ArgumentError, 'worker_endpoint should be valid url: value') unless URI(value)
+      begin
+        URI(value)
+      rescue StandardError
+        raise(ArgumentError, "worker_endpoint should be valid url: #{value}")
+      end
     end
     munge do |value|
       URI(value)
@@ -51,7 +59,11 @@ Puppet::Type.newtype(:graphdb_link) do
     desc 'The port for replications that master and worker will use; default: 0'
     defaultto 0
     validate do |value|
-      raise(ArgumentError, "replication_port should be valid integer: #{value}") unless Integer(value)
+      begin
+        Integer(value)
+      rescue StandardError
+        raise(ArgumentError, "replication_port should be valid integer: #{value}")
+      end
     end
     munge do |value|
       Integer(value)

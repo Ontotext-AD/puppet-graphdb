@@ -13,7 +13,11 @@ Puppet::Type.newtype(:graphdb_validator) do
   newparam(:endpoint) do
     desc 'Sesame endpoint of GraphDB instance'
     validate do |value|
-      raise(ArgumentError, "endpoint should be valid url: #{value}") unless URI(value)
+      begin
+        URI(value)
+      rescue StandardError
+        raise(ArgumentError, "endpoint should be valid url: #{value}")
+      end
     end
     munge do |value|
       URI(value)
@@ -22,13 +26,28 @@ Puppet::Type.newtype(:graphdb_validator) do
 
   newparam(:timeout) do
     desc 'The max number of seconds that the validator should wait before giving up
-				and deciding that the GraphDB is not running; default: 60 seconds.'
+    and deciding that the GraphDB is not running; default: 60 seconds.'
     defaultto 60
     validate do |value|
-      raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
+      begin
+        Integer(value)
+      rescue StandardError
+        raise(ArgumentError, "timeout should be valid integer: #{value}")
+      end
     end
     munge do |value|
       Integer(value)
+    end
+  end
+
+  # Autorequire the relevant service if available
+  autorequire(:service) do
+    repositories = catalog.resources.select do |res|
+      next unless res.type == :service
+      res if res[:name] == self[:name]
+    end
+    repositories.collect do |res|
+      res[:name]
     end
   end
 end

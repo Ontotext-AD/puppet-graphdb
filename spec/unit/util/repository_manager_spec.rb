@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'puppet/util/repository_manager'
 require 'puppet/util/request_manager'
 require 'rspec/mocks'
 
@@ -187,7 +186,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
         uri.path = '/repositories/test/statements'
 
-        result = repository_manager.load_data('test_data', :rdfxml, 'test_data_context', true, 60)
+        result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', true, 60)
 
         expect(result).to be_true
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
@@ -200,7 +199,7 @@ describe 'RepositoryManager' do
           60
         ).once
 
-        result = repository_manager.load_data('test_data', :rdfxml, 'test_data_context', false, 60)
+        result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', false, 60)
         expect(result).to be_true
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
@@ -216,8 +215,8 @@ describe 'RepositoryManager' do
 
     context 'with unknown data format' do
       it do
-        expect { repository_manager.load_data('test_data', :test, 'test_data_context', true, 60) }
-          .to raise_error(ArgumentError, 'Uknown data format test, please check')
+        expect { repository_manager.load_data('test_data', 'test', 'test_data_context', true, 60) }
+          .to raise_error(ArgumentError, 'Uknown data format [test], please check')
       end
     end
 
@@ -225,7 +224,7 @@ describe 'RepositoryManager' do
       it 'should return false' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
-        result = repository_manager.load_data('test_data', :rdfxml, 'test_data_context', true, 60)
+        result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', true, 60)
         expect(result).to be_false
       end
     end

@@ -22,7 +22,11 @@ Puppet::Type.newtype(:graphdb_update) do
   newparam(:endpoint) do
     desc 'Sesame endpoint of GraphDB instance'
     validate do |value|
-      raise(ArgumentError, "endpoint should be valid url: #{value}") unless URI(value)
+      begin
+        URI(value)
+      rescue StandardError
+        raise(ArgumentError, "endpoint should be valid url: #{value}")
+      end
     end
     munge do |value|
       URI(value)
@@ -31,12 +35,11 @@ Puppet::Type.newtype(:graphdb_update) do
 
   newparam(:update_query) do
     desc 'The update query you want to execute repository'
+    validate do |value|
+      value.is_a?(String)
+    end
     munge do |value|
-      if value.is_a?(String)
-        value.gsub!(/[\n]+/, ' ')
-      else
-        value
-      end
+      value.gsub('\n', ' ')
     end
   end
 
@@ -44,17 +47,20 @@ Puppet::Type.newtype(:graphdb_update) do
     desc 'The ask query to check whether update has been applied. You can use the following syntax: ask {?s ?p ?o}'
   end
 
-  newparam(:exists_expected_response) do
+  newparam(:exists_expected_response, boolean: true) do
     desc 'The expected response from exists_query'
-    defaultto(:true)
-    newvalues(:true, :false)
+    defaultto(true)
   end
 
   newparam(:timeout) do
     desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds.'
     defaultto 60
     validate do |value|
-      raise(ArgumentError, "Timeout should be valid integer: #{value}") unless Integer(value)
+      begin
+        Integer(value)
+      rescue StandardError
+        raise(ArgumentError, "timeout should be valid integer: #{value}")
+      end
     end
     munge do |value|
       Integer(value)

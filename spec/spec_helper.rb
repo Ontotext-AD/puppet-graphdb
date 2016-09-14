@@ -7,12 +7,14 @@ include RspecPuppetFacts
 if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start do
+    add_filter '.vendor'
+
     add_group 'module library', 'lib/puppet'
     add_group 'module utils', 'lib/puppet/util'
     add_group 'module type', 'lib/puppet/type'
     add_group 'module provider', 'lib/puppet/provider'
 
-    add_group 'library', '.vendor'
+    # add_group 'library', '.vendor'
   end
 end
 

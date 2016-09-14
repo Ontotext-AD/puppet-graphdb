@@ -5,17 +5,17 @@ module Puppet
   module Util
     # GraphDB repository manager
     class RepositoryManager
-      DATA_TYPE_CONTENT_TYPE = { rdfxml: 'application/rdf+xml; charset=utf-8',
-                                 ntriples: 'application/n-triples; charset=utf-8',
-                                 turtle: 'application/x-turtle; charset=utf-8',
-                                 n3: 'text/n3; charset=utf-8',
-                                 trix: 'application/trix; charset=utf-8',
-                                 trig: 'application/x-trig; charset=utf-8',
-                                 binary: 'application/x-binary-rdf; charset=utf-8',
-                                 nquads: 'application/n-quads; charset=utf-8',
-                                 jsonld: 'application/ld+json; charset=utf-8',
-                                 rdfjson: 'application/rdf+json; charset=utf-8',
-                                 rdfa: 'application/html; charset=utf-8' }.freeze
+      DATA_TYPE_CONTENT_TYPE = { 'rdfxml' => 'application/rdf+xml; charset=utf-8',
+                                 'ntriples' => 'application/n-triples; charset=utf-8',
+                                 'turtle' => 'application/x-turtle; charset=utf-8',
+                                 'n3' => 'text/n3; charset=utf-8',
+                                 'trix' => 'application/trix; charset=utf-8',
+                                 'trig' => 'application/x-trig; charset=utf-8',
+                                 'binary' => 'application/x-binary-rdf; charset=utf-8',
+                                 'nquads' => 'application/n-quads; charset=utf-8',
+                                 'jsonld' => 'application/ld+json; charset=utf-8',
+                                 'rdfjson' => 'application/rdf+json; charset=utf-8',
+                                 'rdfa' => 'application/html; charset=utf-8' }.freeze
 
       attr_reader :endpoint
       attr_reader :repository_id
@@ -131,8 +131,8 @@ module Puppet
       end
 
       def resolve_content_type(data_format)
-        return DATA_TYPE_CONTENT_TYPE[data_format.to_sym] if DATA_TYPE_CONTENT_TYPE.key?(data_format.to_sym)
-        raise ArgumentError, "Uknown data format #{data_format}, please check"
+        return DATA_TYPE_CONTENT_TYPE[data_format] if DATA_TYPE_CONTENT_TYPE.key?(data_format)
+        raise ArgumentError, "Uknown data format [#{data_format}], please check"
       end
     end
   end

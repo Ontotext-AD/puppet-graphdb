@@ -37,9 +37,9 @@ private
     port = resource[:master_endpoint].port.to_s
     julokia_secret = nil
     resource.catalog.resources.each do |resource|
-      julokia_secret = res[:jolokia_secret] if check_resource_is_master?(resource, port)
+      julokia_secret = resource[:jolokia_secret] if check_resource_is_matching_master?(resource, port)
     end
-    raise 'fail to resolve julokia secret, please ensure that graphdb_link
+    raise Puppet::Error, 'fail to resolve julokia secret, please ensure that graphdb_link
 										is defined on the same node as master graphdb instance' if julokia_secret.nil?
   end
 

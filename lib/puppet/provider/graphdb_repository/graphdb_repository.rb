@@ -15,7 +15,7 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
       resource[:repository_context],
       resource[:timeout]
     )
-    result = exists? if result
+    return exists? if result == true
     result
   end
 

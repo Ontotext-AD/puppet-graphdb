@@ -55,10 +55,7 @@ define graphdb::instance (
     status => $graphdb::status,
   }
 
-  graphdb_validator { $title:
-    endpoint => "http://${::ipaddress}:${http_port}",
-    require  => Service[$title],
-  }
+  graphdb_validator { $title: endpoint => "http://${::ipaddress}:${http_port}" }
 
   Class['graphdb::install'] ~> Graphdb::Instance <| |>
 
