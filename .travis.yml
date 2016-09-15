@@ -1,5 +1,15 @@
-language: ruby
-rvm:
- - 2.2
- - jruby
- - rbx-2
+ {
+   "language": "ruby",
+   "sudo": false,
+   "before_install": [
+     "gem install bundler -v 1.10"
+   ],
+   "bundler_args": "--without development",
+   "script": [
+     "bundle exec rake $CHECK"
+   ],
+   "rvm": "2.3.1",
+   "group": "stable",
+   "dist": "precise",
+   "os": "linux"
+ }
