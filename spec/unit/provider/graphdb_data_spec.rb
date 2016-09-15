@@ -43,7 +43,7 @@ describe provider_class do
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
           .with(exists_query, exists_expected_response, 0).once
 
-        expect(provider.exists?).to be_true
+        expect(provider.exists?).to be true
       end
     end
 
@@ -54,7 +54,7 @@ describe provider_class do
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
           .with(exists_query, exists_expected_response, 0).once
 
-        expect(provider.exists?).to be_false
+        expect(provider.exists?).to be false
       end
     end
 
@@ -85,7 +85,7 @@ describe provider_class do
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with(data, data_format, data_context, data_overwrite, timeout).once
 
-          expect(provider.create).to be_true
+          expect(provider.create).to be true
         end
       end
 
@@ -118,7 +118,7 @@ describe provider_class do
 
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be_true
+              expect(provider.create).to be true
             end
           end
 
@@ -187,7 +187,7 @@ describe provider_class do
                 .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be_true
+              expect(provider.create).to be true
             end
           end
           context 'with fail on one file' do
@@ -242,7 +242,7 @@ describe provider_class do
                   .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
                 expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-                expect(provider.create).to be_true
+                expect(provider.create).to be true
               end
             end
 
@@ -296,7 +296,7 @@ describe provider_class do
                 .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be_true
+              expect(provider.create).to be true
             end
           end
         end
@@ -331,7 +331,7 @@ describe provider_class do
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with('test_data#3', data_format, data_context, data_overwrite, timeout).once
 
-          expect(provider.create).to be_true
+          expect(provider.create).to be true
         end
 
         it 'should call load_data multiple times and raise error on single load_data call fail' do

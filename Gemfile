@@ -3,13 +3,10 @@
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 
 def location_from_env(env, default_location = [])
-  if ENV[env]
-    location = ENV[env]
+  if location = ENV[env]
     if location =~ /^((?:git|https?)[:@][^#]*)#(.*)/
-      [{ git: Regexp.last_match(1),
-         branch: Regexp.last_match(2),
-         require: false }]
-    elsif location =~ %r{^file:\/\/(.*)}
+      [{ git: Regexp.last_match(1), branch: Regexp.last_match(2), require: false }]
+    elsif location =~ /^file:\/\/(.*)/
       ['>= 0', { path: File.expand_path(Regexp.last_match(1)), require: false }]
     else
       [location, { require: false }]
@@ -19,30 +16,27 @@ def location_from_env(env, default_location = [])
   end
 end
 
-gem 'puppet', *location_from_env('PUPPET_GEM_VERSION') || '~> 3.8.0'
 gem 'facter', *location_from_env('FACTER_GEM_VERSION')
-group :development, :test do
+gem 'puppet', *location_from_env('PUPPET_GEM_VERSION')
+
+group :development, :unit_tests do
   gem 'metadata-json-lint'
   gem 'puppet_facts'
-  gem 'puppet-doc-lint'
-  gem 'puppet-lint'
   gem 'puppet-blacksmith', '>= 3.4.0'
-  gem 'puppetlabs_spec_helper'
+  gem 'puppetlabs_spec_helper', '>= 1.2.1'
   gem 'rspec-puppet', '>= 2.3.2'
   gem 'rspec-puppet-facts'
   gem 'rspec-puppet-utils'
   gem 'rspec-mocks'
-  gem 'simplecov'
   gem 'rubocop', '0.41.2' if RUBY_VERSION < '2.0.0'
+  gem 'rubocop' if RUBY_VERSION >= '2.0.0'
   gem 'rubocop-rspec', '~> 1.6' if RUBY_VERSION >= '2.3.0'
   gem 'json_pure', '<= 2.0.1' if RUBY_VERSION < '2.0.0'
-  gem 'ci_reporter_rspec'
   gem 'guard'
   gem 'guard-rspec', require: false
   gem 'guard-rubocop'
   gem 'pry-doc'
   gem 'webmock'
-  gem 'rspec-parallel'
   gem 'parallel_tests'
   gem 'simplecov', require: false
 end
@@ -56,3 +50,5 @@ group :system_tests do
   gem 'master_manipulator'
   gem 'beaker-hostgenerator', *location_from_env('BEAKER_HOSTGENERATOR_VERSION', [])
 end
+
+eval(File.read("#{__FILE__}.local"), binding) if File.exist? "#{__FILE__}.local"

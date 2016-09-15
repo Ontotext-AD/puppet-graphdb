@@ -6,7 +6,7 @@
    ],
    "bundler_args": "--without development",
    "script": [
-     "bundle exec rake"
+     "bundle exec rake spec"
    ],
    "rvm": "2.3.1",
    "group": "stable",

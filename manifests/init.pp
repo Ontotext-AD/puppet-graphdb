@@ -22,12 +22,12 @@ class graphdb (
 
   #### Validate parameters
 
-  #version
+  # version
   if versioncmp($version, '7.0.0') < 0 {
     fail('This module supprort GraphDB version 7.0.0 and up')
   }
 
-  if ! ($edition in [ 'se', 'ee' ]) {
+  if ! ($edition in [ 'se', 'ee', 'EE', 'SE' ]) {
     fail("\"${edition}\" is not a valid edition parameter value")
   }
 
@@ -52,11 +52,11 @@ class graphdb (
   validate_bool($purge_data_dir)
   validate_integer($archive_dl_timeout, undef, 100)
 
-  if $java_home != undef {
+  if $java_home {
     validate_absolute_path($java_home)
     $java_location = $java_home
   }
-  elsif $::machine_java_home != undef {
+  elsif $::machine_java_home {
     $java_location = $::machine_java_home
   } else {
     $java_location = '/usr/lib/jvm/java-8-oracle'

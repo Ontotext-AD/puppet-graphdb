@@ -29,7 +29,7 @@ describe provider_class do
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).with(timeout) { true }
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
 
-      expect(provider.exists?).to be_true
+      expect(provider.exists?).to be true
     end
   end
 
@@ -38,7 +38,7 @@ describe provider_class do
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).with(timeout) { false }
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
 
-      expect(provider.exists?).to be_false
+      expect(provider.exists?).to be false
     end
   end
 
@@ -52,7 +52,7 @@ describe provider_class do
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
 
-      expect(provider.create).to be_true
+      expect(provider.create).to be true
     end
 
     context 'with repository creation fail' do
@@ -61,7 +61,7 @@ describe provider_class do
           .with(repository_template, repository_context, timeout) { false }
 
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
-        expect(provider.create).to be_false
+        expect(provider.create).to be false
       end
     end
   end
@@ -71,7 +71,7 @@ describe provider_class do
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:delete_repository).with(timeout) { true }
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:delete_repository).once
 
-      expect(provider.destroy).to be_true
+      expect(provider.destroy).to be true
     end
   end
 
@@ -80,7 +80,7 @@ describe provider_class do
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:delete_repository).with(timeout) { false }
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:delete_repository).once
 
-      expect(provider.destroy).to be_false
+      expect(provider.destroy).to be false
     end
   end
 end

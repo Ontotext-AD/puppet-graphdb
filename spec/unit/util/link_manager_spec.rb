@@ -21,9 +21,7 @@ describe 'LinkManager' do
       it 'should return true' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
 
-        result = link_manager.check_link
-
-        expect(result).to be_true
+        expect(link_manager.check_link).to be true
         uri_master.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository}/NodeStatus"
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
@@ -40,7 +38,7 @@ describe 'LinkManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = link_manager.check_link
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -52,7 +50,7 @@ describe 'LinkManager' do
 
         result = link_manager.create_link
 
-        expect(result).to be_true
+        expect(result).to be true
         uri_master.path = '/jolokia'
 
         body = {
@@ -77,7 +75,7 @@ describe 'LinkManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = link_manager.create_link
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -89,7 +87,7 @@ describe 'LinkManager' do
 
         result = link_manager.delete_link
 
-        expect(result).to be_true
+        expect(result).to be true
         uri_master.path = '/jolokia'
 
         body = {
@@ -114,7 +112,7 @@ describe 'LinkManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = link_manager.delete_link
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end

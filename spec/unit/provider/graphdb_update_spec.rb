@@ -34,7 +34,7 @@ describe provider_class do
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
         .with(exists_query, exists_expected_response, 0).once
 
-      expect(provider.exists?).to be_true
+      expect(provider.exists?).to be true
     end
   end
 
@@ -45,7 +45,7 @@ describe provider_class do
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
         .with(exists_query, exists_expected_response, 0).once
 
-      expect(provider.exists?).to be_false
+      expect(provider.exists?).to be false
     end
   end
 
@@ -56,7 +56,7 @@ describe provider_class do
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:update_query)
         .with(update_query, timeout).once
 
-      expect(provider.create).to be_true
+      expect(provider.create).to be true
     end
   end
 
@@ -67,7 +67,7 @@ describe provider_class do
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:update_query)
         .with(update_query, timeout).once
 
-      expect(provider.create).to be_false
+      expect(provider.create).to be false
     end
   end
 end

@@ -11,9 +11,7 @@ describe 'RepositoryManager' do
       it 'should return true' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
 
-        result = repository_manager.check_repository(60)
-
-        expect { result }.to be_true
+        expect(repository_manager.check_repository(60)).to be true
         uri.path = '/repositories/test/size'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
@@ -35,7 +33,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.check_repository(60)
 
-        expect(result).to be_false
+        expect(result).to be false
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
         ).once
@@ -49,7 +47,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.check_repository(60)
 
-        expect(result).to be_false
+        expect(result).to be false
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
         ).once
@@ -70,7 +68,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.create_repository('test', 'http://test.com', 60)
 
-        expect(result).to be_true
+        expect(result).to be true
         uri.path = '/repositories/SYSTEM/rdf-graphs/service'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :post,
@@ -87,7 +85,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = repository_manager.create_repository('test', 'http://test.com', 60)
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -99,7 +97,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.delete_repository(60)
 
-        expect(result).to be_true
+        expect(result).to be true
         uri.path = '/repositories/test'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
@@ -115,7 +113,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = repository_manager.delete_repository(60)
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -127,7 +125,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.ask('test_query', 'test_expected_response', 60)
 
-        expect(result).to be_true
+        expect(result).to be true
         uri.path = '/repositories/test'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get,
@@ -145,7 +143,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = repository_manager.ask('test_query', 'test_expected_response', 60)
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -157,7 +155,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.update_query('test_query', 60)
 
-        expect(result).to be_true
+        expect(result).to be true
         uri.path = '/repositories/test/statements'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
@@ -175,7 +173,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = repository_manager.update_query('test_query', 60)
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
@@ -188,7 +186,7 @@ describe 'RepositoryManager' do
 
         result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', true, 60)
 
-        expect(result).to be_true
+        expect(result).to be true
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
           { method: :put,
@@ -200,7 +198,7 @@ describe 'RepositoryManager' do
         ).once
 
         result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', false, 60)
-        expect(result).to be_true
+        expect(result).to be true
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
           { method: :post,
@@ -225,7 +223,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 
         result = repository_manager.load_data('test_data', 'rdfxml', 'test_data_context', true, 60)
-        expect(result).to be_false
+        expect(result).to be false
       end
     end
   end
