@@ -43,11 +43,27 @@ define graphdb::instance (
     }
   }
 
-  graphdb::config { $title:
-    license          => $licence_file_destination,
-    http_port        => $http_port,
-    jolokia_secret   => $jolokia_secret,
-    extra_properties => $extra_properties,
+  $default_properties = {
+    'graphdb.home.data'      => "${graphdb::data_dir}/${title}",
+    'graphdb.home.logs'      => "${graphdb::log_dir}/${title}",
+    'graphdb.license.file'   => $licence_file_destination,
+    'graphdb.connector.port' => $http_port,
+  }
+
+  if $jolokia_secret {
+    $jolokia_secret_property = { 'graphdb.jolokia.secret' => $jolokia_secret }
+  }
+
+  $final_graphdb_properties = merge($default_properties, $jolokia_secret_property, $extra_properties)
+
+  file { "${instance_home_dir}/conf":
+    ensure => 'directory',
+  }
+
+  file { "${instance_home_dir}/conf/graphdb.properties":
+    ensure  => 'present',
+    content => template('graphdb/config/graphdb.properties.erb'),
+    notify  => Service[$title],
   }
 
   graphdb::service { $title:
