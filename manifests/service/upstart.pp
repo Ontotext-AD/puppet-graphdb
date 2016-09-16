@@ -30,7 +30,7 @@
 #     service_enable => true,
 #  }
 #
-define graphdb::service::upstart($ensure, $service_ensure, $service_enable) {
+define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $kill_timeout = 180) {
 
   File {
     owner   => 'root',
@@ -58,7 +58,7 @@ define graphdb::service::upstart($ensure, $service_ensure, $service_enable) {
   }
 
   service { $title:
-    ensure     => $service_enable,
+    ensure     => $service_ensure,
     enable     => $service_enable,
     name       => $title,
     provider   => 'upstart',

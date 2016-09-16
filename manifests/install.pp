@@ -1,14 +1,4 @@
-class graphdb::install (
-  $tool_to_path       = [
-    'console',
-    'loadrdf',
-    'migration-wizard',
-    'rdfvalidator',
-    'report',
-    'rule-compiler',
-    'storage-tool',
-  ]
-) {
+class graphdb::install {
 
   require graphdb
 

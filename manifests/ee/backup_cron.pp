@@ -15,6 +15,7 @@ define graphdb::ee::backup_cron (
   ensure_packages(['curl'])
 
   file { "${graphdb::install_dir}/${title}":
+    ensure => $ensure,
     source => $backup_script_source,
     owner  => $graphdb::graphdb_user,
     group  => $graphdb::graphdb_group,

@@ -1,7 +1,9 @@
 define graphdb::instance (
   $license,
-  $http_port          = '8080',
-  $kill_timeout       = '180',
+  $ensure             = $graphdb::ensure,
+  $status             = $graphdb::status,
+  $http_port          = 8080,
+  $kill_timeout       = 180,
   $jolokia_secret     = undef,
   $extra_properties   = undef,
 ){
@@ -15,31 +17,34 @@ define graphdb::instance (
     group => $graphdb::graphdb_group,
   }
 
+  $service_name = "graphdb-${title}"
+
   $instance_home_dir = "${graphdb::install_dir}/instances/${title}"
 
   $license_file_name = basename($license)
   $licence_file_destination = "${instance_home_dir}/${license_file_name}"
 
   file { $licence_file_destination:
-    ensure => $graphdb::ensure,
+    ensure => $ensure,
     source => $license,
     mode   => '0555',
-    notify => Service[$title],
+    notify => Service[$service_name],
   }
 
   $instance_data_dir = "${graphdb::data_dir}/${title}"
   $instance_plugins_dir = "${instance_data_dir}/plugins"
   $instance_temp_dir = "${graphdb::tmp_dir}/${title}"
+  $instance_conf_dir = "${instance_home_dir}/conf"
 
 
-  if $graphdb::ensure == 'present' {
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir]:
+  if $ensure == 'present' {
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir]:
       ensure => 'directory',
-      notify => Service[$title],
+      notify => Service[$service_name],
     }
   } else {
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir]:
-      ensure => $graphdb::ensure,
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir]:
+      ensure => $ensure,
     }
   }
 
@@ -51,27 +56,26 @@ define graphdb::instance (
   }
 
   if $jolokia_secret {
-    $jolokia_secret_property = { 'graphdb.jolokia.secret' => $jolokia_secret }
-  }
-
-  $final_graphdb_properties = merge($default_properties, $jolokia_secret_property, $extra_properties)
-
-  file { "${instance_home_dir}/conf":
-    ensure => 'directory',
+    $final_graphdb_properties = merge($default_properties, { 'graphdb.jolokia.secret' => $jolokia_secret }, $extra_properties)
+  } else {
+    $final_graphdb_properties = merge($default_properties, $extra_properties)
   }
 
   file { "${instance_home_dir}/conf/graphdb.properties":
-    ensure  => 'present',
+    ensure  => $ensure,
     content => template('graphdb/config/graphdb.properties.erb'),
-    notify  => Service[$title],
+    notify  => Service[$service_name],
   }
 
-  graphdb::service { $title:
-    ensure => $graphdb::ensure,
-    status => $graphdb::status,
+  graphdb::service { $service_name:
+    ensure       => $ensure,
+    status       => $status,
+    kill_timeout => $kill_timeout,
   }
 
-  graphdb_validator { $title: endpoint => "http://${::ipaddress}:${http_port}" }
+  if $ensure == 'present' {
+    graphdb_validator { $title: endpoint => "http://${::ipaddress}:${http_port}" }
+  }
 
   Class['graphdb::install'] ~> Graphdb::Instance <| |>
 

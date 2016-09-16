@@ -25,7 +25,7 @@ define graphdb::data (
   if $archive {
     $archive_name = basename($archive)
     $archive_base = "${graphdb::tmp_dir}/${title}"
-    $archive_destination = "${archive_base}/${archive_name}.zip"
+    $archive_destination = "${archive_base}/${archive_name}"
     $data_source_final = "${archive_base}/unpacked"
 
     file { $archive_base:
@@ -33,6 +33,7 @@ define graphdb::data (
     }
 
     file { $archive_destination:
+      ensure  => 'present',
       source  => $archive,
       require => File[$archive_base],
       notify  => Exec["unpack-archive-source-${title}"],

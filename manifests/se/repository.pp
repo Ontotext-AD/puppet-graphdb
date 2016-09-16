@@ -46,8 +46,6 @@ define graphdb::se::repository (
   # Read-only
   $read_only = false,
 ) {
-  #TODO Not sure we need this
-  include ::graphdb
 
   graphdb_repository { $title:
     ensure              => $ensure,

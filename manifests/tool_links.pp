@@ -1,6 +1,6 @@
 class graphdb::tool_links {
 
-  $instance_installation_dir = "${graphdb::install_dir}/dist"
+  $instance_installation_dir = "${graphdb::install_dir}/dist/bin"
 
   $tool_link_ensure = $graphdb::ensure ? {
     'present'  => 'link',

@@ -25,7 +25,7 @@
 #     status         => 'enabled',
 #  }
 #
-define graphdb::service($ensure, $status) {
+define graphdb::service($ensure, $status, $kill_timeout = 180) {
   require graphdb::params
 
   #### Service management
@@ -81,6 +81,7 @@ define graphdb::service($ensure, $status) {
         ensure         => $ensure,
         service_ensure => $service_ensure,
         service_enable => $service_enable,
+        kill_timeout   => $kill_timeout,
       }
     }
     'systemd': {
@@ -88,6 +89,7 @@ define graphdb::service($ensure, $status) {
         ensure         => $ensure,
         service_ensure => $service_ensure,
         service_enable => $service_enable,
+        kill_timeout   => $kill_timeout,
       }
     }
     default: {

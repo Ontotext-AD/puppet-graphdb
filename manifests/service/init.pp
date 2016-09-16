@@ -58,7 +58,7 @@ define graphdb::service::init($ensure, $service_ensure, $service_enable) {
   }
 
   service { $title:
-    ensure     => $service_enable,
+    ensure     => $service_ensure,
     enable     => $service_enable,
     name       => $title,
     provider   => 'init',

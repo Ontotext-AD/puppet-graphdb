@@ -27,7 +27,7 @@ class graphdb (
     fail('This module supprort GraphDB version 7.0.0 and up')
   }
 
-  if ! ($edition in [ 'se', 'ee', 'EE', 'SE' ]) {
+  if ! ($edition in [ 'se', 'ee' ]) {
     fail("\"${edition}\" is not a valid edition parameter value")
   }
 

@@ -34,7 +34,7 @@
 #     service_enable => true,
 #  }
 #
-define graphdb::service::systemd($ensure, $service_ensure, $service_enable) {
+define graphdb::service::systemd($ensure, $service_ensure, $service_enable, $kill_timeout = 180) {
 
   require graphdb::params
 
@@ -48,24 +48,24 @@ define graphdb::service::systemd($ensure, $service_ensure, $service_enable) {
   }
 
   $notify_service = $graphdb::restart_on_change ? {
-    true  => [ Exec["systemd_reload_${title}"], Service["graphdb-${title}"] ],
+    true  => [ Exec["systemd_reload_${title}"], Service[$title] ],
     false => Exec["systemd_reload_${title}"]
   }
 
   if ( $ensure == 'present' ) {
-    file { "${graphdb::params::systemd_service_path}/graphdb-${title}.service":
+    file { "${graphdb::params::systemd_service_path}/${title}.service":
       ensure  => $ensure,
       content => template('graphdb/service/systemd.erb'),
-      before  => Service["graphdb-${title}"],
+      before  => Service[$title],
       notify  => $notify_service,
     }
 
     $service_require = Exec["systemd_reload_${title}"]
 
   } else {
-    file { "${graphdb::params::systemd_service_path}/graphdb-${title}.service":
+    file { "${graphdb::params::systemd_service_path}/${title}.service":
       ensure    => 'absent',
-      subscribe => Service["graphdb-${title}"],
+      subscribe => Service[$title],
       notify    => Exec["systemd_reload_${title}"],
     }
 
@@ -77,10 +77,10 @@ define graphdb::service::systemd($ensure, $service_ensure, $service_enable) {
     refreshonly => true,
   }
 
-  service { "graphdb-${title}":
-    ensure     => $service_enable,
+  service { $title:
+    ensure     => $service_ensure,
     enable     => $service_enable,
-    name       => "graphdb-${title}.service",
+    name       => "${title}.service",
     hasstatus  => true,
     hasrestart => true,
     provider   => 'systemd',
