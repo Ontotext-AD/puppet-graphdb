@@ -10,27 +10,32 @@ describe 'graphdb', type: :class do
       describe 'with minimum configuration' do
         let(:params) { { version: '7.0.0', edition: 'ee' } }
 
+        it { is_expected.to contain_class('graphdb::params') }
+        it { is_expected.to contain_anchor('graphdb::begin') }
+        it {   is_expected.to contain_package('unzip') }
+        it {   is_expected.to contain_user('graphdb').with(ensure: 'present', comment: 'graphdb service user') }
         it do
-          is_expected.to contain_class('graphdb::params')
-          is_expected.to contain_anchor('graphdb::begin')
-          is_expected.to contain_package('unzip')
-          is_expected.to contain_user('graphdb').with(ensure: 'present', comment: 'graphdb service user')
-          is_expected.to contain_file('/opt/graphdb').with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
-          is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
-          is_expected.to contain_file('/var/lib/graphdb').with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
-          is_expected.to contain_class('graphdb::install')
-          is_expected.to contain_class('graphdb::tool_links')
+          is_expected.to contain_file('/opt/graphdb')
+            .with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
         end
+        it do
+          is_expected.to contain_file('/var/tmp/graphdb')
+            .with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
+        end
+        it do
+          is_expected.to contain_file('/var/lib/graphdb')
+            .with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
+        end
+        it { is_expected.to contain_class('graphdb::install') }
+        it { is_expected.to contain_class('graphdb::tool_links') }
       end
 
       describe 'with custom graphdb_user and graphdb_group' do
         let(:params) { { version: '7.0.0', edition: 'ee', graphdb_user: 'user', graphdb_group: 'group' } }
 
-        it do
-          is_expected.to contain_file('/opt/graphdb').with(ensure: 'directory', owner: 'user', group: 'group')
-          is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'directory', owner: 'user', group: 'group')
-          is_expected.to contain_file('/var/lib/graphdb').with(ensure: 'directory', owner: 'user', group: 'group')
-        end
+        it { is_expected.to contain_file('/opt/graphdb').with(ensure: 'directory', owner: 'user', group: 'group') }
+        it { is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'directory', owner: 'user', group: 'group') }
+        it { is_expected.to contain_file('/var/lib/graphdb').with(ensure: 'directory', owner: 'user', group: 'group') }
       end
 
       describe 'with wrong configuration' do

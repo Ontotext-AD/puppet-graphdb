@@ -20,33 +20,44 @@ describe 'graphdb::instance', type: :define do
     context 'with ensure set to present' do
       let(:params) { { license: 'license' } }
 
+      it { is_expected.to contain_graphdb__instance(title).that_requires('Class[graphdb::install]') }
       it do
-        is_expected.to contain_graphdb__instance(title).that_requires('Class[graphdb::install]')
         is_expected.to contain_file('/opt/graphdb/instances/test/license').with(ensure: 'present',
                                                                                 owner: 'graphdb',
                                                                                 group: 'graphdb',
                                                                                 mode: '0555',
                                                                                 notify: "Service[graphdb-#{title}]")
+      end
+      it do
         is_expected.to contain_file('/opt/graphdb/instances/test').with(ensure: 'directory',
                                                                         owner: 'graphdb',
                                                                         group: 'graphdb',
                                                                         notify: "Service[graphdb-#{title}]")
+      end
+      it do
         is_expected.to contain_file('/var/lib/graphdb/test/plugins').with(ensure: 'directory',
                                                                           owner: 'graphdb',
                                                                           group: 'graphdb',
                                                                           notify: "Service[graphdb-#{title}]")
+      end
+      it do
         is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'directory',
                                                                   owner: 'graphdb',
                                                                   group: 'graphdb',
                                                                   notify: "Service[graphdb-#{title}]")
+      end
+      it do
         is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'directory',
                                                                   owner: 'graphdb',
                                                                   group: 'graphdb',
                                                                   notify: "Service[graphdb-#{title}]")
+      end
+      it do
         is_expected.to contain_file('/opt/graphdb/instances/test/conf').with(ensure: 'directory',
                                                                              owner: 'graphdb',
                                                                              group: 'graphdb')
-
+      end
+      it do
         is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
           .with(ensure: 'present',
                 notify:  "Service[graphdb-#{title}]",
@@ -57,26 +68,26 @@ graphdb.home.data = /var/lib/graphdb/test
 graphdb.home.logs = /var/log/graphdb/test
 graphdb.license.file = /opt/graphdb/instances/test/license
 ")
-
-        is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'present', status: 'enabled')
-        is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080')
       end
+      it {    is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'present', status: 'enabled') }
+      it {    is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080') }
     end
 
     context 'with ensure set to absent' do
       let(:params) { { license: 'license', ensure: 'absent' } }
 
+      it {    is_expected.to contain_file('/opt/graphdb/instances/test/license').with(ensure: 'absent') }
+      it {    is_expected.to contain_file('/opt/graphdb/instances/test').with(ensure: 'absent') }
+      it {    is_expected.to contain_file('/var/lib/graphdb/test/plugins').with(ensure: 'absent') }
+      it {    is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'absent') }
+      it {    is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'absent') }
+      it {    is_expected.to contain_file('/opt/graphdb/instances/test/conf').with(ensure: 'absent') }
       it do
-        is_expected.to contain_file('/opt/graphdb/instances/test/license').with(ensure: 'absent')
-        is_expected.to contain_file('/opt/graphdb/instances/test').with(ensure: 'absent')
-        is_expected.to contain_file('/var/lib/graphdb/test/plugins').with(ensure: 'absent')
-        is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'absent')
-        is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'absent')
-        is_expected.to contain_file('/opt/graphdb/instances/test/conf').with(ensure: 'absent')
-        is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties').with(ensure: 'absent')
-        is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'absent')
-        is_expected.to_not contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080')
+        is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
+          .with(ensure: 'absent')
       end
+      it {    is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'absent') }
+      it {    is_expected.to_not contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080') }
     end
   end
 
@@ -105,9 +116,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
               owner: 'graphdb',
               group: 'graphdb',
               content: /graphdb.connector.port = 9090/)
-
-      is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:9090')
     end
+    it { is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:9090') }
   end
 
   describe 'with custom kill_timeout' do

@@ -24,23 +24,26 @@ describe 'graphdb::install', type: :class do
       '/var/tmp/graphdb/graphdb-ee-7.0.0.zip'
     end
 
+    it { is_expected.to contain_class('graphdb::install').that_requires('Class[graphdb]') }
     it do
-      is_expected.to contain_class('graphdb::install').that_requires('Class[graphdb]')
       is_expected.to contain_file('/opt/graphdb/instances').with(ensure: 'directory',
                                                                  owner: 'graphdb', group: 'graphdb')
+    end
 
+    it do
       is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
         command: "rm -f /var/tmp/graphdb/*.zip && wget --no-check-certificate -O #{dest_file}" \
- 																" #{download_url} 2> /dev/null",
+  															" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
         require: 'File[/var/tmp/graphdb]',
         user: 'graphdb'
       )
-
+    end
+    it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
- 		' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
+  	' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
         refreshonly: true,
         require: 'Package[unzip]',
         user: 'graphdb'
@@ -101,10 +104,11 @@ describe 'graphdb::install', type: :class do
         require: 'File[/tmp]',
         user: 'graphdb'
       )
-
+    end
+    it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
-       		' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
+        		' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
         refreshonly: true,
         require: 'Package[unzip]',
         user: 'graphdb'
@@ -137,7 +141,8 @@ describe 'graphdb::install', type: :class do
         require: 'File[/var/tmp/graphdb]',
         user: 'graphdb'
       )
-
+    end
+    it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /var/lib/dist && unzip #{dest_file} -d /var/lib/dist" \
        		' && mv /var/lib/dist/graphdb-ee-7.0.0/* /var/lib/dist && rm -r /var/lib/dist/graphdb-ee-7.0.0',
@@ -157,10 +162,8 @@ describe 'graphdb::install', type: :class do
       "class { 'graphdb': version => '7.0.0', edition => 'ee', ensure => 'absent' }"
     end
 
-    it do
-      is_expected.to contain_file('/opt/graphdb/instances').with(ensure: 'absent')
-      is_expected.to contain_file('/opt/graphdb/dist').with(ensure: 'absent')
-      is_expected.to contain_file('/var/tmp/graphdb/graphdb-ee-7.0.0.zip').with(ensure: 'absent')
-    end
+    it { is_expected.to contain_file('/opt/graphdb/instances').with(ensure: 'absent') }
+    it {  is_expected.to contain_file('/opt/graphdb/dist').with(ensure: 'absent') }
+    it {  is_expected.to contain_file('/var/tmp/graphdb/graphdb-ee-7.0.0.zip').with(ensure: 'absent') }
   end
 end

@@ -20,8 +20,8 @@ describe 'graphdb::ee::master::repository', type: :define do
   context 'with ensure set to present' do
     let(:params) { { endpoint: 'http://test.com', repository_context: 'test:test' } }
 
+    it { is_expected.to contain_graphdb__ee__master__repository('test') }
     it do
-      is_expected.to contain_graphdb__ee__master__repository('test')
       is_expected.to contain_graphdb_repository('test')
         .with(ensure: 'present',
               repository_id: 'test',
@@ -33,8 +33,8 @@ describe 'graphdb::ee::master::repository', type: :define do
   context 'with ensure set to absent' do
     let(:params) { { ensure: 'absent', endpoint: 'http://test.com', repository_context: 'test:test' } }
 
+    it { is_expected.to contain_graphdb__ee__master__repository('test') }
     it do
-      is_expected.to contain_graphdb__ee__master__repository('test')
       is_expected.to contain_graphdb_repository('test')
         .with(ensure: 'absent',
               repository_id: 'test',

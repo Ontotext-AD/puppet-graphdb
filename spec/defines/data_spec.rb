@@ -25,11 +25,13 @@ describe 'graphdb::data', type: :define do
         archive: 'test.zip' }
     end
 
+    it { is_expected.to contain_graphdb__data(title).that_requires('Class[graphdb]') }
     it do
-      is_expected.to contain_graphdb__data(title).that_requires('Class[graphdb]')
       is_expected.to contain_file("/var/tmp/graphdb/#{title}").with(ensure: 'directory',
                                                                     owner: 'graphdb',
                                                                     group: 'graphdb')
+    end
+    it do
       is_expected.to contain_file('/var/tmp/graphdb/test/test.zip')
         .with(ensure: 'present',
               source: 'test.zip',
@@ -37,14 +39,17 @@ describe 'graphdb::data', type: :define do
               group: 'graphdb',
               require: "File[/var/tmp/graphdb/#{title}]",
               notify: "Exec[unpack-archive-source-#{title}]")
+    end
+    it do
       is_expected.to contain_exec("unpack-archive-source-#{title}")
         .with(command: "rm -rf /var/tmp/graphdb/#{title}/unpacked "\
-      "&& unzip /var/tmp/graphdb/#{title}/test.zip -d /var/tmp/graphdb/#{title}/unpacked",
+    "&& unzip /var/tmp/graphdb/#{title}/test.zip -d /var/tmp/graphdb/#{title}/unpacked",
               refreshonly: true,
               user: 'graphdb',
               require: ['Package[unzip]', "File[/var/tmp/graphdb/#{title}]"],
               notify: "Graphdb_data[#{title}]")
-
+    end
+    it do
       is_expected.to contain_graphdb_data(title)
         .with(endpoint: 'http://test.com',
               repository_id: 'test',
