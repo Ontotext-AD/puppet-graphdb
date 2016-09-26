@@ -22,8 +22,3 @@ env:
   - DISTRO=ubuntu-server-1404-x64
 script:
 - make test-$TEST_SUITE
-before_install:
-- openssl aes-256-cbc -K $encrypted_c1be2d1aa63f_key -iv $encrypted_c1be2d1aa63f_iv
-  -in ee.license.enc -out ee.license -d
-- openssl aes-256-cbc -K $encrypted_c1be2d1aa63f_key -iv $encrypted_c1be2d1aa63f_iv
-  -in se.license.enc -out se.license -d
