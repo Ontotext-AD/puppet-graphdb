@@ -25,4 +25,4 @@ script:
 before_install:
 - openssl aes-256-cbc -K $encrypted_c1be2d1aa63f_key -iv $encrypted_c1be2d1aa63f_iv
   -in licenses.tar.enc -out licenses.tar -d
-  - tar xvf licenses.tar
+- tar xvf licenses.tar
