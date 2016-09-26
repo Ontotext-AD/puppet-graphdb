@@ -44,7 +44,7 @@ private
   end
 
   def check_resource_is_matching_master?(resource, port)
-    return true if resource.type == :component && resource[:http_port] == port && !resource[:jolokia_secret].nil?
+    return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port && !resource[:jolokia_secret].nil?
     false
   end
 end

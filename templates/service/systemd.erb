@@ -13,6 +13,10 @@ TimeoutStopSec=<%= @kill_timeout %>
 
 Environment=JAVA_HOME=<%= scope.lookupvar('graphdb::java_location') %>
 
+<% unless @final_java_opts.empty? -%>
+Environment="GDB_JAVA_OPTS=<%= @final_java_opts %>"
+<% end -%>
+
 # Tomcat process exits with status 143 when kill is successful
 SuccessExitStatus=143
 

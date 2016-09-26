@@ -30,7 +30,9 @@
 #     service_enable => true,
 #  }
 #
-define graphdb::service::init($ensure, $service_ensure, $service_enable) {
+define graphdb::service::init($ensure, $service_ensure, $service_enable, $java_opts = []) {
+
+  $final_java_opts = generate_java_opts_string($java_opts)
 
   File {
     owner   => 'root',
@@ -39,28 +41,27 @@ define graphdb::service::init($ensure, $service_ensure, $service_enable) {
   }
 
   $notify_service = $graphdb::restart_on_change ? {
-    true  => Service[$title],
+    true  => Service["graphdb-${title}"],
     false => undef,
   }
 
   if ( $ensure == 'present' ) {
-    file { "/etc/init.d/${title}":
+    file { "/etc/init.d/graphdb-${title}":
       ensure  => $ensure,
       content => template('graphdb/service/init.d.erb'),
-      before  => Service[$title],
+      before  => Service["graphdb-${title}"],
       notify  => $notify_service,
     }
   } else {
-    file { "/etc/init.d/${title}":
+    file { "/etc/init.d/graphdb-${title}":
       ensure    => 'absent',
-      subscribe => Service[$title],
+      subscribe => Service["graphdb-${title}"],
     }
   }
 
-  service { $title:
+  service { "graphdb-${title}":
     ensure     => $service_ensure,
     enable     => $service_enable,
-    name       => $title,
     provider   => 'init',
     hasstatus  => true,
     hasrestart => true,

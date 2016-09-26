@@ -21,6 +21,10 @@ export GRAPHDB_PID=/var/run/$NAME.pid
 export GRAPHDB_INSTALL_DIR=<%= scope.lookupvar('graphdb::install_dir') %>
 export GRAPHDB_INSTANCE_DIR=$GRAPHDB_INSTALL_DIR/instances/<%= @title %>
 
+<% unless @final_java_opts.empty? -%>
+export GDB_JAVA_OPTS="<%= @final_java_opts %>"
+<% end -%>
+
 if [ `id -u` -ne 0 ]; then
 	echo "You need root privileges to run this script"
 	exit 1

@@ -15,4 +15,8 @@ env JAVA_HOME=<%= scope.lookupvar('graphdb::java_location') %>
 env GRAPHDB_INSTALL_DIR=<%= scope.lookupvar('graphdb::install_dir') %>
 env GRAPHDB_INSTANCE_DIR=$GRAPHDB_INSTALL_DIR/instances/<%= @title %>
 
+<% unless @final_java_opts.empty? -%>
+env GDB_JAVA_OPTS="<%= @final_java_opts %>"
+<% end -%>
+
 exec $GRAPHDB_INSTALL_DIR/dist/bin/graphdb -Dgraphdb.home=$GRAPHDB_INSTANCE_DIR

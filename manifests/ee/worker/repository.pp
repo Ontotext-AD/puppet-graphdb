@@ -32,7 +32,7 @@ define graphdb::ee::worker::repository(
   # Check for inconsistencies
   $check_for_inconsistencies = false,
   # Disable OWL sameAs optimisation
-  $disable_sameas = false,
+  $disable_same_as = false,
   # Transaction mode
   $transaction_mode = 'safe',
   # Transaction isolation

@@ -21,42 +21,42 @@ describe 'graphdb::service::systemd', type: :define do
     let(:params) { { ensure: 'present', service_ensure: 'running', service_enable: true } }
 
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(ensure: 'present',
               owner: 'root',
               group: 'root',
-              before: "Service[#{title}]",
-              notify: ['Exec[systemd_reload_test]', 'Service[test]'])
+              before: "Service[graphdb-#{title}]",
+              notify: ['Exec[systemd_reload_test]', 'Service[graphdb-test]'])
     end
 
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(content: /Description="GraphDB - test"/)
     end
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(content: /Group=graphdb/)
     end
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(content: /User=graphdb/)
     end
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(content: /JAVA_HOME=\/opt\/jdk7/)
     end
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service')
         .with(content: /ExecStart=\/opt\/graphdb\/dist\/bin\/graphdb -Dgraphdb.home=\/opt\/graphdb\/instances\/test/)
     end
 
     it { is_expected.to contain_exec('systemd_reload_test').with(command: '/bin/systemctl daemon-reload', refreshonly: true) }
 
     it do
-      is_expected.to contain_service('test').with(
+      is_expected.to contain_service('graphdb-test').with(
         ensure: 'running',
         enable: true,
-        name: 'test.service',
+        name: 'graphdb-test.service',
         provider: 'systemd',
         hasstatus: true,
         hasrestart: true
@@ -67,14 +67,14 @@ describe 'graphdb::service::systemd', type: :define do
     let(:params) { { ensure: 'absent', service_ensure: 'disabled', service_enable: false } }
 
     it do
-      is_expected.to contain_file('/lib/systemd/system/test.service').with(ensure: 'absent', subscribe: 'Service[test]')
+      is_expected.to contain_file('/lib/systemd/system/graphdb-test.service').with(ensure: 'absent', subscribe: 'Service[graphdb-test]')
     end
 
     it do
-      is_expected.to contain_service('test').with(
+      is_expected.to contain_service('graphdb-test').with(
         ensure: 'disabled',
         enable: false,
-        name: 'test.service',
+        name: 'graphdb-test.service',
         provider: 'systemd',
         hasstatus: true,
         hasrestart: true

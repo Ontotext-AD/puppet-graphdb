@@ -26,17 +26,15 @@ module Puppet
       end
 
       def check_repository(timeout)
-        uri = endpoint.dup
-        uri.path = "/repositories/#{repository_id}/size"
-
         Puppet.debug "Checking repository [#{endpoint}/repositories/#{repository_id}]"
 
-        unless repository_exists?(uri)
+        # fast failing if repository doesn't exists
+        unless repository_exists?
           Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] doesn't exists")
           return false
         end
 
-        if repository_up?(uri, timeout)
+        if repository_up?(timeout)
           Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] up and running")
           return true
         end
@@ -44,11 +42,15 @@ module Puppet
         false
       end
 
-      def repository_exists?(uri)
-        Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { codes: [404] }, 0)
+      def repository_exists?
+        uri = endpoint.dup
+        uri.path = "/repositories/#{repository_id}/size"
+        !Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { codes: [404] }, 0)
       end
 
-      def repository_up?(uri, timeout)
+      def repository_up?(timeout)
+        uri = endpoint.dup
+        uri.path = "/repositories/#{repository_id}/size"
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :get },
                                                           { messages: ['No workers configured', '\d+'],

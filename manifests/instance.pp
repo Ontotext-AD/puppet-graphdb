@@ -5,7 +5,8 @@ define graphdb::instance (
   $http_port          = 8080,
   $kill_timeout       = 180,
   $jolokia_secret     = undef,
-  $extra_properties   = undef,
+  $extra_properties   = {},
+  $java_opts          = [],
 ){
   include graphdb::install
 
@@ -53,6 +54,7 @@ define graphdb::instance (
     'graphdb.home.logs'      => "${graphdb::log_dir}/${title}",
     'graphdb.license.file'   => $licence_file_destination,
     'graphdb.connector.port' => $http_port,
+    'graphdb.extra.plugins'  => $instance_plugins_dir,
   }
 
   if $jolokia_secret {
@@ -67,14 +69,15 @@ define graphdb::instance (
     notify  => Service[$service_name],
   }
 
-  graphdb::service { $service_name:
+  graphdb::service { $title:
     ensure       => $ensure,
     status       => $status,
+    java_opts    => $java_opts,
     kill_timeout => $kill_timeout,
   }
 
   if $ensure == 'present' {
-    graphdb_validator { $title: endpoint => "http://${::ipaddress}:${http_port}" }
+    graphdb_validator { $service_name: endpoint => "http://${::ipaddress}:${http_port}", subscribe => Service[$service_name] }
   }
 
   Class['graphdb::install'] ~> Graphdb::Instance <| |>

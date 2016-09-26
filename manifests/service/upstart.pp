@@ -30,7 +30,9 @@
 #     service_enable => true,
 #  }
 #
-define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $kill_timeout = 180) {
+define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $java_opts = [], $kill_timeout = 180) {
+
+  $final_java_opts = generate_java_opts_string($java_opts)
 
   File {
     owner   => 'root',
@@ -39,28 +41,27 @@ define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $kil
   }
 
   $notify_service = $graphdb::restart_on_change ? {
-    true  => Service[$title],
+    true  => Service["graphdb-${title}"],
     false => undef,
   }
 
   if ( $ensure == 'present' ) {
-    file { "/etc/init/${title}.conf":
+    file { "/etc/init/graphdb-${title}.conf":
       ensure  => $ensure,
       content => template('graphdb/service/upstart.erb'),
-      before  => Service[$title],
+      before  => Service["graphdb-${title}"],
       notify  => $notify_service,
     }
   } else {
-    file { "/etc/init/${title}.conf":
+    file { "/etc/init/graphdb-${title}.conf":
       ensure    => 'absent',
-      subscribe => Service[$title],
+      subscribe => Service["graphdb-${title}"],
     }
   }
 
-  service { $title:
+  service { "graphdb-${title}":
     ensure     => $service_ensure,
     enable     => $service_enable,
-    name       => $title,
     provider   => 'upstart',
     hasstatus  => true,
     hasrestart => true,

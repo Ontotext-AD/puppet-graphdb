@@ -64,13 +64,14 @@ describe 'graphdb::instance', type: :define do
                 owner: 'graphdb',
                 group: 'graphdb',
                 content: "graphdb.connector.port = 8080
+graphdb.extra.plugins = /var/lib/graphdb/test/plugins
 graphdb.home.data = /var/lib/graphdb/test
 graphdb.home.logs = /var/log/graphdb/test
 graphdb.license.file = /opt/graphdb/instances/test/license
 ")
       end
-      it {    is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'present', status: 'enabled') }
-      it {    is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080') }
+      it {    is_expected.to contain_graphdb__service(title).with(ensure: 'present', status: 'enabled') }
+      it {    is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:8080') }
     end
 
     context 'with ensure set to absent' do
@@ -86,8 +87,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
         is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
           .with(ensure: 'absent')
       end
-      it {    is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'absent') }
-      it {    is_expected.to_not contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:8080') }
+      it {    is_expected.to contain_graphdb__service(title).with(ensure: 'absent') }
+      it {    is_expected.to_not contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:8080') }
     end
   end
 
@@ -99,7 +100,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
     let(:params) { { license: 'license', status: 'disabled' } }
 
     it do
-      is_expected.to contain_graphdb__service("graphdb-#{title}").with(ensure: 'present', status: 'disabled')
+      is_expected.to contain_graphdb__service(title).with(ensure: 'present', status: 'disabled')
     end
   end
 
@@ -117,7 +118,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
               group: 'graphdb',
               content: /graphdb.connector.port = 9090/)
     end
-    it { is_expected.to contain_graphdb_validator(title).with(endpoint: 'http://127.0.0.1:9090') }
+    it { is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:9090') }
   end
 
   describe 'with custom kill_timeout' do

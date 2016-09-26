@@ -9,10 +9,12 @@ describe 'RepositoryManager' do
   describe '#check_repository' do
     context 'with running repository' do
       it 'should return true' do
+        uri.path = '/repositories/test/size'
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request).with(uri, { method: :get }, { codes: [404] }, 0) { false }
 
         expect(repository_manager.check_repository(60)).to be true
-        uri.path = '/repositories/test/size'
+
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
         ).once
@@ -29,7 +31,7 @@ describe 'RepositoryManager' do
       it 'should return false' do
         uri.path = '/repositories/test/size'
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
-          .with(uri, { method: :get }, { codes: [404] }, 0) { false }
+          .with(uri, { method: :get }, { codes: [404] }, 0) { true }
 
         result = repository_manager.check_repository(60)
 
@@ -43,7 +45,7 @@ describe 'RepositoryManager' do
     context 'with not running repository' do
       it 'should return false' do
         uri.path = '/repositories/test/size'
-        allow(Puppet::Util::RequestManager).to receive(:perform_http_request).and_return(true, false)
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request).and_return(false, false)
 
         result = repository_manager.check_repository(60)
 

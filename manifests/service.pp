@@ -25,7 +25,7 @@
 #     status         => 'enabled',
 #  }
 #
-define graphdb::service($ensure, $status, $kill_timeout = 180) {
+define graphdb::service($ensure, $status, $java_opts = [], $kill_timeout = 180) {
   require graphdb::params
 
   #### Service management
@@ -74,6 +74,7 @@ define graphdb::service($ensure, $status, $kill_timeout = 180) {
         ensure         => $ensure,
         service_ensure => $service_ensure,
         service_enable => $service_enable,
+        java_opts      => $java_opts,
       }
     }
     'upstart': {
@@ -81,6 +82,7 @@ define graphdb::service($ensure, $status, $kill_timeout = 180) {
         ensure         => $ensure,
         service_ensure => $service_ensure,
         service_enable => $service_enable,
+        java_opts      => $java_opts,
         kill_timeout   => $kill_timeout,
       }
     }
@@ -89,6 +91,7 @@ define graphdb::service($ensure, $status, $kill_timeout = 180) {
         ensure         => $ensure,
         service_ensure => $service_ensure,
         service_enable => $service_enable,
+        java_opts      => $java_opts,
         kill_timeout   => $kill_timeout,
       }
     }

@@ -1,15 +1,25 @@
- {
-   "language": "ruby",
-   "sudo": false,
-   "before_install": [
-     "gem install bundler -v 1.10"
-   ],
-   "bundler_args": "--without development",
-   "script": [
-     "bundle exec rake spec"
-   ],
-   "rvm": "2.3.1",
-   "group": "stable",
-   "dist": "precise",
-   "os": "linux"
- }
+
+sudo: required
+services:
+    - docker
+cache:
+    bundler: true
+    directories:
+      - spec/fixtures/artifacts
+      - spec/fixtures/modules
+      - .vendor
+language: ruby
+env:
+    global:
+        - TEST_SUITE=acceptance
+        - BUNDLE_PATH=.vendor
+    matrix:
+        - TEST_SUITE=rspec
+        - DISTRO=centos-6-x64
+        - DISTRO=centos-7-x64
+        - DISTRO=debian-7-x64
+        - DISTRO=debian-8-x64
+        - DISTRO=ubuntu-server-1204-x64
+        - DISTRO=ubuntu-server-1404-x64
+script:
+    - make test-$TEST_SUITE

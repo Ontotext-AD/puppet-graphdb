@@ -16,22 +16,6 @@ if ENV['COVERAGE']
 end
 
 RSpec.configure do |config|
-  config.before :each do
-    # Ensure that we don't accidentally cache facts and environment
-    # between test cases.
-    Facter::Util::Loader.any_instance.stubs(:load_all)
-    Facter.clear
-    Facter.clear_messages
-
-    # Store any environment variables away to be restored later
-    @old_env = {}
-    ENV.each_key { |k| @old_env[k] = ENV[k] }
-
-    Puppet.settings[:strict_variables] = true if ENV['STRICT_VARIABLES'] == 'yes'
-  end
-end
-
-RSpec.configure do |config|
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
   config.mock_with(:rspec)

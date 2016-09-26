@@ -44,12 +44,12 @@ describe provider_class do
 
   context 'creating new repository' do
     it 'should try to create new graphdb repository and try to verify the newly created repository' do
-      allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository)
+      allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?)
         .with(timeout).and_return(true)
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository)
         .with(repository_template, repository_context, timeout) { true }
 
-      expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
+      expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?).once
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
 
       expect(provider.create).to be true
