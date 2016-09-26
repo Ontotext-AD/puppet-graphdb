@@ -12,3 +12,5 @@ log/
 .vendor/
 bin/
 tmp/
+ee.license
+se.license
