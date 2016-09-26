@@ -15,7 +15,7 @@ module Puppet
           Puppet.debug("Request marked as passed in #{Time.now - start_time} seconds")
           return true
         rescue Timeout::Error, Puppet::Exceptions::ExpectationsFailError => e
-          Puppet.debug("Request marked as failed: #{e.reason}")
+          Puppet.debug("Request marked as failed: #{e}")
           if (Time.now - start_time) < timeout
             Puppet.debug('Sleeping 2 seconds before retry...')
             sleep 2
