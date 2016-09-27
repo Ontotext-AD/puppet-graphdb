@@ -41,21 +41,6 @@ class graphdb::params {
 
   $pid_dir = '/var/run/graphdb'
 
-
-  # Download tool
-  case $::kernel {
-    'Linux': {
-      $download_tool = 'wget --no-check-certificate -O'
-    }
-    'Darwin': {
-      $download_tool = 'curl --insecure -o'
-    }
-    default: {
-      fail("\"${module_name}\" provides no download tool default value
-           for \"${::kernel}\"")
-    }
-  }
-
   # User and group to be runned as service
   case $::kernel {
     'Linux': {

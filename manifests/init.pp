@@ -14,7 +14,7 @@ class graphdb (
   $graphdb_group           = $graphdb::params::graphdb_group,
   $purge_data_dir          = $graphdb::params::purge_data_dir,
   $archive_dl_timeout      = $graphdb::params::archive_dl_timeout,
-  $graphdb_download_url    = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/',
+  $graphdb_download_url    = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
 ) inherits graphdb::params {
 
   anchor { 'graphdb::begin': }
@@ -62,7 +62,7 @@ class graphdb (
     $java_location = '/usr/lib/jvm/java-8-oracle'
   }
 
-  ensure_packages(['unzip'])
+  ensure_packages(['unzip', 'curl'])
 
   File {
     owner => $graphdb_user,

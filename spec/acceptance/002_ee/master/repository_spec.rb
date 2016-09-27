@@ -8,8 +8,9 @@ describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.includ
     let(:manifest) do
       <<-EOS
 			 class{ 'graphdb':
-			 version   => '#{graphdb_version}',
-			 edition   => 'ee',
+			 version              => '#{graphdb_version}',
+			 edition              => 'ee',
+			 graphdb_download_url => 'file:///tmp',
 			 }
 
 			 graphdb::instance { 'test':

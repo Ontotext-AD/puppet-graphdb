@@ -8,8 +8,9 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
       let(:manifest) do
         <<-EOS
 			 class{ 'graphdb':
-			 version   => '#{graphdb_version}',
-			 edition   => '#{graphdb_edition}',
+			 version              => '#{graphdb_version}',
+			 edition              => '#{graphdb_edition}',
+			 graphdb_download_url => 'file:///tmp',
 			 }
 		  EOS
       end

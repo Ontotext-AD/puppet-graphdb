@@ -27,10 +27,10 @@ class graphdb::install {
     $unpacked_directory = "${dist_installation_dir}/graphdb-${graphdb::edition}-${graphdb::version}"
 
     exec { "download-graphdb-${graphdb::edition}-${graphdb::version}-archive":
-      command => "rm -f ${graphdb::tmp_dir}/*.zip && ${graphdb::params::download_tool} ${archive_destination} ${package_url} 2> /dev/null",
+      command => "rm -f ${graphdb::tmp_dir}/*.zip && curl --insecure -o ${archive_destination} ${package_url} 2> /dev/null",
       creates => $archive_destination,
       timeout => $graphdb::archive_dl_timeout,
-      require => File[$graphdb::tmp_dir],
+      require => [File[$graphdb::tmp_dir], Package['curl']],
     } ~>
     exec { 'unpack-graphdb-archive':
       command     => "rm -rf ${dist_installation_dir} && unzip ${archive_destination} -d ${dist_installation_dir} && mv ${unpacked_directory}/* ${dist_installation_dir} && rm -r ${unpacked_directory}",
