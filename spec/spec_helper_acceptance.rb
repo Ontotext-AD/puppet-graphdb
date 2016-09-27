@@ -42,7 +42,7 @@ RSpec.configure do |c|
       end
 
       if on(host, 'ls /tmp/jdk1.8.0_102', accept_all_exit_codes: true).exit_code.nonzero?
-        on(host, 'tar -zxvf /tmp/jdk-8u102-linux-x64.tar.gz -C /tmp', acceptable_exit_codes: [0])
+        on(host, 'tar -zxf /tmp/jdk-8u102-linux-x64.tar.gz -C /tmp', acceptable_exit_codes: [0])
       end
 
       host.add_env_var('JAVA_HOME', '/tmp/jdk1.8.0_102')
