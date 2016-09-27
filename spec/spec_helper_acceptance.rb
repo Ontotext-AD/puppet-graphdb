@@ -38,8 +38,8 @@ RSpec.configure do |c|
     hosts.each do |host|
       on(host, "mkdir -p /tmp/graphdb-se/#{graphdb_version}")
       on(host, "mkdir -p /tmp/graphdb-ee/#{graphdb_version}")
-      on(host, "curl --insecure -o /tmp/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
-      on(host, "curl --insecure -o /tmp/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
+      on(host, "curl --insecure --keepalive-time 700 -o /tmp/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
+      on(host, "curl --insecure --keepalive-time 700 -o /tmp/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
 
       if on(host, 'ls /tmp/jdk-8u102-linux-x64.tar.gz', accept_all_exit_codes: true).exit_code.nonzero?
         on(host, 'curl -v -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" '\
