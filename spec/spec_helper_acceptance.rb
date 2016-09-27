@@ -25,9 +25,9 @@ RSpec.configure do |c|
       on(host, 'rm -f /lib/systemd/system/graphdb-*', acceptable_exit_codes: [0])
       on(host, '/bin/systemctl daemon-reload', accept_all_exit_codes: true)
       on(host, 'killall -9 java', accept_all_exit_codes: true)
-      on(host, 'rm -rf /opt/graphdb', acceptable_exit_codes: [0])
+      on(host, 'rm -rf /opt/graphdb/instances', acceptable_exit_codes: [0])
       on(host, 'rm -rf /var/lib/graphdb', acceptable_exit_codes: [0])
-      on(host, 'rm -rf /var/tmp/graphdb', acceptable_exit_codes: [0])
+      # on(host, 'rm -rf /var/tmp/graphdb', acceptable_exit_codes: [0])
       on(host, 'rm -f /var/log/upstart/graphdb*', acceptable_exit_codes: [0])
     end
   end

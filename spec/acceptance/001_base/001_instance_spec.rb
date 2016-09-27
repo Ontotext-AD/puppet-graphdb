@@ -4,7 +4,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
   graphdb_version = ENV['GRAPHDB_VERSION']
   graphdb_timeout = ENV['GRAPHDB_TIMEOUT']
 
-  %w(ee se).each do |graphdb_edition|
+  %w(se ee).each do |graphdb_edition|
     context "#{graphdb_edition} installation" do
       let(:manifest) do
         <<-EOS
@@ -23,7 +23,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
       end
 
       it "installs #{graphdb_edition} and one instance with defaults" do
-        apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'])
+        apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
         expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
       end
 

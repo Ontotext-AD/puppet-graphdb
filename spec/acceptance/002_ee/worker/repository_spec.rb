@@ -8,8 +8,8 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
     let(:manifest) do
       <<-EOS
 			 class{ 'graphdb':
-			 version   => '#{graphdb_version}',
-			 edition   => 'ee',
+			   version   => '#{graphdb_version}',
+			   edition   => 'ee',
 			 }
 
 			 graphdb::instance { 'test':
@@ -28,7 +28,7 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
 		  EOS
     end
     it do
-      apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'])
+      apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
       expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
     end
 
