@@ -29,7 +29,7 @@ describe 'graphdb::se::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact(
     end
 
     it do
-      apply_manifest(manifest, catch_failures: true)
+      apply_manifest(manifest, catch_failures: true, debug: true)
       expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
     end
 
