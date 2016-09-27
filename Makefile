@@ -1,5 +1,7 @@
 DISTRO ?= ubuntu-server-1404-x64
 GRAPHDB_VERSION ?= 7.1.0
+GRAPHDB_TIMEOUT ?= 60
+
 
 .vendor: Gemfile
 	bundle update || true
@@ -21,7 +23,8 @@ release: clean-logs
 
 .PHONY: test-acceptance
 test-acceptance: .vendor
-		GRAPHDB_VERSION=${GRAPHDB_VERSION} \
+		GRAPHDB_VERSION=$(GRAPHDB_VERSION) \
+		GRAPHDB_TIMEOUT=$(GRAPHDB_TIMEOUT) \
 		BEAKER_set=$(DISTRO) \
 		bundle exec rspec spec/acceptance
 

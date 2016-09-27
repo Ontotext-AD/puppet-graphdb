@@ -5,6 +5,7 @@ define graphdb::ee::master::repository (
   $repository_template = "${module_name}/repository/master.ttl.erb",
   $repository_id = $title,
   $repository_label = 'GraphDB EE master repository',
+  $timeout = 60,
 ) {
 
   graphdb_repository { $title:
@@ -13,6 +14,7 @@ define graphdb::ee::master::repository (
     endpoint            => $endpoint,
     repository_template => template($repository_template),
     repository_context  => $repository_context,
+    timeout             => $timeout,
   }
 
 }

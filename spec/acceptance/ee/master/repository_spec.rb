@@ -2,6 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
   graphdb_version = ENV['GRAPHDB_VERSION']
+  graphdb_timeout = ENV['GRAPHDB_TIMEOUT']
 
   context 'ee installation with master repository' do
     let(:manifest) do
@@ -12,15 +13,17 @@ describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.includ
 			 }
 
 			 graphdb::instance { 'test':
-  		 		license        => '/tmp/ee.license',
-  				jolokia_secret => 'duper',
-  				http_port      => 8080,
+  		 		license           => '/tmp/ee.license',
+  				jolokia_secret    => 'duper',
+  				http_port         => 8080,
+				validator_timeout => #{graphdb_timeout},
 			 }
 
 		     graphdb::ee::master::repository { 'test-repo':
 		        repository_id       => 'test-repo',
 		    	endpoint            => "http://${::ipaddress}:8080",
 		    	repository_context  => 'http://ontotext.com/pub/',
+				timeout             => #{graphdb_timeout},
 		  	 }
 		  EOS
     end

@@ -3,6 +3,7 @@ define graphdb::se::repository (
   $repository_context,
   $ensure = $graphdb::ensure,
   $repository_template = "${module_name}/repository/se.ttl.erb",
+  $timeout = 60,
 
   # Here start the repository parameters(note that those are generated from the template that graphdb provides)
   # Repository ID
@@ -53,6 +54,7 @@ define graphdb::se::repository (
     endpoint            => $endpoint,
     repository_template => template($repository_template),
     repository_context  => $repository_context,
+    timeout             => $timeout,
   }
 
 }

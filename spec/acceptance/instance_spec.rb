@@ -2,6 +2,7 @@ require 'spec_helper_acceptance'
 
 describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
   graphdb_version = ENV['GRAPHDB_VERSION']
+  graphdb_timeout = ENV['GRAPHDB_TIMEOUT']
 
   %w(ee se).each do |graphdb_edition|
     context "#{graphdb_edition} installation" do
@@ -13,9 +14,10 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
 			 }
 
 			 graphdb::instance { 'test':
-  		 		license        => '/tmp/#{graphdb_edition}.license',
-  				jolokia_secret => 'duper',
-  				http_port      => 8080,
+  		 		license           => '/tmp/#{graphdb_edition}.license',
+  				jolokia_secret    => 'duper',
+  				http_port         => 8080,
+				validator_timeout => #{graphdb_timeout},
 			 }
 		  EOS
       end

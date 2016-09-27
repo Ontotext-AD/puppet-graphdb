@@ -4,6 +4,7 @@ define graphdb::instance (
   $status             = $graphdb::status,
   $http_port          = 8080,
   $kill_timeout       = 180,
+  $validator_timeout  = 60,
   $jolokia_secret     = undef,
   $extra_properties   = {},
   $java_opts          = [],
@@ -77,7 +78,11 @@ define graphdb::instance (
   }
 
   if $ensure == 'present' {
-    graphdb_validator { $service_name: endpoint => "http://${::ipaddress}:${http_port}", subscribe => Service[$service_name] }
+    graphdb_validator { $service_name:
+      endpoint  => "http://${::ipaddress}:${http_port}",
+      timeout   => $validator_timeout,
+      subscribe => Service[$service_name]
+    }
   }
 
   Class['graphdb::install'] ~> Graphdb::Instance <| |>
