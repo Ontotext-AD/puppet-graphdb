@@ -8,11 +8,13 @@ cache:
   - spec/fixtures/modules
   - ".vendor"
 language: ruby
+git:
+  depth: 3
 env:
   global:
   - TEST_SUITE=acceptance
   - BUNDLE_PATH=.vendor
-  - GRAPHDB_TIMEOUT=120
+  - GRAPHDB_TIMEOUT=200
   matrix:
   - TEST_SUITE=rspec
   - DISTRO=centos-6-x64
