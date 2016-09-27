@@ -37,7 +37,7 @@ GEM
       stringify-hash (~> 0.0.0)
     beaker-hiera (0.1.1)
       stringify-hash (~> 0.0.0)
-    beaker-hostgenerator (0.7.3)
+    beaker-hostgenerator (0.7.4)
       deep_merge (~> 1.0)
       stringify-hash (~> 0.0.0)
     beaker-pe (0.12.0)
@@ -63,6 +63,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     excon (0.52.0)
     facter (2.4.6)
+      CFPropertyList (~> 2.2.6)
     facterdb (0.3.6)
       facter
       jgrep
@@ -276,6 +277,7 @@ GEM
       pry (~> 0.9)
       yard (~> 0.8)
     puppet (4.7.0)
+      CFPropertyList (~> 2.2.6)
       facter (> 2.0, < 4)
       hiera (>= 2.0, < 4)
       json_pure (~> 1.8)

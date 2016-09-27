@@ -15,6 +15,7 @@ env:
   - TEST_SUITE=acceptance
   - BUNDLE_PATH=.vendor
   - GRAPHDB_TIMEOUT=200
+  - DEBUG=true
   matrix:
   - TEST_SUITE=rspec
   - DISTRO=centos-6-x64

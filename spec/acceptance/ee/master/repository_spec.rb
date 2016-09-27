@@ -29,7 +29,7 @@ describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.includ
     end
 
     it do
-      apply_manifest(manifest, catch_failures: true, debug: true)
+      apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'])
       expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
     end
 

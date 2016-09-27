@@ -1,6 +1,7 @@
 DISTRO ?= ubuntu-server-1404-x64
 GRAPHDB_VERSION ?= 7.1.0
 GRAPHDB_TIMEOUT ?= 60
+DEBUG ?= false
 
 
 .vendor: Gemfile
@@ -26,6 +27,7 @@ test-acceptance: .vendor
 		GRAPHDB_VERSION=$(GRAPHDB_VERSION) \
 		GRAPHDB_TIMEOUT=$(GRAPHDB_TIMEOUT) \
 		BEAKER_set=$(DISTRO) \
+		DEBUG=$(DEBUG) \
 		bundle exec rspec spec/acceptance
 
 .PHONY: test-rspec
