@@ -6,7 +6,7 @@ define graphdb::instance (
   $kill_timeout       = 180,
   $validator_timeout  = 60,
   $jolokia_secret     = undef,
-  $extra_properties   = {},
+  $extra_properties   = { },
   $java_opts          = [],
 ){
   include graphdb::install
