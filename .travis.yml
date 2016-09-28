@@ -14,7 +14,7 @@ env:
   global:
   - TEST_SUITE=acceptance
   - BUNDLE_PATH=.vendor
-  - GRAPHDB_TIMEOUT=200
+  - GRAPHDB_TIMEOUT=500
   - DEBUG=false
   matrix:
   - TEST_SUITE=rspec

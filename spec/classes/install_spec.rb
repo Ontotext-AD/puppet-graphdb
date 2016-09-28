@@ -17,7 +17,7 @@ describe 'graphdb::install', type: :class do
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb//graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
     end
 
     let(:dest_file) do
@@ -36,7 +36,7 @@ describe 'graphdb::install', type: :class do
   															" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
-        require: 'File[/var/tmp/graphdb]',
+        require: ['File[/var/tmp/graphdb]', 'Package[curl]'],
         user: 'graphdb'
       )
     end
@@ -60,7 +60,7 @@ describe 'graphdb::install', type: :class do
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb//graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
     end
 
     let(:dest_file) do
@@ -73,7 +73,7 @@ describe 'graphdb::install', type: :class do
     															  " #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
-        require: 'File[/var/tmp/graphdb]',
+        require: ['File[/var/tmp/graphdb]', 'Package[curl]'],
         user: 'graphdb'
       )
     end
@@ -88,7 +88,7 @@ describe 'graphdb::install', type: :class do
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb//graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
     end
 
     let(:dest_file) do
@@ -101,7 +101,7 @@ describe 'graphdb::install', type: :class do
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
-        require: 'File[/tmp]',
+        require: ['File[/tmp]', 'Package[curl]'],
         user: 'graphdb'
       )
     end
@@ -125,7 +125,7 @@ describe 'graphdb::install', type: :class do
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb//graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
     end
 
     let(:dest_file) do
@@ -138,7 +138,7 @@ describe 'graphdb::install', type: :class do
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
-        require: 'File[/var/tmp/graphdb]',
+        require: ['File[/var/tmp/graphdb]', 'Package[curl]'],
         user: 'graphdb'
       )
     end
