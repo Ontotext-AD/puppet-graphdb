@@ -18,8 +18,16 @@ class graphdb::install {
   $instances_installation_dir = "${graphdb::install_dir}/instances"
 
   if $graphdb::ensure == 'present' {
+    ensure_packages(['unzip', 'curl'])
 
-    file { $instances_installation_dir:
+    if $graphdb::manage_graphdb_user {
+        user { $graphdb::graphdb_user:
+          ensure  => $graphdb::ensure,
+          comment => 'graphdb service user',
+        }
+    }
+
+    file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $instances_installation_dir]:
       ensure => 'directory',
     }
 
@@ -39,10 +47,21 @@ class graphdb::install {
     }
 
   } else {
-    file { [$archive_destination, $dist_installation_dir, $instances_installation_dir]:
-      ensure => $graphdb::ensure,
+    $purge_list = [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::log_dir]
+
+    if $graphdb::purge_data_dir {
+      join($purge_list, $graphdb::data_dir)
+    }
+
+    file { $purge_list:
+      ensure  => $graphdb::ensure,
+      force   => true,
+      backup  => false,
+      recurse => true,
+    }
+
+    user { $graphdb::graphdb_user:
+      ensure  => $graphdb::ensure,
     }
   }
-
-
 }

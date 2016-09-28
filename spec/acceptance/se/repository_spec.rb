@@ -38,4 +38,41 @@ describe 'graphdb::se::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact(
       its(:exit_status) { should eq 0 }
     end
   end
+
+  context 'se installation with se repository removal' do
+    let(:manifest) do
+      <<-EOS
+	  		 class{ 'graphdb':
+	  		   version              => '#{graphdb_version}',
+	  		   edition              => 'se',
+	  		   graphdb_download_url => 'file:///tmp',
+	  		 }
+
+	  		 graphdb::instance { 'test':
+	  			license           => '/tmp/se.license',
+	  			jolokia_secret    => 'duper',
+	  			http_port         => 8080,
+	  			validator_timeout => #{graphdb_timeout},
+	  		 }
+
+	  		 graphdb::se::repository { 'test-repo':
+			    ensure              => 'absent',
+	  			repository_id       => 'test-repo',
+	  			endpoint            => "http://${::ipaddress}:8080",
+	  			repository_context  => 'http://ontotext.com/pub/',
+	  			timeout             => #{graphdb_timeout},
+	  		 }
+	  	  EOS
+    end
+
+    it do
+      apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
+      expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+    end
+
+    describe command("curl -f -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do
+      its(:exit_status) { should eq 22 }
+      its(:stderr) { should match /The requested URL returned error: 404 Not Found/ }
+    end
+  end
 end

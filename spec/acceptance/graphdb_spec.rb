@@ -101,5 +101,66 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         it { should be_executable }
       end
     end
+
+    context "#{graphdb_edition} uninstallation" do
+      let(:manifest) do
+        <<-EOS
+			   class { 'graphdb':
+			     ensure  => 'absent',
+			     version => '#{graphdb_version}',
+			     edition => '#{graphdb_edition}',
+			   }
+			EOS
+      end
+
+      it "uninstalls #{graphdb_edition}" do
+        apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
+        expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+      end
+
+      describe user('graphdb') do
+        it { should_not exist }
+      end
+
+      describe file('/opt/graphdb') do
+        it { should_not exist }
+      end
+
+      describe file('/var/tmp/graphdb') do
+        it { should_not exist }
+      end
+
+      describe file('/var/log/graphdb') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/console') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/loadrdf') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/migration-wizard') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/rdfvalidator') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/report') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/rule-compiler') do
+        it { should_not exist }
+      end
+
+      describe file('/bin/storage-tool') do
+        it { should_not exist }
+      end
+    end
   end
 end

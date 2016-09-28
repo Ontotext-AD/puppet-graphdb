@@ -52,5 +52,42 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         its(:stdout) { should match /"status":200/ }
       end
     end
+
+    context "#{graphdb_edition} uninstall" do
+      let(:manifest) do
+        <<-EOS
+			   class{ 'graphdb':
+			     version              => '#{graphdb_version}',
+			     edition              => '#{graphdb_edition}',
+			     graphdb_download_url => 'file:///tmp',
+			   }
+
+			   graphdb::instance { 'test':
+			      ensure => 'absent',
+			   }
+			EOS
+      end
+
+      it "keeps #{graphdb_edition} and uninstall the instance" do
+        apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
+      end
+
+      describe file('/opt/graphdb/instances/test') do
+        it { should_not exist }
+      end
+
+      describe file('/etc/init/graphdb-test.conf') do
+        it { should_not exist }
+      end
+
+      describe service('graphdb-test') do
+        it { should_not be_enabled } unless %w(Debian CentOS).include? fact('operatingsystem')
+        it { should_not be_running }
+      end
+
+      describe port(8080) do
+        it { should_not be_listening.with('tcp') }
+      end
+    end
   end
 end
