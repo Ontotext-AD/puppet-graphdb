@@ -4,7 +4,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
   graphdb_version = ENV['GRAPHDB_VERSION']
   graphdb_timeout = ENV['GRAPHDB_TIMEOUT']
 
-  %w(se ee).each do |graphdb_edition|
+  %w(ee se).each do |graphdb_edition|
     context "#{graphdb_edition} installation" do
       let(:manifest) do
         <<-EOS
@@ -43,11 +43,11 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         it { should be_listening.with('tcp') }
       end
 
-      describe command("curl -f -s -X GET 'http://#{fact('ipaddress')}:8080/protocol'") do
+      describe command("curl -f -s -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/protocol'") do
         its(:exit_status) { should eq 0 }
       end
 
-      describe command("curl -f -s -X GET -u :duper 'http://#{fact('ipaddress')}:8080/jolokia/version'") do
+      describe command("curl -f -s -m 30 --connect-timeout 20 -X GET -u :duper 'http://#{fact('ipaddress')}:8080/jolokia/version'") do
         its(:exit_status) { should eq 0 }
         its(:stdout) { should match /"status":200/ }
       end

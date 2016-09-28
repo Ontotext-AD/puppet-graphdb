@@ -1,26 +1,26 @@
 require 'spec_helper_acceptance'
 
-describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'graphdb::se::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
   graphdb_version = ENV['GRAPHDB_VERSION']
   graphdb_timeout = ENV['GRAPHDB_TIMEOUT']
 
-  context 'ee installation with master repository' do
+  context 'se installation with se repository' do
     let(:manifest) do
       <<-EOS
 			 class{ 'graphdb':
-			 version              => '#{graphdb_version}',
-			 edition              => 'ee',
-			 graphdb_download_url => 'file:///tmp',
+			   version              => '#{graphdb_version}',
+			   edition              => 'se',
+			   graphdb_download_url => 'file:///tmp',
 			 }
 
 			 graphdb::instance { 'test':
-  		 		license           => '/tmp/ee.license',
+  		 		license           => '/tmp/se.license',
   				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 			 }
 
-		     graphdb::ee::master::repository { 'test-repo':
+		     graphdb::se::repository { 'test-repo':
 		        repository_id       => 'test-repo',
 		    	endpoint            => "http://${::ipaddress}:8080",
 		    	repository_context  => 'http://ontotext.com/pub/',
@@ -34,8 +34,8 @@ describe 'graphdb::ee::master::repository', unless: UNSUPPORTED_PLATFORMS.includ
       expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
     end
 
-    describe command("curl -s -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do
-      its(:stdout) { should match /No workers configured/ }
+    describe command("curl -f -s -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do
+      its(:exit_status) { should eq 0 }
     end
   end
 end
