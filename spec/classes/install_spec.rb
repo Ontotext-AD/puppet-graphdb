@@ -153,7 +153,7 @@ describe 'graphdb::install', type: :class do
     end
   end
 
-  describe 'with minimum configuration and ensure set ot absent' do
+  describe 'with minimum configuration and ensure set to absent' do
     let :facts do
       default_facts.merge(kernel: 'Linux')
     end
@@ -162,8 +162,9 @@ describe 'graphdb::install', type: :class do
       "class { 'graphdb': version => '7.0.0', edition => 'ee', ensure => 'absent' }"
     end
 
-    it { is_expected.to contain_file('/opt/graphdb/instances').with(ensure: 'absent') }
-    it {  is_expected.to contain_file('/opt/graphdb/dist').with(ensure: 'absent') }
-    it {  is_expected.to contain_file('/var/tmp/graphdb/graphdb-ee-7.0.0.zip').with(ensure: 'absent') }
+    it { is_expected.to contain_user('graphdb').with(ensure: 'absent') }
+    it { is_expected.to contain_file('/opt/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+    it {  is_expected.to contain_file('/var/log/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+    it {  is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
   end
 end

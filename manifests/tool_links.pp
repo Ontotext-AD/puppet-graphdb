@@ -1,5 +1,10 @@
 class graphdb::tool_links {
 
+  File {
+    owner => $graphdb::graphdb_user,
+    group => $graphdb::graphdb_group,
+  }
+
   $instance_installation_dir = "${graphdb::install_dir}/dist/bin"
 
   $tool_link_ensure = $graphdb::ensure ? {

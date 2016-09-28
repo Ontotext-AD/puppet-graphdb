@@ -77,16 +77,11 @@ graphdb.license.file = /opt/graphdb/instances/test/license
     context 'with ensure set to absent' do
       let(:params) { { license: 'license', ensure: 'absent' } }
 
-      it {    is_expected.to contain_file('/opt/graphdb/instances/test/license').with(ensure: 'absent') }
-      it {    is_expected.to contain_file('/opt/graphdb/instances/test').with(ensure: 'absent') }
-      it {    is_expected.to contain_file('/var/lib/graphdb/test/plugins').with(ensure: 'absent') }
-      it {    is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'absent') }
-      it {    is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'absent') }
-      it {    is_expected.to contain_file('/opt/graphdb/instances/test/conf').with(ensure: 'absent') }
-      it do
-        is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
-          .with(ensure: 'absent')
-      end
+      it {    is_expected.to contain_file('/opt/graphdb/instances/test').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+      it {    is_expected.to contain_file('/var/lib/graphdb/test/plugins').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+      it {    is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+      it {    is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+      it {    is_expected.to contain_file('/opt/graphdb/instances/test/conf').with(ensure: 'absent', force: true, backup: false, recurse: true) }
       it {    is_expected.to contain_graphdb__service(title).with(ensure: 'absent') }
       it {    is_expected.to_not contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:8080') }
     end

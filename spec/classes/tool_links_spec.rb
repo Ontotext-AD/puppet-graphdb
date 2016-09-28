@@ -20,7 +20,6 @@ describe 'graphdb::tool_links', type: :class do
                       'link'
                     else
                       'absent'
-
                     end
       it do
         is_expected.to contain_class('graphdb::tool_links')

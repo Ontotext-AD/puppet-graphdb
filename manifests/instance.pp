@@ -16,7 +16,7 @@ define graphdb::instance (
     fail("\"${ensure}\" is not a valid ensure parameter value")
   }
 
-  if $ensure == 'ensure' {
+  if $ensure == 'present' {
     validate_string($license)
     validate_string($jolokia_secret)
   }
