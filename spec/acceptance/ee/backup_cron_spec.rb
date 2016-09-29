@@ -59,7 +59,7 @@ describe 'graphdb::ee::backup_cron', unless: UNSUPPORTED_PLATFORMS.include?(fact
 
     it do
       apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
-      expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+      expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
     end
 
     describe file('/opt/graphdb/backup-test') do
