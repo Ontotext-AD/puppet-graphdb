@@ -30,7 +30,7 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
     end
     it do
       apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
-      expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+      expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
     end
 
     describe command("curl -f -s -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do
@@ -66,7 +66,7 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
 
     it do
       apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
-      expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+      expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
     end
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do

@@ -109,7 +109,7 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
     it do
       apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
-      expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+      expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
     end
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET -u ':duper' 'http://#{fact('ipaddress')}:8080/jolokia/read/ReplicationCluster:name=ClusterInfo!/master/NodeStatus'") do

@@ -25,7 +25,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
 
       it "installs #{graphdb_edition} and one instance with defaults" do
         apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
-        expect(apply_manifest(manifest, catch_failures: true).exit_code).to be_zero
+        expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
       end
 
       describe service('graphdb-test') do
