@@ -20,15 +20,19 @@ describe 'graphdb::tool_links', type: :class do
                       'link'
                     else
                       'absent'
-                    end
+      end
       it do
         is_expected.to contain_class('graphdb::tool_links')
       end
 
       %w(console loadrdf migration-wizard rdfvalidator report rule-compiler storage-tool).each do |tool|
         it do
-          is_expected.to contain_file("/bin/#{tool}")
-            .with(ensure: link_ensure, target: "/opt/graphdb/dist/bin/#{tool}", owner: 'graphdb', group: 'graphdb')
+          if ensure_param == 'present'
+            file_param = { ensure: link_ensure, target: "/opt/graphdb/dist/bin/#{tool}", owner: 'graphdb', group: 'graphdb' }
+          else
+            file_param = { ensure: link_ensure, target: "/opt/graphdb/dist/bin/#{tool}" }
+          end
+          is_expected.to contain_file("/bin/#{tool}").with(file_param)
         end
       end
     end

@@ -11,7 +11,6 @@ describe 'graphdb', type: :class do
         let(:params) { { version: '7.0.0', edition: 'ee' } }
 
         it { is_expected.to contain_class('graphdb::params') }
-        it { is_expected.to contain_anchor('graphdb::begin') }
         it {   is_expected.to contain_package('unzip') }
         it {   is_expected.to contain_user('graphdb').with(ensure: 'present', comment: 'graphdb service user') }
         it do
