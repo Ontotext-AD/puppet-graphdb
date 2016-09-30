@@ -2,11 +2,6 @@ class graphdb::install {
 
   require graphdb
 
-  File {
-    owner => $graphdb::graphdb_user,
-    group => $graphdb::graphdb_group,
-  }
-
   Exec {
     path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
     cwd  => '/',
@@ -18,13 +13,18 @@ class graphdb::install {
   $instances_installation_dir = "${graphdb::install_dir}/instances"
 
   if $graphdb::ensure == 'present' {
+    File {
+      owner => $graphdb::graphdb_user,
+      group => $graphdb::graphdb_group,
+    }
+
     ensure_packages(['unzip', 'curl'])
 
     if $graphdb::manage_graphdb_user {
-        user { $graphdb::graphdb_user:
-          ensure  => $graphdb::ensure,
-          comment => 'graphdb service user',
-        }
+      user { $graphdb::graphdb_user:
+        ensure  => 'present',
+        comment => 'graphdb service user',
+      }
     }
 
     file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $instances_installation_dir]:
@@ -53,15 +53,18 @@ class graphdb::install {
       join($purge_list, $graphdb::data_dir)
     }
 
+    if $graphdb::manage_graphdb_user {
+      user { $graphdb::graphdb_user:
+        ensure  => 'absent',
+      }
+    }
+
     file { $purge_list:
-      ensure  => $graphdb::ensure,
+      ensure  => 'absent',
       force   => true,
       backup  => false,
       recurse => true,
     }
 
-    user { $graphdb::graphdb_user:
-      ensure  => $graphdb::ensure,
-    }
   }
 }

@@ -1,7 +1,7 @@
 DISTRO ?= ubuntu-server-1404-x64
 GRAPHDB_VERSION ?= 7.1.0
 GRAPHDB_TIMEOUT ?= 60
-DEBUG ?= true
+DEBUG ?= false
 
 
 .vendor: Gemfile

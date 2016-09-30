@@ -17,8 +17,6 @@ class graphdb (
   $graphdb_download_url    = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
 ) inherits graphdb::params {
 
-  anchor { 'graphdb::begin': }
-
   #### Validate parameters
 
   # ensure
@@ -30,7 +28,6 @@ class graphdb (
     if  (!$version or !$edition){
       fail('"ensure" is set on present, you should provide "version" and "edition"')
     }
-
 
     # version
     if versioncmp($version, '7.0.0') < 0 {
@@ -74,15 +71,11 @@ class graphdb (
   #### Relationships
 
   if $ensure == 'present' {
-    Anchor['graphdb::begin']
-    -> Class['graphdb::install']
+    Class['graphdb::install']
     -> Class['graphdb::tool_links']
     -> Graphdb::Instance <| |>
   } else {
-    Graphdb::Instance <| |>
-    -> Anchor['graphdb::begin']
-    -> Class['graphdb::tool_links']
-    -> Class['graphdb::install']
+    Graphdb::Instance <| |> -> Class['graphdb::install']
   }
 
 }

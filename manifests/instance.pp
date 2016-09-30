@@ -9,7 +9,6 @@ define graphdb::instance (
   $extra_properties   = { },
   $java_opts          = [],
 ){
-  include graphdb::install
 
   # ensure
   if ! ($ensure in [ 'present', 'absent' ]) {
@@ -21,11 +20,6 @@ define graphdb::instance (
     validate_string($jolokia_secret)
   }
 
-  File {
-    owner => $graphdb::graphdb_user,
-    group => $graphdb::graphdb_group,
-  }
-
   $service_name = "graphdb-${title}"
 
   $instance_home_dir = "${graphdb::install_dir}/instances/${title}"
@@ -35,6 +29,11 @@ define graphdb::instance (
   $instance_conf_dir = "${instance_home_dir}/conf"
 
   if $ensure == 'present' {
+    File {
+      owner => $graphdb::graphdb_user,
+      group => $graphdb::graphdb_group,
+    }
+
     $license_file_name = basename($license)
     $licence_file_destination = "${instance_home_dir}/${license_file_name}"
 
@@ -76,12 +75,11 @@ define graphdb::instance (
       subscribe => Service[$service_name]
     }
   } else {
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir]:
-      ensure  => $ensure,
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir]:
+      ensure  => 'absent',
       force   => true,
       backup  => false,
       recurse => true,
-      notify  => Service[$service_name],
     }
   }
 
@@ -90,6 +88,7 @@ define graphdb::instance (
     status       => $status,
     java_opts    => $java_opts,
     kill_timeout => $kill_timeout,
+    subscribe    => Exec['unpack-graphdb-archive']
   }
 
 }

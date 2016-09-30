@@ -178,7 +178,7 @@ Puppet::Type.newtype(:graphdb_data) do
 
   newparam(:data_overwrite, boolean: true) do
     desc 'Wheather to overwrite any existing data; default: false'
-    defaultto(true)
+    defaultto(false)
   end
 
   newparam(:exists_query) do
