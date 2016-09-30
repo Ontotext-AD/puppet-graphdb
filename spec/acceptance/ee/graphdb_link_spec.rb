@@ -56,7 +56,7 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET -u ':duper' 'http://#{fact('ipaddress')}:8080/jolokia/read/ReplicationCluster:name=ClusterInfo!/master/NodeStatus'") do
       its(:exit_status) { should eq 0 }
-      regex = Regexp.escape('"value":["[ON] http://172.17.0.3:9090/repositories/worker"]'.gsub('/', '\/'))
+      regex = Regexp.escape("\"value\":[\"[ON] http://#{fact('ipaddress')}:9090/repositories/worker\"]".gsub('/', '\/'))
       its(:stdout) { should match regex }
     end
   end
