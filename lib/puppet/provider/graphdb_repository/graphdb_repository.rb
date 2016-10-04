@@ -7,16 +7,19 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
 
   def exists?
     repository_manager.check_repository(resource[:timeout])
+    true
+  rescue
+    false
   end
 
   def create
-    result = repository_manager.create_repository(
+    repository_manager.create_repository(
       resource[:repository_template],
       resource[:repository_context],
       resource[:timeout]
     )
-    return repository_manager.repository_up?(resource[:timeout]) if result == true
-    result
+
+    repository_manager.repository_up?(0)
   end
 
   def destroy

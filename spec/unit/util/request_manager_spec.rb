@@ -62,7 +62,7 @@ describe '#perform_http_request' do
                                           .to_return(status: [404]).then
                                           .to_return(status: [501]).then
 
-      expect { call_perform_http_request }.to raise_error(Puppet::Error, 'Unrecoverable response recieved [501]')
+      expect { call_perform_http_request }.to raise_error(Puppet::Error, /Unrecoverable response recieved/)
       expect(WebMock).to have_requested(method, uri).times(3)
     end
   end

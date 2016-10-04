@@ -9,12 +9,6 @@ Puppet::Type.type(:graphdb_validator).provide(:graphdb_validator) do
     uri = resource[:endpoint]
     uri.path = '/protocol'
     Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { codes: [200] }, resource[:timeout])
-  end
-
-  def create
-    # If `#create` is called, that means that `#exists?` returned false, which
-    # means that the connection could not be established... so we need to
-    # cause a failure here.
-    raise(Puppet::Error, "GraphDB check failed [#{resource[:endpoint]}]!")
+    true
   end
 end

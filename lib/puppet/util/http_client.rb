@@ -73,7 +73,9 @@ module Puppet
         end
 
         if FATAL_RESPONSE_CODES.include?(response.code)
-          raise Puppet::Error, "Unrecoverable response recieved [#{response.code}]"
+          err_message = "Unrecoverable response recieved: [#{response.code}]"
+          err_message += " with body: [#{response.body}]" unless response.body.nil?
+          raise Puppet::Error, err_message
         end
 
         Puppet.debug('Recieved response:')

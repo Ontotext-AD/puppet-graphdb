@@ -27,25 +27,22 @@ module Puppet
 
       def check_repository(timeout)
         Puppet.debug "Checking repository [#{endpoint}/repositories/#{repository_id}]"
-
-        # fast failing if repository doesn't exists
         unless repository_exists?
-          Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] doesn't exists")
-          return false
+          raise Puppet::Error, "Repository [#{endpoint}/repositories/#{repository_id}] doesn't exists"
         end
-
-        if repository_up?(timeout)
-          Puppet.debug("Repository [#{endpoint}/repositories/#{repository_id}] up and running")
-          return true
-        end
-
-        false
+        repository_up?(timeout)
       end
 
       def repository_exists?
         uri = endpoint.dup
         uri.path = "/repositories/#{repository_id}/size"
-        !Puppet::Util::RequestManager.perform_http_request(uri, { method: :get }, { codes: [404] }, 0)
+        Puppet::Util::RequestManager.perform_http_request(uri,
+                                                          { method: :get },
+                                                          { codes: [404] },
+                                                          0)
+        false
+      rescue
+        true
       end
 
       def repository_up?(timeout)
@@ -62,20 +59,14 @@ module Puppet
         uri = endpoint.dup
         uri.path = '/repositories/SYSTEM/rdf-graphs/service'
 
-        result = Puppet::Util::RequestManager.perform_http_request(uri,
-                                                                   { method: :post,
-                                                                     params: { 'graph' => repository_context },
-                                                                     body_data: repository_template,
-                                                                     content_type: 'application/x-turtle' },
-                                                                   { codes: [204] },
-                                                                   timeout)
-        if result
-          Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
-          return true
-        end
-
-        Puppet.notice("Repository creation failed [#{endpoint}/repositories/#{repository_id}]")
-        false
+        Puppet::Util::RequestManager.perform_http_request(uri,
+                                                          { method: :post,
+                                                            params: { 'graph' => repository_context },
+                                                            body_data: repository_template,
+                                                            content_type: 'application/x-turtle' },
+                                                          { codes: [204] },
+                                                          timeout)
+        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
       end
 
       def delete_repository(timeout)

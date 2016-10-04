@@ -8,6 +8,9 @@ Puppet::Type.type(:graphdb_update).provide(:graphdb_update) do
   def exists?
     Puppet.debug 'Check whether update has been applied'
     repository_manager.ask(resource[:exists_query], resource[:exists_expected_response], 0)
+    true
+  rescue
+    false
   end
 
   def create

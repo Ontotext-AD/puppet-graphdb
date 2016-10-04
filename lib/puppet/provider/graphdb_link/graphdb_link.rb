@@ -8,17 +8,20 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
   def exists?
     Puppet.debug 'Check worker is already connected with master'
     link_manager.check_link
+    true
+  rescue
+    false
   end
 
   def create
     Puppet.debug "Creating link between #{resource[:master_endpoint]}/repositories/#{resource[:master_repository_id]}
-	 								and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
+    	and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
     link_manager.create_link
   end
 
   def destroy
     Puppet.debug "Deleting link between #{resource[:master_endpoint]}/repositories/#{resource[:master_repository_id]}
-									and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
+    and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
     link_manager.delete_link
   end
 
@@ -40,7 +43,7 @@ private
       julokia_secret = resource[:jolokia_secret] if check_resource_is_matching_master?(resource, port)
     end
     raise Puppet::Error, 'fail to resolve julokia secret, please ensure that graphdb_link
-										is defined on the same node as master graphdb instance' if julokia_secret.nil?
+    	is defined on the same node as master graphdb instance' if julokia_secret.nil?
   end
 
   def check_resource_is_matching_master?(resource, port)

@@ -9,6 +9,9 @@ Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
   def exists?
     Puppet.debug 'Check whether data is already loaded'
     repository_manager.ask(resource[:exists_query], resource[:exists_expected_response], 0)
+    true
+  rescue
+    false
   end
 
   def create
@@ -17,19 +20,17 @@ Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
     else
       handle_data(resource[:data])
     end
-    true
   end
 
 private
 
   def handle_data(data)
     data.each do |curr_data|
-      result = repository_manager.load_data(curr_data[:content],
-                                            curr_data[:format],
-                                            curr_data[:context],
-                                            resource[:data_overwrite],
-                                            resource[:timeout])
-      raise Puppet::Error, "Data loading fail for: #{curr_data}" unless result == true
+      repository_manager.load_data(curr_data[:content],
+                                   curr_data[:format],
+                                   curr_data[:context],
+                                   resource[:data_overwrite],
+                                   resource[:timeout])
     end
   end
 
@@ -51,23 +52,21 @@ private
                else
                  resolve_file_format(file)
                end
-      result = repository_manager.load_data(File.read(file),
-                                            format,
-                                            directory[:context],
-                                            resource[:data_overwrite],
-                                            resource[:timeout])
-      raise Puppet::Error, "File loading fail for: #{file}" unless result == true
+      repository_manager.load_data(File.read(file),
+                                   format,
+                                   directory[:context],
+                                   resource[:data_overwrite],
+                                   resource[:timeout])
     end
   end
 
   def handle_data_file(file)
     format = !file.key?(:format) || file[:format].nil? ? resolve_file_format(file[:source]) : file[:format]
-    result = repository_manager.load_data(File.read(file[:source]),
-                                          format,
-                                          file[:context],
-                                          resource[:data_overwrite],
-                                          resource[:timeout])
-    raise Puppet::Error, "File loading fail for: #{file[:source]}" unless result == true
+    repository_manager.load_data(File.read(file[:source]),
+                                 format,
+                                 file[:context],
+                                 resource[:data_overwrite],
+                                 resource[:timeout])
   end
 
   def resolve_file_format(file_path)
