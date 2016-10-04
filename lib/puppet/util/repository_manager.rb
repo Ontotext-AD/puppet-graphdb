@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/request_manager'
+require 'puppet/exceptions/request_fail'
 
 module Puppet
   module Util
@@ -28,7 +29,8 @@ module Puppet
       def check_repository(timeout)
         Puppet.debug "Checking repository [#{endpoint}/repositories/#{repository_id}]"
         unless repository_exists?
-          raise Puppet::Error, "Repository [#{endpoint}/repositories/#{repository_id}] doesn't exists"
+          raise Puppet::Exceptions::RequestFailError,
+                "Repository [#{endpoint}/repositories/#{repository_id}] doesn't exists"
         end
         repository_up?(timeout)
       end

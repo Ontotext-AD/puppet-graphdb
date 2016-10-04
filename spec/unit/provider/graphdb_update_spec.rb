@@ -41,7 +41,7 @@ describe provider_class do
   context 'validating not applied update' do
     it 'should detect that update is not applied' do
       allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
-        .with(exists_query, exists_expected_response, 0) { false }
+        .with(exists_query, exists_expected_response, 0).and_raise(Puppet::Exceptions::RequestFailError)
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
         .with(exists_query, exists_expected_response, 0).once
 

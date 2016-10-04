@@ -17,7 +17,9 @@ define graphdb::instance (
 
   if $ensure == 'present' {
     validate_string($license)
-    validate_string($jolokia_secret)
+    if $jolokia_secret {
+      validate_string($jolokia_secret)
+    }
   }
 
   $service_name = "graphdb-${title}"

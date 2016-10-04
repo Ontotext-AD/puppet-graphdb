@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/repository_manager'
 require 'puppet/util/data_type_extensions'
+require 'puppet/exceptions/request_fail'
 
 Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
   desc "A provider for the resource type `graphdb_data`,
@@ -10,7 +11,7 @@ Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
     Puppet.debug 'Check whether data is already loaded'
     repository_manager.ask(resource[:exists_query], resource[:exists_expected_response], 0)
     true
-  rescue
+  rescue Puppet::Exceptions::RequestFailError
     false
   end
 

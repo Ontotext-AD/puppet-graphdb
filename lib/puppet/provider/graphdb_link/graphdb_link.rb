@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/link_manager'
+require 'puppet/exceptions/request_fail'
 
 Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
   desc "A provider for the resource type `graphdb_link`,
@@ -9,7 +10,7 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
     Puppet.debug 'Check worker is already connected with master'
     link_manager.check_link
     true
-  rescue
+  rescue Puppet::Exceptions::RequestFailError
     false
   end
 

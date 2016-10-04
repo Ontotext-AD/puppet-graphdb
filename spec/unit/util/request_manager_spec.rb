@@ -24,7 +24,7 @@ describe '#perform_http_request' do
     it do
       stub_request(method, /.*test.com.*/).to_return(status: [201], body: 'test')
 
-      expect(call_perform_http_request).to be true
+      expect { call_perform_http_request }.not_to raise_error
       expect(WebMock).to have_requested(method, uri).times(1)
     end
   end
@@ -36,7 +36,7 @@ describe '#perform_http_request' do
     it do
       stub_request(method, /.*test.com.*/).to_return(status: [200], body: 'test')
 
-      expect(call_perform_http_request).to be false
+      expect { call_perform_http_request }.to raise_error(Puppet::Exceptions::RequestFailError)
       expect(WebMock).to have_requested(method, uri).times(1)
     end
   end
@@ -49,7 +49,7 @@ describe '#perform_http_request' do
                                           .to_return(status: [404]).then
                                           .to_return(status: [200])
 
-      expect(call_perform_http_request).to be true
+      expect { call_perform_http_request }.not_to raise_error
       expect(WebMock).to have_requested(method, uri).times(3)
     end
   end
@@ -73,7 +73,7 @@ describe '#perform_http_request' do
     it do
       stub_request(method, /.*test.com.*/).to_return(status: [404]).times(20)
 
-      expect(call_perform_http_request).to be false
+      expect { call_perform_http_request }.to raise_error(Puppet::Exceptions::RequestFailError)
       expect(a_request(method, uri)).to have_been_made.at_least_times(6)
     end
   end

@@ -2,6 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 
 require 'timeout'
 require 'puppet/exceptions/expectations_fail'
+require 'puppet/exceptions/request_fail'
 require 'puppet/util/http_client'
 
 module Puppet
@@ -20,7 +21,7 @@ module Puppet
             sleep 2
             retry
           else
-            raise(Puppet::Error,
+            raise(Puppet::Exceptions::RequestFailError,
                   "Request marked as failed within timeout window of #{timeout}: #{e} #{e.message}")
           end
         end

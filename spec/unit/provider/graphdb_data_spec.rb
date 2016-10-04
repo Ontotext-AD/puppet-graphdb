@@ -50,7 +50,7 @@ describe provider_class do
     context 'validating not loaded data' do
       it 'should detect that data is not loaded' do
         allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
-          .with(exists_query, exists_expected_response, 0) { false }
+          .with(exists_query, exists_expected_response, 0).and_raise(Puppet::Exceptions::RequestFailError)
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:ask)
           .with(exists_query, exists_expected_response, 0).once
 
@@ -85,7 +85,7 @@ describe provider_class do
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with(data, data_format, data_context, data_overwrite, timeout).once
 
-          expect(provider.create).to be true
+          expect { provider.create }.not_to raise_error
         end
       end
 
@@ -118,7 +118,7 @@ describe provider_class do
 
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be true
+              expect { provider.create }.not_to raise_error
             end
           end
 
@@ -147,12 +147,13 @@ describe provider_class do
                 allow(File).to receive(:directory?) { false }
                 allow(File).to receive(:read) { 'data_content' }
                 allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
-                  .with('data_content', 'turtle', data_context, data_overwrite, timeout) { false }
+                  .with('data_content', 'turtle', data_context, data_overwrite, timeout)
+                  .and_raise(Puppet::Exceptions::RequestFailError)
 
                 expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content', 'turtle', data_context, data_overwrite, timeout).once
 
-                expect { provider.create }.to raise_error(Puppet::Error, 'File loading fail for: /test.ttl')
+                expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
               end
             end
           end
@@ -187,7 +188,7 @@ describe provider_class do
                 .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be true
+              expect { provider.create }.not_to raise_error
             end
           end
           context 'with fail on one file' do
@@ -197,14 +198,15 @@ describe provider_class do
               allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#1', 'turtle', data_context, data_overwrite, timeout) { true }
               allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
-                .with('data_content#2', 'turtle', data_context, data_overwrite, timeout) { false }
+                .with('data_content#2', 'turtle', data_context, data_overwrite, timeout)
+                .and_raise(Puppet::Exceptions::RequestFailError)
 
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#1', 'turtle', data_context, data_overwrite, timeout).once
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
 
-              expect { provider.create }.to raise_error(Puppet::Error, 'File loading fail for: /test#2.ttl')
+              expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
             end
           end
         end
@@ -242,7 +244,7 @@ describe provider_class do
                   .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
                 expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-                expect(provider.create).to be true
+                expect { provider.create }.not_to raise_error
               end
             end
 
@@ -254,14 +256,15 @@ describe provider_class do
                 allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content#1', 'turtle', data_context, data_overwrite, timeout) { true }
                 allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
-                  .with('data_content#2', 'turtle', data_context, data_overwrite, timeout) { false }
+                  .with('data_content#2', 'turtle', data_context, data_overwrite, timeout)
+                  .and_raise(Puppet::Exceptions::RequestFailError)
 
                 expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content#1', 'turtle', data_context, data_overwrite, timeout).once
                 expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                   .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
 
-                expect { provider.create }.to raise_error(Puppet::Error, 'File loading fail for: /test#2.ttl')
+                expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
               end
             end
           end
@@ -296,7 +299,7 @@ describe provider_class do
                 .with('data_content#2', 'turtle', data_context, data_overwrite, timeout).once
               expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
                 .with('data_content#3', 'turtle', data_context, data_overwrite, timeout).once
-              expect(provider.create).to be true
+              expect { provider.create }.not_to raise_error
             end
           end
         end
@@ -331,14 +334,15 @@ describe provider_class do
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with('test_data#3', data_format, data_context, data_overwrite, timeout).once
 
-          expect(provider.create).to be true
+          expect { provider.create }.not_to raise_error
         end
 
         it 'should call load_data multiple times and raise error on single load_data call fail' do
           allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with('test_data#1', data_format, data_context, data_overwrite, timeout) { true }
           allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
-            .with('test_data#2', data_format, data_context, data_overwrite, timeout) { false }
+            .with('test_data#2', data_format, data_context, data_overwrite, timeout)
+            .and_raise(Puppet::Exceptions::RequestFailError)
 
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with('test_data#1', data_format, data_context, data_overwrite, timeout).once
@@ -346,19 +350,20 @@ describe provider_class do
             .with('test_data#2', data_format, data_context, data_overwrite, timeout).once
 
           error_hash = { content: 'test_data#2', format: data_format, context: data_context }
-          expect { provider.create }.to raise_error(Puppet::Error, "Data loading fail for: #{error_hash}")
+          expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
         end
       end
 
       context 'loading data with fail' do
         it 'should call load_data and raise error' do
           allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
-            .with(data, data_format, data_context, data_overwrite, timeout) { false }
+            .with(data, data_format, data_context, data_overwrite, timeout)
+            .and_raise(Puppet::Exceptions::RequestFailError)
           expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:load_data)
             .with(data, data_format, data_context, data_overwrite, timeout).once
 
           error_hash = { content: data, format: data_format, context: data_context }
-          expect { provider.create }.to raise_error(Puppet::Error, "Data loading fail for: #{error_hash}")
+          expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
         end
       end
     end

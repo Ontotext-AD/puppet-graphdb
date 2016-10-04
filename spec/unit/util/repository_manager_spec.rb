@@ -11,9 +11,11 @@ describe 'RepositoryManager' do
       it 'should return true' do
         uri.path = '/repositories/test/size'
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
-        allow(Puppet::Util::RequestManager).to receive(:perform_http_request).with(uri, { method: :get }, { codes: [404] }, 0) { false }
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
+          .with(uri, { method: :get }, { codes: [404] }, 0)
+          .and_raise(Puppet::Exceptions::RequestFailError)
 
-        expect(repository_manager.check_repository(60)).to be true
+        expect { repository_manager.check_repository(60) }.not_to raise_error
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
@@ -33,9 +35,7 @@ describe 'RepositoryManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
           .with(uri, { method: :get }, { codes: [404] }, 0) { true }
 
-        result = repository_manager.check_repository(60)
-
-        expect(result).to be false
+        expect { repository_manager.check_repository(60) }.to raise_error(Puppet::Exceptions::RequestFailError)
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
         ).once
@@ -45,11 +45,10 @@ describe 'RepositoryManager' do
     context 'with not running repository' do
       it 'should return false' do
         uri.path = '/repositories/test/size'
-        allow(Puppet::Util::RequestManager).to receive(:perform_http_request).and_return(false, false)
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
+          .and_raise(Puppet::Exceptions::RequestFailError)
 
-        result = repository_manager.check_repository(60)
-
-        expect(result).to be false
+        expect { repository_manager.check_repository(60) }.to raise_error(Puppet::Exceptions::RequestFailError)
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :get }, { codes: [404] }, 0
         ).once
@@ -68,9 +67,7 @@ describe 'RepositoryManager' do
       it 'should return true' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
 
-        result = repository_manager.create_repository('test', 'http://test.com', 60)
-
-        expect(result).to be true
+        expect { repository_manager.create_repository('test', 'http://test.com', 60) }.not_to raise_error
         uri.path = '/repositories/SYSTEM/rdf-graphs/service'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri, { method: :post,
@@ -84,10 +81,11 @@ describe 'RepositoryManager' do
 
     context 'with unsuccessfully created repository' do
       it 'should return false' do
-        allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
+          .and_raise(Puppet::Exceptions::RequestFailError)
 
-        result = repository_manager.create_repository('test', 'http://test.com', 60)
-        expect(result).to be false
+        expect { repository_manager.create_repository('test', 'http://test.com', 60) }
+          .to raise_error(Puppet::Exceptions::RequestFailError)
       end
     end
   end
@@ -97,9 +95,7 @@ describe 'RepositoryManager' do
       it 'should return true' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
 
-        result = repository_manager.delete_repository(60)
-
-        expect(result).to be true
+        expect { repository_manager.delete_repository(60) }.not_to raise_error
         uri.path = '/repositories/test'
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri,
@@ -112,10 +108,10 @@ describe 'RepositoryManager' do
 
     context 'with unsuccessfully deleted repository' do
       it 'should return false' do
-        allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
+        allow(Puppet::Util::RequestManager).to receive(:perform_http_request)
+          .and_raise(Puppet::Exceptions::RequestFailError)
 
-        result = repository_manager.delete_repository(60)
-        expect(result).to be false
+        expect { repository_manager.delete_repository(60) }.to raise_error(Puppet::Exceptions::RequestFailError)
       end
     end
   end

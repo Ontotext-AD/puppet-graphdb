@@ -31,7 +31,6 @@ describe provider_class do
       final_uri.path = '/protocol'
       stub_request(:get, final_uri).to_return(status: [404])
       expect(provider.exists?).to be false
-      expect { provider.create }.to raise_error(Puppet::Error, "GraphDB check failed [#{final_uri}]!")
     end
   end
 end

@@ -35,7 +35,8 @@ describe provider_class do
 
   context 'validating not existing graphdb repository' do
     it 'should detect that graphdb repository is not existing' do
-      allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).with(timeout) { false }
+      allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).with(timeout)
+        .and_raise(Puppet::Exceptions::RequestFailError)
       expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
 
       expect(provider.exists?).to be false
@@ -58,10 +59,10 @@ describe provider_class do
     context 'with repository creation fail' do
       it 'should try to create new graphdb repository and return false' do
         allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository)
-          .with(repository_template, repository_context, timeout) { false }
+          .with(repository_template, repository_context, timeout).and_raise(Puppet::Exceptions::RequestFailError)
 
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
-        expect(provider.create).to be false
+        expect { provider.create }.to raise_error(Puppet::Exceptions::RequestFailError)
       end
     end
   end
