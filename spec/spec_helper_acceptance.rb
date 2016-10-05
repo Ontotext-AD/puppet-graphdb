@@ -59,9 +59,12 @@ RSpec.configure do |c|
 
       scp_to(host, 'ee.license', '/tmp/ee.license')
       scp_to(host, 'se.license', '/tmp/se.license')
+      scp_to(host, 'spec/fixtures/test.ttl', '/tmp/test.ttl')
 
       # Install module and dependencies
       puppet_module_install(source: proj_root, module_name: 'graphdb')
+      puppet_module_install(source: "#{proj_root}/spec/fixtures/modules/test", module_name: 'test')
+
       on host, puppet('module', 'install', 'puppetlabs-stdlib'), acceptable_exit_codes: [0, 1]
     end
   end

@@ -2,7 +2,8 @@ pkg/
 Gemfile.lock
 vendor/
 spec/fixtures/manifests/
-spec/fixtures/modules/
+spec/fixtures/modules/*
+!spec/fixtures/modules/test
 .vagrant/
 .bundle/
 coverage/

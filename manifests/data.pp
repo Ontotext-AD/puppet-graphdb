@@ -19,6 +19,8 @@ define graphdb::data (
   }
 
   Exec {
+    path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
+    cwd  => '/',
     user => $graphdb::graphdb_user,
   }
 
