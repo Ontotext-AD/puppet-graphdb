@@ -5,34 +5,22 @@
 # === Parameters
 #
 # [*ensure*]
-#
 #   Whether the service should exist. Possible values are present and absent.
 #
 # [*service_ensure*]
-#
 #   Whether a service should be running. Possible values are running, stopped, true and false.
 #
 # [*service_enable*]
-#
 #   Whether a service should be enabled to start at boot. Possible values are true and false.
 #
-# === Variables
+# [*java_opts*]
+#   Array of java options to give to GraphDB java process
+#   example: ['-Xmx1g', '-Xms1g']
 #
-# [*graphdb::restart_on_change*]
-#
-#   Whether a service should be restarted on service configuration change. Possible values are true and false.
-#
-# [*graphdb::params::systemd_service_path*]
-#
-#   The path of OS specific systemd configuration directory.
-#
-# === Examples
-#
-#  graphdb::service::systemd { 'graphdb-service-systemd'
-#     ensure         => 'present',
-#     service_ensure => 'running',
-#     service_enable => true,
-#  }
+# [*kill_timeout*]
+#   Time before force kill of GraphDB process. Instances with big repositories may
+#   time to flush on shutdown.
+#   default: 180
 #
 define graphdb::service::systemd($ensure, $service_ensure, $service_enable, $java_opts = [], $kill_timeout = 180) {
 

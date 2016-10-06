@@ -5,25 +5,19 @@
 # === Parameters
 #
 # [*ensure*]
-#
 #   Whether the service should exist. Possible values are present and absent.
 #
 # [*status*]
-#
 #   What the state of the service must be. Possible values are enabled, disabled, running and unmanaged.
 #
-# === Variables
+# [*java_opts*]
+#   Array of java options to give to GraphDB java process
+#   example: ['-Xmx1g', '-Xms1g']
 #
-# [*graphdb::params::service_providers*]
-#
-#   The path of OS specific service provider.
-#
-# === Examples
-#
-#  graphdb::service { 'graphdb-service'
-#     ensure         => 'present',
-#     status         => 'enabled',
-#  }
+# [*kill_timeout*]
+#   Time before force kill of GraphDB process. Instances with big repositories may
+#   time to flush on shutdown.
+#   default: 180
 #
 define graphdb::service($ensure, $status, $java_opts = [], $kill_timeout = 180) {
   require graphdb::params

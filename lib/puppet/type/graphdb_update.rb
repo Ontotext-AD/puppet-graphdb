@@ -53,7 +53,7 @@ Puppet::Type.newtype(:graphdb_update) do
   end
 
   newparam(:timeout) do
-    desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds.'
+    desc 'The max number of seconds that the update process should wait before giving up; default: 60 seconds.'
     defaultto 60
     validate do |value|
       begin

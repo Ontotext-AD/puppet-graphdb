@@ -40,7 +40,7 @@ Puppet::Type.newtype(:graphdb_repository) do
   end
 
   newparam(:timeout) do
-    desc 'The max number of seconds that the validator should wait before giving up
+    desc 'The max number of seconds that graphdb create/delete/check process should wait before giving up
     and deciding that the GraphDB is not running; default: 60 seconds.'
     defaultto 60
     validate do |value|

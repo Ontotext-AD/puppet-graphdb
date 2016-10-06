@@ -37,7 +37,7 @@ class graphdb::params {
   $purge_data_dir = false
 
   # archive download timeout
-  $archive_dl_timeout = 600 # 300 seconds is default of puppet
+  $archive_dl_timeout = 600
 
   $pid_dir = '/var/run/graphdb'
 

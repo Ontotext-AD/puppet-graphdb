@@ -1,3 +1,8 @@
+# == Class: graphdb::tool_links
+#
+# Adds GraphDB tool to system path
+# Not meant to be used directly.
+#
 class graphdb::tool_links {
 
   if ($graphdb::ensure  == 'present') {

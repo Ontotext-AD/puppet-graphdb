@@ -191,7 +191,7 @@ Puppet::Type.newtype(:graphdb_data) do
   end
 
   newparam(:timeout) do
-    desc 'The max number of seconds that the validator should wait before giving up; default: 60 seconds'
+    desc 'The max number of seconds that the loading process should wait before giving up; default: 60 seconds'
     defaultto 60
     validate do |value|
       begin

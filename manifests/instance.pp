@@ -1,3 +1,65 @@
+# == Define: graphdb::instance
+#
+#  This define allows you to create or remove an graphdb instance
+#
+# === Parameters
+#
+# [*ensure*]
+#   String. Controls if the managed resources shall be <tt>present</tt> or
+#   <tt>absent</tt>. If set to <tt>absent</tt>:
+#   * The managed instance is being uninstalled.
+#   * Any traces of installation will be purged as good as possible. This may
+#     include existing configuration files. The exact behavior is provider
+#     dependent. Q.v.:
+#     * Puppet type reference: {package, "purgeable"}[http://j.mp/xbxmNP]
+#     * {Puppet's package provider source code}[http://j.mp/wtVCaL]
+#   * System modifications (if any) will be reverted as good as possible
+#     (e.g. removal of created users, services, changed log settings, ...).
+#   * This is thus destructive and should be used with care.
+#   Defaults to <tt>present</tt>.
+#
+# [*status*]
+#   String to define the status of the service. Possible values:
+#   * <tt>enabled</tt>: Service is running and will be started at boot time.
+#   * <tt>disabled</tt>: Service is stopped and will not be started at boot
+#     time.
+#   * <tt>running</tt>: Service is running but will not be started at boot time.
+#     You can use this to start a service on the first Puppet run instead of
+#     the system startup.
+#   * <tt>unmanaged</tt>: Service will not be started at boot time and Puppet
+#     does not care whether the service is running or not. For example, this may
+#     be useful if a cluster management software is used to decide when to start
+#     the service plus assuring it is running on the desired node.
+#   Defaults to <tt>enabled</tt>. The singular form ("service") is used for the
+#   sake of convenience. Of course, the defined status affects all services if
+#   more than one is managed (see <tt>service.pp</tt> to check if this is the
+#   case).
+#
+# [*license*]
+#   GraphDB license file.
+#
+# [*http_port*]
+#   The http port at which GraphDB will run.
+#
+# [*kill_timeout*]
+#   Time before force kill of GraphDB process. Instances with big repositories may
+#   time to flush on shutdown.
+#   default: 180
+#
+# [*validator_timeout*]
+#   Time before GraphDB validator decides that the GraphDB instance is not running
+#
+# [*jolokia_secret*]
+#   GraphDB jolokia secret for http jmx requests
+#
+# [*extra_properties*]
+#   Hash of properties to include in graphdb.properties file
+#   example: {'graphdb.some.property' => 'some.property.value'}
+#
+# [*java_opts*]
+#   Array of java options to give to GraphDB java process
+#   example: ['-Xmx1g', '-Xms1g']
+#
 define graphdb::instance (
   $license            = undef,
   $ensure             = $graphdb::ensure,
