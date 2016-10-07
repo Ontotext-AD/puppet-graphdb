@@ -58,7 +58,7 @@ describe 'graphdb::data', type: :define do
               data: nil,
               data_format: nil,
               data_context: 'null',
-              data_overwrite: true,
+              data_overwrite: false,
               exists_expected_response: true,
               timeout: 200)
     end
@@ -78,7 +78,7 @@ describe 'graphdb::data', type: :define do
                 data: nil,
                 data_format: nil,
                 data_context: 'null',
-                data_overwrite: true,
+                data_overwrite: false,
                 exists_expected_response: true,
                 timeout: 200)
       end
