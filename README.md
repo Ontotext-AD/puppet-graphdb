@@ -77,9 +77,9 @@ class { 'graphdb':
 }
 ```
 
-#### Automatically restarting the service (default set to false)
+#### Automatically restarting the service (default set to true)
 
-By default, the module will not restart GraphDB when the configuration file changed.
+By default, the module will restart GraphDB when the configuration file changed.
 This can be overridden globally with the following option:
 
 ```puppet
