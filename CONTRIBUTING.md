@@ -3,8 +3,6 @@
 If you have a bugfix or new feature that you would like to contribute to this puppet module, please find or open an issue about it first.
 Talk about what you would like to do.
 
-**Note**: If you have support-oriented questions that aren't a bugfix or feature request, please post your questions on the [discussion forums](https://discuss.elastic.co/c/elasticsearch).
-
 We enjoy working with contributors to get their code accepted.
 There are many approaches to fixing a problem and it is important to find the best approach before writing too much code.
 
