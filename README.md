@@ -177,8 +177,8 @@ A master with one worker
 
 ##### GraphDB Worker repository options can be given
 
-For `EE`, please, check [here](manifests/ee/worker/repository.pp). Also, please, check [GraphDB EE documentation](http://graphdb.ontotext.com/documentation/enterprise/configuring-a-repository.html).
-For `SE`, please, check [here](manifests/se/worker/repository.pp). Also, please, check [GraphDB SE documentation](http://graphdb.ontotext.com/documentation/standard/configuring-a-repository.html).
+* For `EE`, please, check [here](manifests/ee/worker/repository.pp). Also, please, check [GraphDB EE documentation](http://graphdb.ontotext.com/documentation/enterprise/configuring-a-repository.html).
+* For `SE`, please, check [here](manifests/se/worker/repository.pp). Also, please, check [GraphDB SE documentation](http://graphdb.ontotext.com/documentation/standard/configuring-a-repository.html).
 
 ##### Link specific options can be given
 
