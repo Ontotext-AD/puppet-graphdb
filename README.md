@@ -17,6 +17,7 @@ GraphDB Puppet module
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Development - Guide for contributing to the module](#development)
 7. [Support - When you need help with this module](#support)
+8. [License](#license)
 
 ## Module description
 

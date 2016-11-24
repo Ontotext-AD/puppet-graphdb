@@ -3,7 +3,6 @@ GRAPHDB_VERSION ?= 7.1.0
 GRAPHDB_TIMEOUT ?= 60
 DEBUG ?= false
 
-
 .vendor: Gemfile
 	bundle update || true
 	bundle install --path .vendor
@@ -19,8 +18,11 @@ clean-logs:
 	rm -rf log
 
 .PHONY: release
-release: clean-logs
-	bundle exec puppet module build
+release: clean-logs clean
+	rake module:bump:$(RELEASE_TYPE)
+	BLACKSMITH_FORGE_USERNAME=$(BLACKSMITH_FORGE_USERNAME) \
+	BLACKSMITH_FORGE_PASSWORD=$(BLACKSMITH_FORGE_PASSWORD) \
+	rake module:release
 
 .PHONY: test-acceptance
 test-acceptance: .vendor

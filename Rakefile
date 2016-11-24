@@ -1,5 +1,6 @@
 require 'puppet-lint/tasks/puppet-lint'
 require 'puppetlabs_spec_helper/rake_tasks'
+require 'puppet_blacksmith/rake_tasks'
 
 PuppetLint.configuration.send('relative')
 PuppetLint.configuration.send('disable_documentation')
