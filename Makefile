@@ -11,7 +11,7 @@ DEBUG ?= false
 .PHONY: clean
 clean:
 	bundle exec rake spec_clean
-	rm -rf .bundle .vendor
+	rm -rf .bundle .vendor junit
 
 .PHONY: clean-logs
 clean-logs:
@@ -22,6 +22,7 @@ release: clean-logs clean
 	rake module:clean
 	bundle exec puppet module build
 	rake module:tag
+	git push --tags
 	BLACKSMITH_FORGE_USERNAME=$(BLACKSMITH_FORGE_USERNAME) \
     BLACKSMITH_FORGE_PASSWORD=$(BLACKSMITH_FORGE_PASSWORD) \
 	rake module:push
