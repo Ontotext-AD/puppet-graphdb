@@ -34,7 +34,7 @@ First, run the rspec tests and ensure it completes without errors with your chan
 
     make test-rspec
 
-Next, run the more thorough acceptance tests.
+Next, run the more thorough acceptance tests. **You need valid `SE` and `EE` GraphDB licenses.**
 By default, the test will run against a GraphDB 7.1.0 deployed on Ubuntu 14.04 Docker image - other available hosts can be found in `spec/acceptance/nodesets`.
 For example, to run the acceptance tests against CentOS 6, run the following:
 

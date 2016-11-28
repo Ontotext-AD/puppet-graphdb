@@ -24,7 +24,7 @@ GraphDB Puppet module
 This module sets up [GraphDB](http://graphdb.ontotext.com/) instances with additional resource for
 repository creation, data loading, updates, backups, and more.
 
-This module has been tested against all versions of GraphDB 7.*
+This module has been tested against all major versions of GraphDB 7.*
 
 ## Setup
 
@@ -274,7 +274,7 @@ Because of init.d/systemd/upstart support the module may run on other platforms,
    
 ## Development
 
-Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for instructions regarding development environments and testing.
+Please see the [CONTRIBUTING.md](https://github.com/Ontotext-AD/puppet-graphdb/CONTRIBUTING.md) file for instructions regarding development environments and testing.
 
 ## Support
 
@@ -282,4 +282,4 @@ Please, use [email](mailto:graphdb-support@ontotext.com?Subject=GraphDB%20puppet
 
 ## License
 
-Please see the [LICENSE](LICENSE) 
+Please see the [LICENSE](https://github.com/Ontotext-AD/puppet-graphdb/LICENSE) 
