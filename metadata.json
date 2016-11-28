@@ -1,6 +1,6 @@
 {
   "name": "ontotext-graphdb",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "source": "https://github.com/Ontotext-AD/puppet-graphdb",
   "author": "ontotext",
   "license": "Apache-2.0",
@@ -56,10 +56,10 @@
     {
       "name": "puppet",
       "version_requirement": ">=3.2.0 <4.3.0"
-  },
-  {
-	"name": "ruby",
-	"version_requirement": ">=1.9.0"
-  }
+    },
+    {
+      "name": "ruby",
+      "version_requirement": ">=1.9.0"
+    }
   ]
 }
