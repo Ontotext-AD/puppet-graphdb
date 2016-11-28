@@ -1,0 +1,22 @@
+description "GraphDB - <%= @title %>"
+
+kill timeout <%= @kill_timeout %>
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+respawn limit 10 5
+
+<% if scope.lookupvar('::operatingsystemrelease') == '10.04' -%>exec sudo -u <%= scope.lookupvar('graphdb::graphdb_user') %><% else -%>setuid <%= scope.lookupvar('graphdb::graphdb_user') %>
+setgid <%= scope.lookupvar('graphdb::graphdb_user') %><% end -%>
+
+env JAVA_HOME=<%= scope.lookupvar('graphdb::java_location') %>
+env GRAPHDB_INSTALL_DIR=<%= scope.lookupvar('graphdb::install_dir') %>
+env GRAPHDB_INSTANCE_DIR=$GRAPHDB_INSTALL_DIR/instances/<%= @title %>
+
+<% unless @final_java_opts.empty? -%>
+env GDB_JAVA_OPTS="<%= @final_java_opts %>"
+<% end -%>
+
+exec $GRAPHDB_INSTALL_DIR/dist/bin/graphdb -Dgraphdb.home=$GRAPHDB_INSTANCE_DIR

@@ -1,0 +1,5 @@
+@base <http://test.com#>.
+@prefix test:   <http://test.com/ontologies/test#> .
+<http://test>
+		a                test:good ;
+		test:price       "5" .

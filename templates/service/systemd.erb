@@ -1,0 +1,26 @@
+[Unit]
+Description="GraphDB - <%= @title %>"
+After=network.target
+
+[Service]
+Group=<%= scope.lookupvar('graphdb::graphdb_user') %>
+User=<%= scope.lookupvar('graphdb::graphdb_user') %>
+
+Restart=on-failure
+RestartSec=5s
+
+TimeoutStopSec=<%= @kill_timeout %>
+
+Environment=JAVA_HOME=<%= scope.lookupvar('graphdb::java_location') %>
+
+<% unless @final_java_opts.empty? -%>
+Environment="GDB_JAVA_OPTS=<%= @final_java_opts %>"
+<% end -%>
+
+# Tomcat process exits with status 143 when kill is successful
+SuccessExitStatus=143
+
+ExecStart=<%= scope.lookupvar('graphdb::install_dir') %>/dist/bin/graphdb -Dgraphdb.home=<%= scope.lookupvar('graphdb::install_dir') %>/instances/<%= @title %>
+
+[Install]
+WantedBy=multi-user.target
