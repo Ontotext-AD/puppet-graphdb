@@ -19,10 +19,14 @@ clean-logs:
 
 .PHONY: release
 release: clean-logs clean
-	rake module:bump:$(RELEASE_TYPE)
+	rake module:clean
+	bundle exec puppet module build
+	rake module:tag
 	BLACKSMITH_FORGE_USERNAME=$(BLACKSMITH_FORGE_USERNAME) \
-	BLACKSMITH_FORGE_PASSWORD=$(BLACKSMITH_FORGE_PASSWORD) \
-	rake module:release
+    BLACKSMITH_FORGE_PASSWORD=$(BLACKSMITH_FORGE_PASSWORD) \
+	rake module:push
+	rake module:bump_commit:$(RELEASE_TYPE)
+	git push
 
 .PHONY: test-acceptance
 test-acceptance: .vendor
