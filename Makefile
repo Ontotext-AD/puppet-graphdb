@@ -42,7 +42,7 @@ test-acceptance: .vendor
 .PHONY: test-rspec
 test-rspec: .vendor
 	bundle exec rake lint
-	bundle exec rae validate
+	bundle exec rake validate
 	bundle exec rake spec
 
 .PHONY: guard
