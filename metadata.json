@@ -50,12 +50,8 @@
   ],
   "requirements": [
     {
-      "name": "pe",
-      "version_requirement": ">= 3.3.2"
-    },
-    {
       "name": "puppet",
-      "version_requirement": ">=3.2.0 <=4.7.0"
+      "version_requirement": ">=3.0.0 < 5.0.0"
     },
     {
       "name": "ruby",
