@@ -22,7 +22,7 @@ clean-logs:
 release: clean-logs clean
 	bundle exec rake module:clean
 	bundle exec rake module:bump_commit:$(RELEASE_TYPE)
-	git push
+	git push origin HEAD:master
 	bundle exec puppet module build
 	bundle exec rake module:tag
 	git push --tags
