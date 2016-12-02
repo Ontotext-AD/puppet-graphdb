@@ -3,8 +3,10 @@ require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/dsl/helpers'
 
+puppet_version = ENV['PUPPET_VERSION']
+
 # Install puppet
-install_puppet(version: '4.7.0',
+install_puppet(version: puppet_version,
                puppet_agent_version: '1.1.0',
                default_action: 'gem_install')
 

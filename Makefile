@@ -1,6 +1,7 @@
 DISTRO ?= ubuntu-server-1404-x64
 GRAPHDB_VERSION ?= 7.1.0
 GRAPHDB_TIMEOUT ?= 120
+PUPPET_VERSION ?= 3.7.5
 DEBUG ?= false
 
 .vendor: Gemfile
@@ -33,6 +34,7 @@ release: clean-logs clean
 test-acceptance: .vendor
 		GRAPHDB_VERSION=$(GRAPHDB_VERSION) \
 		GRAPHDB_TIMEOUT=$(GRAPHDB_TIMEOUT) \
+		PUPPET_VERSION=$(PUPPET_VERSION) \
 		BEAKER_set=$(DISTRO) \
 		DEBUG=$(DEBUG) \
 		bundle exec rspec spec/acceptance
@@ -40,7 +42,7 @@ test-acceptance: .vendor
 .PHONY: test-rspec
 test-rspec: .vendor
 	bundle exec rake lint
-	bundle exec rake validate
+	bundle exec rae validate
 	bundle exec rake spec
 
 .PHONY: guard
