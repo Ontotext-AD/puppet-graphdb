@@ -49,6 +49,9 @@
 # [*validator_timeout*]
 #   Time before GraphDB validator decides that the GraphDB instance is not running
 #
+# [*heap_size*]
+#   GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
+#
 # [*jolokia_secret*]
 #   GraphDB jolokia secret for http jmx requests
 #
@@ -61,19 +64,20 @@
 #   example: ['-Xmx1g', '-Xms1g']
 #
 define graphdb::instance (
-  $license            = undef,
-  $ensure             = $graphdb::ensure,
-  $status             = $graphdb::status,
-  $http_port          = 8080,
-  $kill_timeout       = 180,
-  $validator_timeout  = 60,
-  $jolokia_secret     = undef,
-  $extra_properties   = { },
-  $java_opts          = [],
-){
+  $license           = undef,
+  $ensure            = $graphdb::ensure,
+  $status            = $graphdb::status,
+  $http_port         = 8080,
+  $kill_timeout      = 180,
+  $validator_timeout = 60,
+  $heap_size         = undef,
+  $jolokia_secret    = undef,
+  $extra_properties  = { },
+  $java_opts         = [],
+) {
 
   # ensure
-  if ! ($ensure in [ 'present', 'absent' ]) {
+  if !($ensure in [ 'present', 'absent' ]) {
     fail("\"${ensure}\" is not a valid ensure parameter value")
   }
 
@@ -82,6 +86,12 @@ define graphdb::instance (
     if $jolokia_secret {
       validate_string($jolokia_secret)
     }
+  }
+
+  if $heap_size {
+    $java_opts_final = concat($java_opts, ["-Xmx${heap_size}", "-Xms${heap_size}"])
+  } else {
+    $java_opts_final = $java_opts
   }
 
   $service_name = "graphdb-${title}"
@@ -150,7 +160,7 @@ define graphdb::instance (
   graphdb::service { $title:
     ensure       => $ensure,
     status       => $status,
-    java_opts    => $java_opts,
+    java_opts    => $java_opts_final,
     kill_timeout => $kill_timeout,
     subscribe    => Exec['unpack-graphdb-archive']
   }

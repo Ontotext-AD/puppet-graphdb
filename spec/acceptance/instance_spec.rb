@@ -19,7 +19,8 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
   				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
-				java_opts         => ['-Xmx256g'],
+				heap_size         => '256m',
+				java_opts         => ['-XX:+AggressiveHeap'],
 			 }
 		  EOS
       end
@@ -37,7 +38,9 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
       describe process('java') do
         its(:user) { should eq 'graphdb' }
         its(:args) { should match /-Dgraphdb.home=\/opt\/graphdb\/instances\/test/ }
-        its(:args) { should match /-Xmx256g/ }
+        its(:args) { should match /-XX:+AggressiveHeap/ }
+        its(:args) { should match /-Xmx256m/ }
+        its(:args) { should match /-Xms256m/ }
         its(:count) { should eq 1 }
       end
 

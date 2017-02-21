@@ -115,6 +115,7 @@ graphdb::instance { 'graphdb-instance':
   validator_timeout  => 60, # GraphDB repository validator timeout
   jolokia_secret     => undef, # julokia secret for http jmx requests
   extra_properties   => { }, # extra properties for graphdb.properties file
+  heap_size          => '2g', # GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
   java_opts          => [], # extra java opts for java process
 }
 ```
