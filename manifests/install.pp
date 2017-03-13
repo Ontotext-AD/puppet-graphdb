@@ -32,7 +32,7 @@ class graphdb::install {
       }
     }
 
-    file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $instances_installation_dir]:
+    file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $graphdb::log_dir, $instances_installation_dir]:
       ensure => 'directory',
     }
 

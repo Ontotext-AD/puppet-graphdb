@@ -30,6 +30,48 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
       end
 
+      describe file('/opt/graphdb/instances/test') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
+      describe file('/opt/graphdb/instances/test/plugins') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
+      describe file('/var/tmp/graphdb/test') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
+      describe file('/opt/graphdb/instances/test/conf') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
+      describe file('/var/lib/graphdb/test') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
+      describe file('/var/log/graphdb/test') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
       describe service('graphdb-test') do
         it { should be_enabled } unless %w(Debian CentOS).include? fact('operatingsystem')
         it { should be_running }
@@ -78,6 +120,18 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
       end
 
       describe file('/opt/graphdb/instances/test') do
+        it { should_not exist }
+      end
+
+      describe file('/var/log/graphdb/test') do
+        it { should_not exist }
+      end
+
+      describe file('/var/lib/graphdb/test') do
+        it { should_not exist }
+      end
+
+      describe file('/var/tmp/graphdb/test') do
         it { should_not exist }
       end
 
