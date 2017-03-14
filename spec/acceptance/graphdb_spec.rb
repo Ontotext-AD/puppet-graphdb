@@ -66,6 +66,13 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         it { should be_writable.by('owner') }
       end
 
+      describe file('/var/log/graphdb') do
+        it { should be_directory }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+        it { should be_writable.by('owner') }
+      end
+
       describe file('/bin/console') do
         it { should be_linked_to '/opt/graphdb/dist/bin/console' }
         it { should be_executable }

@@ -101,6 +101,7 @@ define graphdb::instance (
   $instance_plugins_dir = "${instance_data_dir}/plugins"
   $instance_temp_dir = "${graphdb::tmp_dir}/${title}"
   $instance_conf_dir = "${instance_home_dir}/conf"
+  $instance_log_dir = "${graphdb::log_dir}/${title}"
 
   if $ensure == 'present' {
     File {
@@ -118,14 +119,14 @@ define graphdb::instance (
       notify => Service[$service_name],
     }
 
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir]:
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir]:
       ensure => 'directory',
       notify => Service[$service_name],
     }
 
     $default_properties = {
       'graphdb.home.data'      => "${graphdb::data_dir}/${title}",
-      'graphdb.home.logs'      => "${graphdb::log_dir}/${title}",
+      'graphdb.home.logs'      => $instance_log_dir,
       'graphdb.license.file'   => $licence_file_destination,
       'graphdb.connector.port' => $http_port,
       'graphdb.extra.plugins'  => $instance_plugins_dir,
@@ -149,7 +150,7 @@ define graphdb::instance (
       subscribe => Service[$service_name]
     }
   } else {
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir]:
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_log_dir]:
       ensure  => 'absent',
       force   => true,
       backup  => false,
