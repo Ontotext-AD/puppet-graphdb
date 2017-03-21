@@ -49,7 +49,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         it { should be_writable.by('owner') }
       end
 
-      describe file('/opt/graphdb/instances/test/plugins') do
+      describe file('/var/lib/graphdb/test/plugins') do
         it { should be_directory }
         it { should be_owned_by 'graphdb' }
         it { should be_grouped_into 'graphdb' }
