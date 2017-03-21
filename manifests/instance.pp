@@ -55,6 +55,9 @@
 # [*jolokia_secret*]
 #   GraphDB jolokia secret for http jmx requests
 #
+# [*logback_config*]
+#   GraphDB logback log configuration
+#
 # [*extra_properties*]
 #   Hash of properties to include in graphdb.properties file
 #   example: {'graphdb.some.property' => 'some.property.value'}
@@ -72,6 +75,7 @@ define graphdb::instance (
   $validator_timeout = 60,
   $heap_size         = undef,
   $jolokia_secret    = undef,
+  $logback_config    = undef,
   $extra_properties  = { },
   $java_opts         = [],
 ) {
@@ -122,6 +126,23 @@ define graphdb::instance (
     file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir]:
       ensure => 'directory',
       notify => Service[$service_name],
+    }
+
+    if $logback_config {
+      file { "${instance_conf_dir}/logback.xml":
+        ensure => $ensure,
+        source => $logback_config,
+      }
+    } else {
+      file { "${instance_conf_dir}/logback.xml":
+        ensure => 'link',
+        target => "${graphdb::install_dir}/dist/conf/logback.xml",
+      }
+    }
+
+    file { "${instance_conf_dir}/tools-logback.xml":
+      ensure => 'link',
+      target => "${graphdb::install_dir}/dist/conf/tools-logback.xml",
     }
 
     $default_properties = {
