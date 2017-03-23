@@ -48,7 +48,7 @@ class graphdb::install {
     exec { 'unpack-graphdb-archive':
       command     => "rm -rf ${dist_installation_dir} && unzip ${archive_destination} -d ${dist_installation_dir} && mv ${unpacked_directory}/* ${dist_installation_dir} && rm -r ${unpacked_directory}",
       refreshonly => true,
-      require     => Package['unzip'],
+      require     => [File[$graphdb::install_dir], Package['unzip']],
     }
 
   } else {

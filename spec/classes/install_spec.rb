@@ -45,7 +45,7 @@ describe 'graphdb::install', type: :class do
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
   	' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
         refreshonly: true,
-        require: 'Package[unzip]',
+        require: ['File[/opt/graphdb]','Package[unzip]'],
         user: 'graphdb'
       )
     end
@@ -110,7 +110,7 @@ describe 'graphdb::install', type: :class do
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
         		' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
         refreshonly: true,
-        require: 'Package[unzip]',
+        require: ['File[/opt/graphdb]','Package[unzip]'],
         user: 'graphdb'
       )
     end
@@ -147,7 +147,7 @@ describe 'graphdb::install', type: :class do
         command: "rm -rf /var/lib/dist && unzip #{dest_file} -d /var/lib/dist" \
        		' && mv /var/lib/dist/graphdb-ee-7.0.0/* /var/lib/dist && rm -r /var/lib/dist/graphdb-ee-7.0.0',
         refreshonly: true,
-        require: 'Package[unzip]',
+        require: ['File[/var/lib]','Package[unzip]'],
         user: 'graphdb'
       )
     end
