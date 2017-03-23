@@ -21,7 +21,7 @@ GraphDB Puppet module
 
 ## Module description
 
-This module sets up [GraphDB](http://graphdb.ontotext.com) instances with additional resource for
+This module sets up [GraphDB](http://graphdb.ontotext.com/) instances with additional resource for
 repository creation, data loading, updates, backups, and more.
 
 This module has been tested against all major versions of GraphDB 7.* and 8.*
