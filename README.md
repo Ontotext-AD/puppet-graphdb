@@ -24,7 +24,7 @@ GraphDB Puppet module
 This module sets up [GraphDB](http://graphdb.ontotext.com/) instances with additional resource for
 repository creation, data loading, updates, backups, and more.
 
-This module has been tested against all major versions of GraphDB 7.*
+This module has been tested against all major versions of GraphDB 7.* and 8.*
 
 ## Setup
 
@@ -114,6 +114,7 @@ graphdb::instance { 'graphdb-instance':
   kill_timeout       => 180, # time before force kill of GraphDB process
   validator_timeout  => 60, # GraphDB repository validator timeout
   jolokia_secret     => undef, # julokia secret for http jmx requests
+  logback_config     => undef, # custom GraphDB logback log configuration
   extra_properties   => { }, # extra properties for graphdb.properties file
   heap_size          => '2g', # GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
   java_opts          => [], # extra java opts for java process

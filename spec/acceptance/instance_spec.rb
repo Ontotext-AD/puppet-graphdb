@@ -30,6 +30,18 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
       end
 
+      describe file('/opt/graphdb/instances/test/conf/logback.xml') do
+        it { should be_linked_to '/opt/graphdb/dist/conf/logback.xml' }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+      end
+
+      describe file('/opt/graphdb/instances/test/conf/tools-logback.xml') do
+        it { should be_linked_to '/opt/graphdb/dist/conf/tools-logback.xml' }
+        it { should be_owned_by 'graphdb' }
+        it { should be_grouped_into 'graphdb' }
+      end
+
       describe file('/opt/graphdb/instances/test') do
         it { should be_directory }
         it { should be_owned_by 'graphdb' }
@@ -37,7 +49,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         it { should be_writable.by('owner') }
       end
 
-      describe file('/opt/graphdb/instances/test/plugins') do
+      describe file('/var/lib/graphdb/test/plugins') do
         it { should be_directory }
         it { should be_owned_by 'graphdb' }
         it { should be_grouped_into 'graphdb' }
