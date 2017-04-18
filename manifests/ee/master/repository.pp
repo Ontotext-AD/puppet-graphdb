@@ -21,7 +21,7 @@
 #
 # [*replication_port*]
 #   Master replication port used for backups
-#   default: undef, random port used
+#   default: 0, random port used
 #
 # [*timeout*]
 #   The max number of seconds that the repository create/delete/check process should wait before giving up.
@@ -36,8 +36,8 @@ define graphdb::ee::master::repository (
   $repository_template = "${module_name}/repository/master.ttl.erb",
   $repository_id       = $title,
   $repository_label    = 'GraphDB EE master repository',
+  $replication_port    = 0,
   $timeout             = 60,
-  $replication_port    = undef,
 ) {
 
   graphdb_repository { $title:

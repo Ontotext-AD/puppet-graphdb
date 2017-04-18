@@ -40,8 +40,7 @@ Puppet::Type.newtype(:graphdb_repository) do
   end
 
   newparam(:replication_port) do
-    desc 'The replication port used for backups; default: null'
-    defaultto('null')
+    desc 'The replication port used for backups'
     validate do |value|
       begin
         Integer(value)
@@ -50,7 +49,7 @@ Puppet::Type.newtype(:graphdb_repository) do
       end
     end
     munge do |value|
-      Integer(value)
+      Integer(value) unless value.nil?
     end
   end
 

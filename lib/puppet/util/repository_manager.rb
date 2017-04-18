@@ -20,10 +20,12 @@ module Puppet
 
       attr_reader :endpoint
       attr_reader :repository_id
+      attr_reader :jolokia_secret
 
-      def initialize(endpoint, repository_id)
+      def initialize(endpoint, repository_id, jolokia_secret = nil)
         @endpoint = endpoint
         @repository_id = repository_id
+        @jolokia_secret = jolokia_secret
       end
 
       def check_repository(timeout)
