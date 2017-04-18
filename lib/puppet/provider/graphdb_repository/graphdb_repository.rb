@@ -20,7 +20,12 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
       resource[:timeout]
     )
 
-    repository_manager.repository_up?(0)
+    result = repository_manager.repository_up?(0)
+    unless resource[:replication_port].nil?
+      result = repository_manager.set_repository_replication_port(resource[:replication_port])
+    end
+
+    result
   end
 
   def destroy

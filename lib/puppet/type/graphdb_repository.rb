@@ -39,6 +39,21 @@ Puppet::Type.newtype(:graphdb_repository) do
     desc 'The context of the created repository'
   end
 
+  newparam(:replication_port) do
+    desc 'The replication port used for backups; default: null'
+    defaultto('null')
+    validate do |value|
+      begin
+        Integer(value)
+      rescue StandardError
+        raise(ArgumentError, "replication_port should be valid integer: #{value}")
+      end
+    end
+    munge do |value|
+      Integer(value)
+    end
+  end
+
   newparam(:timeout) do
     desc 'The max number of seconds that graphdb create/delete/check process should wait before giving up
     and deciding that the GraphDB is not running; default: 60 seconds.'

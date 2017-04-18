@@ -71,6 +71,26 @@ module Puppet
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
       end
 
+      def set_repository_replication_port(replication_port)
+        Puppet.debug "Trying to set repository replication port [#{endpoint}/repositories/#{repository_id}] to [#{replication_port}]"
+        uri = endpoint.dup
+        uri.path = '/jolokia'
+        body = {
+          'type'      => 'write',
+          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
+          'attribute' => 'MasterReplicationPort',
+          'value'     => replication_port
+        }
+
+        Puppet::Util::RequestManager.perform_http_request(uri,
+                                                          { method: :post,
+                                                            body_data: body.to_json,
+                                                            auth: { user: '', password: jolokia_secret } },
+                                                          { codes: [200] }, 0)
+
+        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] replication port set.")
+      end
+
       def delete_repository(timeout)
         uri = endpoint.dup
         uri.path = "/repositories/#{repository_id}"
