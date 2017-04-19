@@ -122,6 +122,7 @@ describe provider_class do
 
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?).once
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
+        expect_any_instance_of(Puppet::Util::RepositoryManager).to_not receive(:set_repository_replication_port)
 
         expect(provider.create).to be true
       end
