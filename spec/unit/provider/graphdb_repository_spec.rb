@@ -32,7 +32,7 @@ describe provider_class do
       provider_class.new(resource)
     end
 
-    context 'validating existing graphdb repository with available master instance' do
+    context 'validating not existing graphdb repository with available master instance' do
       before do
         allow_any_instance_of(Puppet::Type::Graphdb_repository).to receive(:catalog) { catalog }
         allow(catalog).to receive(:resources) { [master_instance] }
@@ -42,13 +42,18 @@ describe provider_class do
       end
 
       it do
-        allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).with(timeout) { true }
+        allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?)
+                  .with(timeout).and_return(true)
+        allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository)
+                  .with(repository_template, repository_context, timeout) { true }
         allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:set_repository_replication_port).with(replication_port) { true }
 
-        expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:check_repository).once
+
+        expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?).once
+        expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:set_repository_replication_port).once
 
-        expect(provider.exists?).to be true
+        expect(provider.create).to be true
       end
     end
   end
