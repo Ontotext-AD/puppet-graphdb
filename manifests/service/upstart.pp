@@ -56,7 +56,6 @@ define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $jav
     enable     => $service_enable,
     provider   => 'upstart',
     hasstatus  => true,
-    hasrestart => true,
   }
 
 }

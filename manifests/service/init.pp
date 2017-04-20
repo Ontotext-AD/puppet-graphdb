@@ -51,7 +51,6 @@ define graphdb::service::init($ensure, $service_ensure, $service_enable, $java_o
     enable     => $service_enable,
     provider   => 'init',
     hasstatus  => true,
-    hasrestart => true,
   }
 
 }
