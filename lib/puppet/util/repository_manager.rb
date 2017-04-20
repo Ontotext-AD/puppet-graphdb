@@ -90,7 +90,7 @@ module Puppet
                                                             auth: { user: '', password: jolokia_secret } },
                                                           { codes: [200] }, 0)
 
-        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] replication port set.")
+        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] replication port set to [#{replication_port}].")
       end
 
       def delete_repository(timeout)
