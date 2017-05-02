@@ -52,10 +52,10 @@ define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $jav
   }
 
   service { "graphdb-${title}":
-    ensure     => $service_ensure,
-    enable     => $service_enable,
-    provider   => 'upstart',
-    hasstatus  => true,
+    ensure    => $service_ensure,
+    enable    => $service_enable,
+    provider  => 'upstart',
+    hasstatus => true,
   }
 
 }
