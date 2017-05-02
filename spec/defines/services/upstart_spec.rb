@@ -45,8 +45,7 @@ describe 'graphdb::service::upstart', type: :define do
         enable: true,
         name: 'graphdb-test',
         provider: 'upstart',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
   end
@@ -63,8 +62,7 @@ describe 'graphdb::service::upstart', type: :define do
         enable: false,
         name: 'graphdb-test',
         provider: 'upstart',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
   end

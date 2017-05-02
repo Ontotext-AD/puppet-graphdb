@@ -40,8 +40,7 @@ describe 'graphdb::service::init', type: :define do
         enable: true,
         name: 'graphdb-test',
         provider: 'init',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
   end
@@ -58,8 +57,7 @@ describe 'graphdb::service::init', type: :define do
         enable: false,
         name: 'graphdb-test',
         provider: 'init',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
   end

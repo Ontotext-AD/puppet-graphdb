@@ -58,8 +58,7 @@ describe 'graphdb::service::systemd', type: :define do
         enable: true,
         name: 'graphdb-test.service',
         provider: 'systemd',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
   end
@@ -76,8 +75,7 @@ describe 'graphdb::service::systemd', type: :define do
         enable: false,
         name: 'graphdb-test.service',
         provider: 'systemd',
-        hasstatus: true,
-        hasrestart: true
+        hasstatus: true
       )
     end
     it { is_expected.to contain_exec('systemd_reload_test').with(command: '/bin/systemctl daemon-reload', refreshonly: true) }
