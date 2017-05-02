@@ -19,6 +19,10 @@
 #   The template to use for repository creation
 #   example: http://ontotext.com
 #
+# [*replication_port*]
+#   Master replication port used for backups
+#   default: 0, random port used
+#
 # [*timeout*]
 #   The max number of seconds that the repository create/delete/check process should wait before giving up.
 #   default: 60
@@ -28,11 +32,12 @@
 define graphdb::ee::master::repository (
   $endpoint,
   $repository_context,
-  $ensure = $graphdb::ensure,
+  $ensure              = $graphdb::ensure,
   $repository_template = "${module_name}/repository/master.ttl.erb",
-  $repository_id = $title,
-  $repository_label = 'GraphDB EE master repository',
-  $timeout = 60,
+  $repository_id       = $title,
+  $repository_label    = 'GraphDB EE master repository',
+  $replication_port    = 0,
+  $timeout             = 60,
 ) {
 
   graphdb_repository { $title:
@@ -41,6 +46,7 @@ define graphdb::ee::master::repository (
     endpoint            => $endpoint,
     repository_template => template($repository_template),
     repository_context  => $repository_context,
+    replication_port    => $replication_port,
     timeout             => $timeout,
   }
 

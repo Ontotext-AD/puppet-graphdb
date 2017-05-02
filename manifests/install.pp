@@ -44,8 +44,8 @@ class graphdb::install {
       creates => $archive_destination,
       timeout => $graphdb::archive_dl_timeout,
       require => [File[$graphdb::tmp_dir], Package['curl']],
-    } ~>
-    exec { 'unpack-graphdb-archive':
+    }
+    ~> exec { 'unpack-graphdb-archive':
       command     => "rm -rf ${dist_installation_dir} && unzip ${archive_destination} -d ${dist_installation_dir} && mv ${unpacked_directory}/* ${dist_installation_dir} && rm -r ${unpacked_directory}",
       refreshonly => true,
       require     => [File[$graphdb::install_dir], Package['unzip']],

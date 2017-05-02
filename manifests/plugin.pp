@@ -24,7 +24,7 @@
 # [*source*]
 #   The source of GraphDB plugin.
 #
-define graphdb::plugin(
+define graphdb::plugin (
   $instance,
   $ensure = $graphdb::ensure,
   $source = undef,
@@ -39,8 +39,8 @@ define graphdb::plugin(
   file { "${instance_plugins_dir}/${plugin_file_name}":
     ensure => $ensure,
     source => $source,
-  } ~>
-  exec { "unpack-graphdb-plugin-${title}":
+  }
+  ~> exec { "unpack-graphdb-plugin-${title}":
     command     => "rm -rf ${title} && unzip ${instance_plugins_dir}/${plugin_file_name} -d ${instance_plugins_dir}",
     refreshonly => true,
     require     => Package['unzip'],
