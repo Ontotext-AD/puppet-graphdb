@@ -39,6 +39,7 @@ group :development, :unit_tests do
   gem 'webmock'
   gem 'parallel_tests'
   gem 'simplecov', require: false
+  gem 'rspec_junit_formatter'
 end
 
 group :system_tests do
@@ -49,6 +50,7 @@ group :system_tests do
   gem 'beaker-puppet_install_helper'
   gem 'master_manipulator'
   gem 'beaker-hostgenerator', *location_from_env('BEAKER_HOSTGENERATOR_VERSION', [])
+  gem 'rspec_junit_formatter'
 end
 
 eval(File.read("#{__FILE__}.local"), binding) if File.exist? "#{__FILE__}.local"
