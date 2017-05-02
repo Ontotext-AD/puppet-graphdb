@@ -20,10 +20,12 @@ module Puppet
 
       attr_reader :endpoint
       attr_reader :repository_id
+      attr_reader :jolokia_secret
 
-      def initialize(endpoint, repository_id)
+      def initialize(endpoint, repository_id, jolokia_secret = nil)
         @endpoint = endpoint
         @repository_id = repository_id
+        @jolokia_secret = jolokia_secret
       end
 
       def check_repository(timeout)
@@ -69,6 +71,26 @@ module Puppet
                                                           { codes: [204] },
                                                           timeout)
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
+      end
+
+      def set_repository_replication_port(replication_port)
+        Puppet.debug "Trying to set repository replication port [#{endpoint}/repositories/#{repository_id}] to [#{replication_port}]"
+        uri = endpoint.dup
+        uri.path = '/jolokia'
+        body = {
+          'type'      => 'write',
+          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
+          'attribute' => 'MasterReplicationPort',
+          'value'     => replication_port
+        }
+
+        Puppet::Util::RequestManager.perform_http_request(uri,
+                                                          { method: :post,
+                                                            body_data: body.to_json,
+                                                            auth: { user: '', password: jolokia_secret } },
+                                                          { codes: [200] }, 0)
+
+        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] replication port set to [#{replication_port}].")
       end
 
       def delete_repository(timeout)
