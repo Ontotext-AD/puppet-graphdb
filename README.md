@@ -1,7 +1,7 @@
 GraphDB Puppet module
 ---------------------
 
-[![Build Status](http://jenkins.ontotext.com/view/Puppet/view/all/job/puppet-graphdb/badge/icon)](http://jenkins.ontotext.com/view/Puppet/view/all/job/puppet-graphdb/)
+[![Build Status](https://jenkins.ontotext.com/buildStatus/icon?job=puppet-graphdb)](https://jenkins.ontotext.com/job/puppet-graphdb)
 [![Puppet Forge endorsed](https://img.shields.io/puppetforge/e/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)
 [![Puppet Forge Version](https://img.shields.io/puppetforge/v/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)
 [![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)

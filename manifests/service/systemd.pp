@@ -68,13 +68,12 @@ define graphdb::service::systemd($ensure, $service_ensure, $service_enable, $jav
   }
 
   service { "graphdb-${title}":
-    ensure     => $service_ensure,
-    enable     => $service_enable,
-    name       => "graphdb-${title}.service",
-    hasstatus  => true,
-    hasrestart => true,
-    provider   => 'systemd',
-    require    => $service_require,
+    ensure    => $service_ensure,
+    enable    => $service_enable,
+    name      => "graphdb-${title}.service",
+    hasstatus => true,
+    provider  => 'systemd',
+    require   => $service_require,
   }
 
 }

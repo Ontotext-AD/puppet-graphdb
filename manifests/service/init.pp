@@ -47,11 +47,10 @@ define graphdb::service::init($ensure, $service_ensure, $service_enable, $java_o
   }
 
   service { "graphdb-${title}":
-    ensure     => $service_ensure,
-    enable     => $service_enable,
-    provider   => 'init',
-    hasstatus  => true,
-    hasrestart => true,
+    ensure    => $service_ensure,
+    enable    => $service_enable,
+    provider  => 'init',
+    hasstatus => true,
   }
 
 }
