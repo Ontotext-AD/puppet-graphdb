@@ -2,22 +2,25 @@
 
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 
-def location_from_env(env, default_location = [])
-  if location = ENV[env]
-    if location =~ /^((?:git|https?)[:@][^#]*)#(.*)/
-      [{ git: Regexp.last_match(1), branch: Regexp.last_match(2), require: false }]
-    elsif location =~ /^file:\/\/(.*)/
-      ['>= 0', { path: File.expand_path(Regexp.last_match(1)), require: false }]
-    else
-      [location, { require: false }]
-    end
+# Find a location or specific version for a gem. place_or_version can be a
+# version, which is most often used. It can also be git, which is specified as
+# `git://somewhere.git#branch`. You can also use a file source location, which
+# is specified as `file://some/location/on/disk`.
+def location_for(place_or_version, fake_version = nil)
+  if place_or_version =~ /^(git[:@][^#]*)#(.*)/
+    [fake_version, { :git => $1, :branch => $2, :require => false }].compact
+  elsif place_or_version =~ /^file:\/\/(.*)/
+    ['>= 0', { :path => File.expand_path($1), :require => false }]
   else
-    default_location
+    [place_or_version, { :require => false }]
   end
 end
 
-gem 'facter', *location_from_env('FACTER_GEM_VERSION')
-gem 'puppet', *location_from_env('PUPPET_GEM_VERSION')
+gem 'facter', *location_for(ENV['FACTER_GEM_VERSION']) if ENV['FACTER_GEM_VERSION']
+gem 'hiera', *location_for(ENV['HIERA_GEM_VERSION']) if ENV['HIERA_GEM_VERSION']
+
+ruby_version_segments = Gem::Version.new(RUBY_VERSION.dup).segments
+minor_version = "#{ruby_version_segments[0]}.#{ruby_version_segments[1]}"
 
 group :development, :unit_tests do
   gem 'metadata-json-lint'
@@ -43,14 +46,14 @@ group :development, :unit_tests do
 end
 
 group :system_tests do
-  gem 'beaker', *location_from_env('BEAKER_VERSION', []) if RUBY_VERSION >= '2.3.0'
-  gem 'beaker', *location_from_env('BEAKER_VERSION', ['< 3']) if RUBY_VERSION < '2.3.0'
-  gem 'beaker-rspec', *location_from_env('BEAKER_RSPEC_VERSION', ['>= 3.4'])
+  gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || '>= 3')
+  gem 'beaker-rspec', *location_for(ENV['BEAKER_RSPEC_VERSION'])
   gem 'serverspec'
   gem 'beaker-puppet_install_helper'
   gem 'master_manipulator'
-  gem 'beaker-hostgenerator', *location_from_env('BEAKER_HOSTGENERATOR_VERSION', [])
+  gem "beaker-hostgenerator", *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'])
   gem 'rspec_junit_formatter'
+  gem "puppet-module-posix-system-r#{minor_version}", :require => false, :platforms => "ruby"
 end
 
 eval(File.read("#{__FILE__}.local"), binding) if File.exist? "#{__FILE__}.local"

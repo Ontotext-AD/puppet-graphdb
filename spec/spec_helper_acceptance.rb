@@ -2,15 +2,28 @@ require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/dsl/helpers'
+require 'beaker/puppet_install_helper'
+require 'beaker/module_install_helper'
 
 puppet_version = ENV['PUPPET_VERSION']
 
-# Install puppet
-install_puppet(version: puppet_version,
-               puppet_agent_version: '1.1.0',
-               default_action: 'gem_install')
+block_on hosts do |host|
+  if host['platform'] =~ /ubuntu-(16.04)/
+    # Workaround https://tickets.puppetlabs.com/browse/BKR-821
+    install_puppetlabs_release_repo(host, repo = 'pc1', opts = { release_apt_repo_url: 'http://apt.puppetlabs.com/' })
 
-UNSUPPORTED_PLATFORMS = %w(AIX windows Solaris Suse).freeze
+    host.install_package("puppet-common=#{puppet_version}-2ubuntu0.1")
+    host.install_package("puppet=#{puppet_version}-2ubuntu0.1")
+    configure_type_defaults_on(host)
+  else
+    install_puppet_on(host, version: puppet_version, puppet_agent_version: '1.1.0', default_action: 'gem_install')
+  end
+end
+
+install_module_on(hosts)
+install_module_dependencies_on(hosts)
+
+UNSUPPORTED_PLATFORMS = %w[AIX windows Solaris Suse].freeze
 graphdb_version = ENV['GRAPHDB_VERSION']
 
 RSpec.configure do |c|
