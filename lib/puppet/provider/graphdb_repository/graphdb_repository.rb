@@ -24,6 +24,9 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
     unless resource[:replication_port].nil?
       result = repository_manager.set_repository_replication_port(resource[:replication_port])
     end
+    unless resource[:node_id].nil?
+      result = repository_manager.set_node_id(resource[:node_id])
+    end
 
     result
   end
@@ -44,7 +47,7 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
     resource.catalog.resources.each do |resource|
       julokia_secret = resource[:jolokia_secret] if check_resource_is_matching_master?(resource, port)
     end
-    if julokia_secret.nil? && !resource[:replication_port].nil?
+    if julokia_secret.nil? && (!resource[:replication_port].nil? || !resource[:node_id].nil?)
       raise Puppet::Error, 'fail to resolve julokia secret, please ensure that graphdb_repository
 	        					is defined on the same node as master graphdb instance'
     end

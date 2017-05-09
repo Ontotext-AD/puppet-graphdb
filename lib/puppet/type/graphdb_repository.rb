@@ -39,6 +39,10 @@ Puppet::Type.newtype(:graphdb_repository) do
     desc 'The context of the created repository'
   end
 
+  newparam(:node_id) do
+    desc 'The node id of master instance'
+  end
+
   newparam(:replication_port) do
     desc 'The replication port used for backups'
     validate do |value|

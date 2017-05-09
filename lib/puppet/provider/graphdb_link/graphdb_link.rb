@@ -1,5 +1,6 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
-require 'puppet/util/link_manager'
+require 'puppet/util/master_master_link_manager'
+require 'puppet/util/master_worker_link_manager'
 require 'puppet/exceptions/request_fail'
 
 Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
@@ -7,7 +8,6 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
   which manages master worker links"
 
   def exists?
-    Puppet.debug 'Check worker is already connected with master'
     link_manager.check_link
     true
   rescue Puppet::Exceptions::RequestFailError
@@ -15,26 +15,34 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
   end
 
   def create
-    Puppet.debug "Creating link between #{resource[:master_endpoint]}/repositories/#{resource[:master_repository_id]}
-    	and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
     link_manager.create_link
   end
 
   def destroy
-    Puppet.debug "Deleting link between #{resource[:master_endpoint]}/repositories/#{resource[:master_repository_id]}
-    and #{resource[:worker_endpoint]}/repositories/#{resource[:worker_repository_id]}"
     link_manager.delete_link
   end
 
 private
 
   def link_manager
-    @link_manager ||= Puppet::Util::LinkManager.new(resource[:master_endpoint],
-                                                    resource[:master_repository_id],
-                                                    resource[:worker_endpoint],
-                                                    resource[:worker_repository_id],
-                                                    resolve_julokia_secret,
-                                                    resource[:replication_port])
+    @link_manager ||= if !resource[:worker_endpoint].nil?
+                        Puppet::Util::MasterWorkerLinkManager.new(resource[:master_endpoint],
+                                                                  resource[:master_repository_id],
+                                                                  resource[:worker_endpoint],
+                                                                  resource[:worker_repository_id],
+                                                                  resolve_julokia_secret,
+                                                                  resource[:replication_port])
+                      elsif !resource[:peer_master_endpoint].nil?
+                        Puppet::Util::MasterMasterLinkManager.new(resource[:master_endpoint],
+                                                                  resource[:master_repository_id],
+                                                                  resource[:peer_master_endpoint],
+                                                                  resource[:peer_master_repository_id],
+                                                                  resolve_julokia_secret,
+                                                                  resource[:peer_master_node_id])
+                      else
+                        raise Puppet::Error, 'please ensure that you provide required worker link details(worker_endpoint and worker_repository_id)
+                          or required master link details(peer_master_endpoint, peer_master_repository_id)'
+                      end
   end
 
   def resolve_julokia_secret

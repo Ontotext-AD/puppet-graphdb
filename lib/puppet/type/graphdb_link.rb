@@ -51,7 +51,7 @@ Puppet::Type.newtype(:graphdb_link) do
       end
     end
     munge do |value|
-      URI(value)
+      URI(value) unless value.nil?
     end
   end
 
@@ -70,12 +70,38 @@ Puppet::Type.newtype(:graphdb_link) do
     end
   end
 
+  newparam(:peer_master_repository_id) do
+    desc 'The id of the peer master repository'
+    validate do |value|
+      value.is_a?(String)
+    end
+  end
+
+  newparam(:peer_master_endpoint) do
+    desc 'Sesame endpoint of GraphDB peer master instance'
+    validate do |value|
+      begin
+        URI(value)
+      rescue StandardError
+        raise(ArgumentError, "peer_worker_endpoint should be valid url: #{value}")
+      end
+    end
+    munge do |value|
+      URI(value) unless value.nil?
+    end
+  end
+
+  newparam(:peer_master_node_id) do
+    desc 'The node id of peer master instance'
+  end
+
   # Autorequire the relevant graphdb_repository
   autorequire(:graphdb_repository) do
     repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
       res if (res[:endpoint] == self[:master_endpoint] && res[:repository_id] == self[:master_repository_id]) ||
-             (res[:endpoint] == self[:worker_endpoint] && res[:repository_id] == self[:worker_repository_id])
+             (res[:endpoint] == self[:worker_endpoint] && res[:repository_id] == self[:worker_repository_id]) ||
+             (res[:endpoint] == self[:peer_master_endpoint] && res[:repository_id] == self[:peer_master_repository_id])
     end
     repositories.collect do |res|
       res[:name]

@@ -73,6 +73,26 @@ module Puppet
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
       end
 
+      def set_node_id(node_id)
+        Puppet.debug "Trying to set node id [#{endpoint}/repositories/#{repository_id}] to [#{node_id}]"
+        uri = endpoint.dup
+        uri.path = '/jolokia'
+        body = {
+          'type'      => 'write',
+          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
+          'attribute' => 'NodeID',
+          'value'     => node_id
+        }
+
+        Puppet::Util::RequestManager.perform_http_request(uri,
+                                                          { method: :post,
+                                                            body_data: body.to_json,
+                                                            auth: { user: '', password: jolokia_secret } },
+                                                          { codes: [200] }, 0)
+
+        Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] node id set to [#{node_id}].")
+      end
+
       def set_repository_replication_port(replication_port)
         Puppet.debug "Trying to set repository replication port [#{endpoint}/repositories/#{repository_id}] to [#{replication_port}]"
         uri = endpoint.dup
