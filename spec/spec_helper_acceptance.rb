@@ -2,8 +2,6 @@ require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 require 'beaker/dsl/helpers'
-require 'beaker/puppet_install_helper'
-require 'beaker/module_install_helper'
 
 puppet_version = ENV['PUPPET_VERSION']
 
@@ -19,9 +17,6 @@ block_on hosts do |host|
     install_puppet_on(host, version: puppet_version, puppet_agent_version: '1.1.0', default_action: 'gem_install')
   end
 end
-
-install_module_on(hosts)
-install_module_dependencies_on(hosts)
 
 UNSUPPORTED_PLATFORMS = %w[AIX windows Solaris Suse].freeze
 graphdb_version = ENV['GRAPHDB_VERSION']

@@ -53,7 +53,6 @@ group :system_tests do
   gem 'master_manipulator'
   gem "beaker-hostgenerator", *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'])
   gem 'rspec_junit_formatter'
-  gem "puppet-module-posix-system-r#{minor_version}", :require => false, :platforms => "ruby"
 end
 
 eval(File.read("#{__FILE__}.local"), binding) if File.exist? "#{__FILE__}.local"
