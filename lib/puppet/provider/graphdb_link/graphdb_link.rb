@@ -25,14 +25,17 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
 private
 
   def link_manager
-    @link_manager ||= if !resource[:worker_endpoint].nil?
+    if !resource[:worker_endpoint].nil? && !resource[:peer_master_endpoint].nil?
+      raise Puppet::Error, 'you should provide worker_endpoint or peer_master_endpoint, but not both'
+    end
+    @link_manager ||= if !resource[:worker_endpoint].nil? && !resource[:worker_repository_id].nil?
                         Puppet::Util::MasterWorkerLinkManager.new(resource[:master_endpoint],
                                                                   resource[:master_repository_id],
                                                                   resource[:worker_endpoint],
                                                                   resource[:worker_repository_id],
                                                                   resolve_julokia_secret,
                                                                   resource[:replication_port])
-                      elsif !resource[:peer_master_endpoint].nil?
+                      elsif !resource[:peer_master_endpoint].nil? && !resource[:peer_master_repository_id].nil? && !resource[:peer_master_node_id].nil?
                         Puppet::Util::MasterMasterLinkManager.new(resource[:master_endpoint],
                                                                   resource[:master_repository_id],
                                                                   resource[:peer_master_endpoint],
@@ -41,7 +44,7 @@ private
                                                                   resource[:peer_master_node_id])
                       else
                         raise Puppet::Error, 'please ensure that you provide required worker link details(worker_endpoint and worker_repository_id)
-                          or required master link details(peer_master_endpoint, peer_master_repository_id)'
+                          or required master link details(peer_master_endpoint, peer_master_repository_id and peer_master_node_id)'
                       end
   end
 

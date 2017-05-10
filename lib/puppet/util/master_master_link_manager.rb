@@ -71,13 +71,12 @@ module Puppet
           'operation' => 'removeSyncPeer',
           'arguments' => [peer_master_node_id]
         }
-        expected_massage = Regexp.escape("#{peer_master_endpoint}/repositories/#{peer_master_repository_id}".gsub('/', '\/'))
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
                                                             body_data: body.to_json,
                                                             auth: { user: '', password: jolokia_secret } },
-                                                          { messages: [expected_massage],
+                                                          { messages: [peer_master_node_id],
                                                             codes: [200] }, 0)
       end
     end

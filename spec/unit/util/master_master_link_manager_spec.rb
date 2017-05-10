@@ -1,19 +1,19 @@
 require 'spec_helper'
-require 'puppet/util/link_manager'
+require 'puppet/util/master_master_link_manager'
 require 'puppet/util/request_manager'
 require 'rspec/mocks'
 
-describe 'LinkManager' do
+describe 'MasterMasterLinkManager' do
   let(:uri_master) { URI('http://test.com/master') }
-  let(:uri_worker) { URI('http://test.com/worker') }
+  let(:uri_peer_master) { URI('http://test.com/peer_master') }
   let(:master_repository) { 'master' }
-  let(:worker_repository) { 'worker' }
+  let(:peer_master_repository) { 'master' }
   let(:jolokia_secret) { 'secret' }
-  let(:replication_port) { 9000 }
+  let(:peer_master_node_id) { 'peer_master' }
 
   let(:link_manager) do
-    Puppet::Util::LinkManager.new(uri_master, master_repository, uri_worker, worker_repository, jolokia_secret,
-                                  replication_port)
+    Puppet::Util::MasterMasterLinkManager.new(uri_master, master_repository, uri_peer_master, peer_master_repository, jolokia_secret,
+                                              peer_master_node_id)
   end
 
   describe '#check_link' do
@@ -22,12 +22,12 @@ describe 'LinkManager' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { true }
 
         expect(link_manager.check_link).to be true
-        uri_master.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository}/NodeStatus"
+        uri_master.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository}/SyncPeers"
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
           { method: :get,
             auth: { user: '', password: jolokia_secret } },
-          { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
+          { messages: [Regexp.escape("#{uri_peer_master}/repositories/#{peer_master_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
       end
@@ -56,15 +56,15 @@ describe 'LinkManager' do
         body = {
           'type' => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository}",
-          'operation' => 'addClusterNode',
-          'arguments' => ["#{uri_worker}/repositories/#{worker_repository}", replication_port, 0, true]
+          'operation' => 'addSyncPeer',
+          'arguments' => [peer_master_node_id, "#{uri_peer_master}/repositories/#{peer_master_repository}"]
         }.to_json
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
           { method: :post, body_data: body,
             auth: { user: '', password: jolokia_secret } },
-          { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
+          { messages: [Regexp.escape("#{uri_peer_master}/repositories/#{peer_master_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
       end
@@ -93,15 +93,15 @@ describe 'LinkManager' do
         body = {
           'type' => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository}",
-          'operation' => 'removeClusterNode',
-          'arguments' => ["#{uri_worker}/repositories/#{worker_repository}"]
+          'operation' => 'removeSyncPeer',
+          'arguments' => [peer_master_node_id]
         }.to_json
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
           { method: :post, body_data: body,
             auth: { user: '', password: jolokia_secret } },
-          { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
+          { messages: [peer_master_node_id],
             codes: [200] }, 0
         ).once
       end
