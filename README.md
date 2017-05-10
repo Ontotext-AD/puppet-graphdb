@@ -1,4 +1,4 @@
-GraphDB Puppet module
+GraphDB Puppet module TEST
 ---------------------
 
 [![Build Status](https://jenkins.ontotext.com/buildStatus/icon?job=puppet-graphdb)](https://jenkins.ontotext.com/job/puppet-graphdb)
