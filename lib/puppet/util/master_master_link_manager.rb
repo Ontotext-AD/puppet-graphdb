@@ -65,6 +65,8 @@ module Puppet
 
         uri = master_endpoint.dup
         uri.path = '/jolokia'
+        expected_massage = Regexp.escape(peer_master_node_id.gsub('/', '\/'))
+
         body = {
           'type'      => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
@@ -76,7 +78,7 @@ module Puppet
                                                           { method: :post,
                                                             body_data: body.to_json,
                                                             auth: { user: '', password: jolokia_secret } },
-                                                          { messages: [peer_master_node_id],
+                                                          { messages: [expected_massage],
                                                             codes: [200] }, 0)
       end
     end

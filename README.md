@@ -136,7 +136,7 @@ Optimum GraphDB EE cluster configuration
 * master_endpoint (**required**)
 * peer_master_endpoint (**required**)
 * peer_master_repository_id (**required**)
-* peer_master_node_id (**required**)
+* peer_master_node_id (**optional** if you define graphdb_link on the same node as registered GraphDB master instance)
 
 
 #### Quick setup
@@ -181,57 +181,52 @@ A master with one worker
 A two peered masters([split brain](http://graphdb.ontotext.com/documentation/enterprise/ee/cluster-failures.html?highlight=master%20master#split-brain))
 
 ```
-class { 'graphdb':
-  version              => '#{graphdb_version}',
-  edition              => 'ee',
-  graphdb_download_url => 'file:///tmp',
+node 'master1' {
+
+  class { 'graphdb':
+    version => '#{graphdb_version}',
+    edition => 'ee',
+  }
+
+  graphdb::instance { 'master1':
+    license        => '/tmp/ee.license',
+    jolokia_secret => 'duper',
+    http_port      => 8080,
+  }
+
+  graphdb::ee::master::repository { 'master1':
+    repository_id      => 'master1',
+    endpoint           => "http://${::ipaddress}:8080",
+    repository_context => 'http://ontotext.com/pub/',
+  }
+
+  graphdb_link { 'master1-to-master2':
+    master_repository_id      => 'master2',
+    master_endpoint           => "http://${::ipaddress}:9090",
+    peer_master_repository_id => 'master1',
+    peer_master_endpoint      => "http://${::ipaddress}:8080",
+  }
 }
 
-graphdb::instance { 'master1':
-  license           => '/tmp/ee.license',
-  jolokia_secret    => 'duper',
-  http_port         => 8080,
-  validator_timeout => #{graphdb_timeout},
-}
+node 'master2' {
+  graphdb::instance { 'master2':
+    license        => '/tmp/ee.license',
+    jolokia_secret => 'duper',
+    http_port      => 9090,
+  }
 
-graphdb::ee::master::repository { 'master1':
-  repository_id      => 'master1',
-  endpoint           => "http://${::ipaddress}:8080",
-  repository_context => 'http://ontotext.com/pub/',
-  node_id            => 'test_master1',
-  timeout            => #{graphdb_timeout},
-}
+  graphdb::ee::master::repository { 'master2':
+    repository_id      => 'master2',
+    endpoint           => "http://${::ipaddress}:9090",
+    repository_context => 'http://ontotext.com/pub/',
+  }
 
-graphdb::instance { 'master2':
-  license           => '/tmp/ee.license',
-  jolokia_secret    => 'duper',
-  http_port         => 9090,
-  validator_timeout => #{graphdb_timeout},
-}
-
-graphdb::ee::master::repository { 'master2':
-  repository_id      => 'master2',
-  endpoint           => "http://${::ipaddress}:9090",
-  repository_context => 'http://ontotext.com/pub/',
-  node_id            => 'test_master2',
-  timeout            => #{graphdb_timeout},
-}
-
-
-graphdb_link { 'master1-master2':
-  master_repository_id      => 'master1',
-  master_endpoint           => "http://${::ipaddress}:8080",
-  peer_master_repository_id => 'master2',
-  peer_master_endpoint      => "http://${::ipaddress}:9090",
-  peer_master_node_id       => 'test_master2'
-}
-
-graphdb_link { 'master2-master1':
-  master_repository_id      => 'master2',
-  master_endpoint           => "http://${::ipaddress}:9090",
-  peer_master_repository_id => 'master1',
-  peer_master_endpoint      => "http://${::ipaddress}:8080",
-  peer_master_node_id       => 'test_master1'
+  graphdb_link { 'master2-to-master1':
+    master_repository_id      => 'master1',
+    master_endpoint           => "http://${::ipaddress}:8080",
+    peer_master_repository_id => 'master2',
+    peer_master_endpoint      => "http://${::ipaddress}:9090",
+  }
 }
 ```
 

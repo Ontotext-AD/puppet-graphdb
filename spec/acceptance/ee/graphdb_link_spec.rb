@@ -139,7 +139,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
             repository_id       => 'master1',
             endpoint            => "http://${::ipaddress}:8080",
             repository_context  => 'http://ontotext.com/pub/',
-            node_id             => 'test_master1',
             timeout             => #{graphdb_timeout},
          }
 
@@ -154,7 +153,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
           repository_id       => 'master2',
           endpoint            => "http://${::ipaddress}:9090",
           repository_context  => 'http://ontotext.com/pub/',
-          node_id             => 'test_master2',
           timeout             => #{graphdb_timeout},
        }
 
@@ -164,7 +162,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
         master_endpoint           => "http://${::ipaddress}:8080",
         peer_master_repository_id => 'master2',
         peer_master_endpoint      => "http://${::ipaddress}:9090",
-        peer_master_node_id       => 'test_master2'
       }
 
       graphdb_link { 'master2-master1':
@@ -172,7 +169,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
        master_endpoint           => "http://${::ipaddress}:9090",
        peer_master_repository_id => 'master1',
        peer_master_endpoint      => "http://${::ipaddress}:8080",
-       peer_master_node_id       => 'test_master1'
      }
     EOS
     end
@@ -184,13 +180,13 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET -u ':duper' 'http://#{fact('ipaddress')}:8080/jolokia/read/ReplicationCluster:name=ClusterInfo!/master1/SyncPeers'") do
       its(:exit_status) { should eq 0 }
-      regex = Regexp.escape("\"value\":[\"test_master2 <http://#{fact('ipaddress')}:9090/repositories/master2".gsub('/', '\/'))
+      regex = Regexp.escape("\"value\":[\"http://#{fact('ipaddress')}:9090/repositories/master2 <http://#{fact('ipaddress')}:9090/repositories/master2".gsub('/', '\/'))
       its(:stdout) { should match regex }
     end
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET -u ':duper' 'http://#{fact('ipaddress')}:9090/jolokia/read/ReplicationCluster:name=ClusterInfo!/master2/SyncPeers'") do
       its(:exit_status) { should eq 0 }
-      regex = Regexp.escape("\"value\":[\"test_master1 <http://#{fact('ipaddress')}:8080/repositories/master1".gsub('/', '\/'))
+      regex = Regexp.escape("\"value\":[\"http://#{fact('ipaddress')}:8080/repositories/master1 <http://#{fact('ipaddress')}:8080/repositories/master1".gsub('/', '\/'))
       its(:stdout) { should match regex }
     end
   end
@@ -215,7 +211,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
            repository_id       => 'master1',
            endpoint            => "http://${::ipaddress}:8080",
            repository_context  => 'http://ontotext.com/pub/',
-           node_id             => 'test_master1',
            timeout             => #{graphdb_timeout},
         }
 
@@ -230,7 +225,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
          repository_id       => 'master2',
          endpoint            => "http://${::ipaddress}:9090",
          repository_context  => 'http://ontotext.com/pub/',
-         node_id             => 'test_master2',
          timeout             => #{graphdb_timeout},
       }
 
@@ -241,7 +235,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
        master_endpoint           => "http://${::ipaddress}:8080",
        peer_master_repository_id => 'master2',
        peer_master_endpoint      => "http://${::ipaddress}:9090",
-       peer_master_node_id       => 'test_master2'
      }
 
      graphdb_link { 'master2-master1':
@@ -250,7 +243,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
       master_endpoint           => "http://${::ipaddress}:9090",
       peer_master_repository_id => 'master1',
       peer_master_endpoint      => "http://${::ipaddress}:8080",
-      peer_master_node_id       => 'test_master1'
      }
 	  EOS
     end
