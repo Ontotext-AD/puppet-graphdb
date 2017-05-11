@@ -25,7 +25,7 @@
 #
 # [*node_id*]
 #   Node id of master instance
-#   default: title, same as the master repository title
+#   default: endpoint, same as the master instance endpoint
 #
 # [*timeout*]
 #   The max number of seconds that the repository create/delete/check process should wait before giving up.
@@ -41,7 +41,7 @@ define graphdb::ee::master::repository (
   $repository_id       = $title,
   $repository_label    = 'GraphDB EE master repository',
   $replication_port    = 0,
-  $node_id             = $title,
+  $node_id             = "${endpoint}/repositories/${repository_id}",
   $timeout             = 60,
 ) {
 

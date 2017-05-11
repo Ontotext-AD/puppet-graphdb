@@ -24,8 +24,8 @@ module Puppet
       end
 
       def check_link
-        Puppet.debug "Check link between master_endpoint/repositories/master_repository_id
-        	and peer_master_endpoint/repositories/peer_master_repository_id"
+        Puppet.debug "Check link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
 
         uri = master_endpoint.dup
         uri.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository_id}/SyncPeers"
@@ -39,8 +39,8 @@ module Puppet
       end
 
       def create_link
-        Puppet.debug "Creating link between master_endpoint/repositories/master_repository_id
-        	and peer_master_endpoint/repositories/peer_master_repository_id"
+        Puppet.debug "Creating link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
         uri = master_endpoint.dup
         uri.path = '/jolokia'
         body = {
@@ -60,8 +60,8 @@ module Puppet
       end
 
       def delete_link
-        Puppet.debug "Deleting link between master_endpoint/repositories/master_repository_id
-        and peer_master_endpoint/repositories/peer_master_repository_id"
+        Puppet.debug "Deleting link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
 
         uri = master_endpoint.dup
         uri.path = '/jolokia'
