@@ -125,6 +125,20 @@ graphdb::instance { 'graphdb-instance':
 
 Optimum GraphDB EE cluster configuration 
 
+1. Master worker linking parameters:
+* master_repository_id (**required**)
+* master_endpoint (**required**)
+* worker_repository_id (**required**)
+* worker_endpoint (**required**)
+* replication_port (**optional**; default to 0)
+2. Master master linking parameters:
+* master_repository_id (**required**)
+* master_endpoint (**required**)
+* peer_master_endpoint (**required**)
+* peer_master_repository_id (**required**)
+* peer_master_node_id (**required**)
+
+
 #### Quick setup
 
 A master with one worker
@@ -164,6 +178,63 @@ A master with one worker
 }
 ```
 
+A two peered masters([split brain](http://graphdb.ontotext.com/documentation/enterprise/ee/cluster-failures.html?highlight=master%20master#split-brain))
+
+```
+       class{ 'graphdb':
+        version              => '#{graphdb_version}',
+        edition              => 'ee',
+        graphdb_download_url => 'file:///tmp',
+       }
+
+       graphdb::instance { 'master1':
+          license           => '/tmp/ee.license',
+          jolokia_secret    => 'duper',
+          http_port         => 8080,
+        validator_timeout => #{graphdb_timeout},
+       }
+
+         graphdb::ee::master::repository { 'master1':
+            repository_id       => 'master1',
+            endpoint            => "http://${::ipaddress}:8080",
+            repository_context  => 'http://ontotext.com/pub/',
+            node_id             => 'test_master1',
+            timeout             => #{graphdb_timeout},
+         }
+
+         graphdb::instance { 'master2':
+            license           => '/tmp/ee.license',
+            jolokia_secret    => 'duper',
+            http_port         => 9090,
+          validator_timeout => #{graphdb_timeout},
+         }
+
+       graphdb::ee::master::repository { 'master2':
+          repository_id       => 'master2',
+          endpoint            => "http://${::ipaddress}:9090",
+          repository_context  => 'http://ontotext.com/pub/',
+          node_id             => 'test_master2',
+          timeout             => #{graphdb_timeout},
+       }
+
+
+       graphdb_link { 'master1-master2':
+        master_repository_id      => 'master1',
+        master_endpoint           => "http://${::ipaddress}:8080",
+        peer_master_repository_id => 'master2',
+        peer_master_endpoint      => "http://${::ipaddress}:9090",
+        peer_master_node_id       => 'test_master2'
+      }
+
+      graphdb_link { 'master2-master1':
+       master_repository_id      => 'master2',
+       master_endpoint           => "http://${::ipaddress}:9090",
+       peer_master_repository_id => 'master1',
+       peer_master_endpoint      => "http://${::ipaddress}:8080",
+       peer_master_node_id       => 'test_master1'
+     }
+```
+
 #### Link Advanced options
 
 ##### GraphDB Master repository options can be given
@@ -173,6 +244,7 @@ A master with one worker
 ...
   $repository_template = "${module_name}/repository/master.ttl.erb", # ttl template to use as source for repository creation template
   $repository_label = 'GraphDB EE master repository', # repository label
+  $node_id          = $title, # node id of master instance
   $timeout = 60, # timeout for repository creation operations
 ...
  }

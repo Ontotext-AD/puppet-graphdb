@@ -23,6 +23,10 @@
 #   Master replication port used for backups
 #   default: 0, random port used
 #
+# [*node_id*]
+#   Node id of master instance
+#   default: title, same as the master repository title
+#
 # [*timeout*]
 #   The max number of seconds that the repository create/delete/check process should wait before giving up.
 #   default: 60
