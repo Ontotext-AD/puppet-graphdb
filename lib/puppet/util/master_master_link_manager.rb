@@ -4,29 +4,32 @@ require 'json'
 
 module Puppet
   module Util
-    # GraphDB master worker link manager
-    class LinkManager
+    # GraphDB master master link manager
+    class MasterMasterLinkManager
       attr_reader :master_endpoint
       attr_reader :master_repository_id
-      attr_reader :worker_endpoint
-      attr_reader :worker_repository_id
+      attr_reader :peer_master_endpoint
+      attr_reader :peer_master_repository_id
       attr_reader :jolokia_secret
-      attr_reader :replication_port
+      attr_reader :peer_master_node_id
 
-      def initialize(master_endpoint, master_repository_id, worker_endpoint, worker_repository_id, jolokia_secret,
-                     replication_port)
+      def initialize(master_endpoint, master_repository_id, peer_master_endpoint, peer_master_repository_id, jolokia_secret,
+                     peer_master_node_id)
         @master_endpoint = master_endpoint
         @master_repository_id = master_repository_id
-        @worker_endpoint = worker_endpoint
-        @worker_repository_id = worker_repository_id
+        @peer_master_endpoint = peer_master_endpoint
+        @peer_master_repository_id = peer_master_repository_id
         @jolokia_secret = jolokia_secret
-        @replication_port = replication_port
+        @peer_master_node_id = peer_master_node_id
       end
 
       def check_link
+        Puppet.debug "Check link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
+
         uri = master_endpoint.dup
-        uri.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository_id}/NodeStatus"
-        expected_massage = Regexp.escape("#{worker_endpoint}/repositories/#{worker_repository_id}".gsub('/', '\/'))
+        uri.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository_id}/SyncPeers"
+        expected_massage = Regexp.escape("#{peer_master_endpoint}/repositories/#{peer_master_repository_id}".gsub('/', '\/'))
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :get,
@@ -36,15 +39,17 @@ module Puppet
       end
 
       def create_link
+        Puppet.debug "Creating link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
         uri = master_endpoint.dup
         uri.path = '/jolokia'
         body = {
           'type'      => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
-          'operation' => 'addClusterNode',
-          'arguments' => ["#{worker_endpoint}/repositories/#{worker_repository_id}", replication_port, 0, true]
+          'operation' => 'addSyncPeer',
+          'arguments' => [peer_master_node_id, "#{peer_master_endpoint}/repositories/#{peer_master_repository_id}"]
         }
-        expected_massage = Regexp.escape("#{worker_endpoint}/repositories/#{worker_repository_id}".gsub('/', '\/'))
+        expected_massage = Regexp.escape("#{peer_master_endpoint}/repositories/#{peer_master_repository_id}".gsub('/', '\/'))
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
@@ -55,15 +60,19 @@ module Puppet
       end
 
       def delete_link
+        Puppet.debug "Deleting link between #{master_endpoint}/repositories/#{master_repository_id}
+        	and #{peer_master_endpoint}/repositories/#{peer_master_repository_id}"
+
         uri = master_endpoint.dup
         uri.path = '/jolokia'
+        expected_massage = Regexp.escape(peer_master_node_id.gsub('/', '\/'))
+
         body = {
           'type'      => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
-          'operation' => 'removeClusterNode',
-          'arguments' => ["#{worker_endpoint}/repositories/#{worker_repository_id}"]
+          'operation' => 'removeSyncPeer',
+          'arguments' => [peer_master_node_id]
         }
-        expected_massage = Regexp.escape("#{worker_endpoint}/repositories/#{worker_repository_id}".gsub('/', '\/'))
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,

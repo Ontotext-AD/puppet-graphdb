@@ -125,42 +125,108 @@ graphdb::instance { 'graphdb-instance':
 
 Optimum GraphDB EE cluster configuration 
 
+1. Master worker linking parameters:
+* master_repository_id (**required**)
+* master_endpoint (**required**)
+* worker_repository_id (**required**)
+* worker_endpoint (**required**)
+* replication_port (**optional**; default to 0)
+2. Master master linking parameters:
+* master_repository_id (**required**)
+* master_endpoint (**required**)
+* peer_master_endpoint (**required**)
+* peer_master_repository_id (**required**)
+* peer_master_node_id (**optional** if you define graphdb_link on the same node as registered GraphDB master instance)
+
+
 #### Quick setup
 
 A master with one worker
 
 ```
- class{ 'graphdb':
-    version              => '7.1.0',
-    edition              => 'ee',
+ class { 'graphdb':
+   version => '7.1.0',
+   edition => 'ee',
  }
-
+ 
  graphdb::instance { 'master':
-    license           => '/tmp/ee.license',
-    jolokia_secret    => 'duper',
-    http_port         => 8080,
+   license        => '/tmp/ee.license',
+   jolokia_secret => 'duper',
+   http_port      => 8080,
  }
-
+ 
  graphdb::ee::master::repository { 'master':
-    endpoint            => "http://${::ipaddress}:8080",
-    repository_context  => 'http://ontotext.com/pub/',
+   endpoint           => "http://${::ipaddress}:8080",
+   repository_context => 'http://ontotext.com/pub/',
  }
-
+ 
  graphdb::instance { 'worker':
-    license           => '/tmp/ee.license',
-    http_port         => 8082,
+   license   => '/tmp/ee.license',
+   http_port => 8082,
  }
-
+ 
  graphdb::ee::worker::repository { 'worker':
-    endpoint            => "http://${::ipaddress}:8082",
-    repository_context  => 'http://ontotext.com/pub/',
+   endpoint           => "http://${::ipaddress}:8082",
+   repository_context => 'http://ontotext.com/pub/',
  }
-
+ 
  graphdb_link { 'master-worker':
-    master_repository_id => 'master',
-    master_endpoint      => "http://${::ipaddress}:8080",
-    worker_repository_id => 'worker',
-    worker_endpoint      => "http://${::ipaddress}:8082",
+   master_repository_id => 'master',
+   master_endpoint      => "http://${::ipaddress}:8080",
+   worker_repository_id => 'worker',
+   worker_endpoint      => "http://${::ipaddress}:8082",
+ }
+```
+
+A two peered masters([split brain](http://graphdb.ontotext.com/documentation/enterprise/ee/cluster-failures.html?highlight=master%20master#split-brain))
+
+```
+node 'master1' {
+
+  class { 'graphdb':
+    version => '#{graphdb_version}',
+    edition => 'ee',
+  }
+
+  graphdb::instance { 'master1':
+    license        => '/tmp/ee.license',
+    jolokia_secret => 'duper',
+    http_port      => 8080,
+  }
+
+  graphdb::ee::master::repository { 'master1':
+    repository_id      => 'master1',
+    endpoint           => "http://${::ipaddress}:8080",
+    repository_context => 'http://ontotext.com/pub/',
+  }
+
+  graphdb_link { 'master1-to-master2':
+    master_repository_id      => 'master2',
+    master_endpoint           => "http://${::ipaddress}:9090",
+    peer_master_repository_id => 'master1',
+    peer_master_endpoint      => "http://${::ipaddress}:8080",
+  }
+}
+
+node 'master2' {
+  graphdb::instance { 'master2':
+    license        => '/tmp/ee.license',
+    jolokia_secret => 'duper',
+    http_port      => 9090,
+  }
+
+  graphdb::ee::master::repository { 'master2':
+    repository_id      => 'master2',
+    endpoint           => "http://${::ipaddress}:9090",
+    repository_context => 'http://ontotext.com/pub/',
+  }
+
+  graphdb_link { 'master2-to-master1':
+    master_repository_id      => 'master1',
+    master_endpoint           => "http://${::ipaddress}:8080",
+    peer_master_repository_id => 'master2',
+    peer_master_endpoint      => "http://${::ipaddress}:9090",
+  }
 }
 ```
 
@@ -173,6 +239,7 @@ A master with one worker
 ...
   $repository_template = "${module_name}/repository/master.ttl.erb", # ttl template to use as source for repository creation template
   $repository_label = 'GraphDB EE master repository', # repository label
+  $node_id          = $title, # node id of master instance
   $timeout = 60, # timeout for repository creation operations
 ...
  }

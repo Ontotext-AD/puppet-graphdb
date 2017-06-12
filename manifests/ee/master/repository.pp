@@ -23,6 +23,10 @@
 #   Master replication port used for backups
 #   default: 0, random port used
 #
+# [*node_id*]
+#   Node id of master instance
+#   default: endpoint, same as the master instance endpoint
+#
 # [*timeout*]
 #   The max number of seconds that the repository create/delete/check process should wait before giving up.
 #   default: 60
@@ -37,6 +41,7 @@ define graphdb::ee::master::repository (
   $repository_id       = $title,
   $repository_label    = 'GraphDB EE master repository',
   $replication_port    = 0,
+  $node_id             = "${endpoint}/repositories/${repository_id}",
   $timeout             = 60,
 ) {
 
@@ -47,6 +52,7 @@ define graphdb::ee::master::repository (
     repository_template => template($repository_template),
     repository_context  => $repository_context,
     replication_port    => $replication_port,
+    node_id             => $node_id,
     timeout             => $timeout,
   }
 

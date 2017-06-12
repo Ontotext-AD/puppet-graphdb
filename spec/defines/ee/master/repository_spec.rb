@@ -26,7 +26,8 @@ describe 'graphdb::ee::master::repository', type: :define do
         .with(ensure: 'present',
               repository_id: 'test',
               endpoint: 'http://test.com',
-              repository_context: 'test:test')
+              repository_context: 'test:test',
+              node_id: 'http://test.com/repositories/test')
     end
   end
 

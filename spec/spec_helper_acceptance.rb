@@ -33,6 +33,8 @@ RSpec.configure do |c|
       on(host, 'crontab -r -u graphdb', accept_all_exit_codes: true)
       on(host, 'service graphdb-test stop', accept_all_exit_codes: true)
       on(host, 'service graphdb-master stop', accept_all_exit_codes: true)
+      on(host, 'service graphdb-master1 stop', accept_all_exit_codes: true)
+      on(host, 'service graphdb-master2 stop', accept_all_exit_codes: true)
       on(host, 'service graphdb-worker stop', accept_all_exit_codes: true)
 
       on(host, 'rm -f /etc/init/graphdb-*', acceptable_exit_codes: [0])
