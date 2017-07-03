@@ -57,17 +57,17 @@ RSpec.configure do |c|
       on(host, "curl --insecure --keepalive-time 700 -o /tmp/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-se/#{graphdb_version}/graphdb-se-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
       on(host, "curl --insecure --keepalive-time 700 -o /tmp/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/#{graphdb_version}/graphdb-ee-#{graphdb_version}-dist.zip", acceptable_exit_codes: [0])
 
-      if on(host, 'ls /tmp/jdk-8u102-linux-x64.tar.gz', accept_all_exit_codes: true).exit_code.nonzero?
+      if on(host, 'ls /tmp/jdk-8u131-linux-x64.tar.gz', accept_all_exit_codes: true).exit_code.nonzero?
         on(host, 'curl -j -k -L -H "Cookie: oraclelicense=accept-securebackup-cookie" '\
-            'http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz >'\
-            ' /tmp/jdk-8u102-linux-x64.tar.gz', acceptable_exit_codes: [0])
+            'http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz >'\
+            ' /tmp/jdk-8u131-linux-x64.tar.gz', acceptable_exit_codes: [0])
       end
 
-      if on(host, 'ls /tmp/jdk1.8.0_102', accept_all_exit_codes: true).exit_code.nonzero?
-        on(host, 'tar -zxf /tmp/jdk-8u102-linux-x64.tar.gz -C /tmp', acceptable_exit_codes: [0])
+      if on(host, 'ls /tmp/jdk1.8.0_131', accept_all_exit_codes: true).exit_code.nonzero?
+        on(host, 'tar -zxf /tmp/jdk-8u131-linux-x64.tar.gz -C /tmp', acceptable_exit_codes: [0])
       end
 
-      host.add_env_var('JAVA_HOME', '/tmp/jdk1.8.0_102')
+      host.add_env_var('JAVA_HOME', '/tmp/jdk1.8.0_131')
 
       scp_to(host, 'ee.license', '/tmp/ee.license')
       scp_to(host, 'se.license', '/tmp/se.license')
