@@ -47,6 +47,26 @@ describe 'graphdb::ee::backup_cron', unless: UNSUPPORTED_PLATFORMS.include?(fact
 			 	worker_endpoint      => "http://${::ipaddress}:9090",
 			}
 
+			graphdb::instance { 'worker2':
+				license           => '/tmp/ee.license',
+				http_port         => 9091,
+				validator_timeout => #{graphdb_timeout},
+			 }
+
+			 graphdb::ee::worker::repository { 'worker2':
+				repository_id       => 'worker',
+				endpoint            => "http://${::ipaddress}:9091",
+				repository_context  => 'http://ontotext.com/pub/',
+				timeout             => #{graphdb_timeout},
+			 }
+
+			 graphdb_link { 'master-worker2':
+			 	master_repository_id => 'master',
+			 	master_endpoint      => "http://${::ipaddress}:8080",
+			 	worker_repository_id => 'worker',
+			 	worker_endpoint      => "http://${::ipaddress}:9091",
+			}
+
 			graphdb::ee::backup_cron { 'backup-test':
 				master_endpoint   => "http://${::ipaddress}:8080",
 				master_repository => 'master',

@@ -36,6 +36,8 @@ RSpec.configure do |c|
       on(host, 'service graphdb-master1 stop', accept_all_exit_codes: true)
       on(host, 'service graphdb-master2 stop', accept_all_exit_codes: true)
       on(host, 'service graphdb-worker stop', accept_all_exit_codes: true)
+      on(host, 'service graphdb-worker2 stop', accept_all_exit_codes: true)
+
 
       on(host, 'rm -f /etc/init/graphdb-*', acceptable_exit_codes: [0])
       on(host, 'rm -f /etc/init.d/graphdb-*', acceptable_exit_codes: [0])
