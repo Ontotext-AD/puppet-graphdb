@@ -84,7 +84,7 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Linux')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee', tmp_dir => '/tmp', user }"
+      "class { 'graphdb': version => '7.0.0', edition => 'ee', tmp_dir => '/tmp' }"
     end
 
     let(:download_url) do
