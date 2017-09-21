@@ -41,6 +41,8 @@ class graphdb::install {
 
     if $graphdb::graphdb_download_user {
       $basic_auth_option = "-u ${graphdb::graphdb_download_user}:${graphdb::graphdb_download_password}"
+    } else {
+      $basic_auth_option = ''
     }
 
     exec { "download-graphdb-${graphdb::edition}-${graphdb::version}-archive":

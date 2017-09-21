@@ -32,7 +32,7 @@ describe 'graphdb::install', type: :class do
 
     it do
       is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
-        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure -o #{dest_file}" \
+        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
   															" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
@@ -69,7 +69,7 @@ describe 'graphdb::install', type: :class do
 
     it do
       is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
-        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure -o #{dest_file}" \
+        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
     															  " #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
@@ -84,7 +84,7 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Linux')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee', tmp_dir => '/tmp' }"
+      "class { 'graphdb': version => '7.0.0', edition => 'ee', tmp_dir => '/tmp', user }"
     end
 
     let(:download_url) do
@@ -97,7 +97,7 @@ describe 'graphdb::install', type: :class do
 
     it do
       is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
-        command: "rm -f /tmp/*.zip && curl --insecure -o #{dest_file}" \
+        command: "rm -f /tmp/*.zip && curl --insecure  -o #{dest_file}" \
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
@@ -134,7 +134,7 @@ describe 'graphdb::install', type: :class do
 
     it do
       is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
-        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure -o #{dest_file}" \
+        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
         timeout: 600,
