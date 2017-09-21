@@ -145,7 +145,7 @@ class graphdb (
 
     #basic auth credentials validation
     if ($graphdb_download_user and !$graphdb_download_password) or (!$graphdb_download_user and $graphdb_download_password) {
-      fail("When using basic auth credentials you should provide both graphdb_download_user and graphdb_download_password")
+      fail('When using basic auth credentials you should provide both graphdb_download_user and graphdb_download_password')
     }
 
     validate_absolute_path($tmp_dir)
