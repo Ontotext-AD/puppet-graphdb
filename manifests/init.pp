@@ -51,6 +51,9 @@
 # [*log_dir*]
 #   String. GraphDB log directory
 #
+# [*pid_dir*]
+#   String. GraphDB pid directory
+#
 # [*install_dir*]
 #   String. GraphDB distribution location
 #
@@ -78,8 +81,14 @@
 #   Boolean. Purge data directory on removal
 #
 # [*archive_dl_timeout*]
-#   For http downloads you can set howlong the exec resource may take.
+#   For http downloads you can set how long the exec resource may take.
 #   default: 600 seconds
+#
+# [*graphdb_download_user*]
+#   For http downloads you can set user(basic auth credentials)
+#
+# [*graphdb_download_password*]
+#   For http downloads you can set password(basic auth credentials)
 #
 # [*graphdb_download_url*]
 #   Url to the archive to download.
@@ -87,33 +96,36 @@
 #   puppet:// resource or file:/ for local packages
 #
 class graphdb (
-  $version                 = undef,
-  $edition                 = undef,
-  $ensure                  = $graphdb::params::ensure,
-  $status                  = $graphdb::params::status,
-  $tmp_dir                 = '/var/tmp/graphdb',
-  $data_dir                = '/var/lib/graphdb',
-  $log_dir                 = '/var/log/graphdb',
-  $install_dir             = '/opt/graphdb',
-  $manage_graphdb_user     = true,
-  $graphdb_user            = $graphdb::params::graphdb_user,
-  $graphdb_group           = $graphdb::params::graphdb_group,
-  $java_home               = undef,
-  $restart_on_change       = $graphdb::params::restart_on_change,
-  $purge_data_dir          = $graphdb::params::purge_data_dir,
-  $archive_dl_timeout      = $graphdb::params::archive_dl_timeout,
-  $graphdb_download_url    = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
+  $version                   = undef,
+  $edition                   = undef,
+  $ensure                    = $graphdb::params::ensure,
+  $status                    = $graphdb::params::status,
+  $tmp_dir                   = '/var/tmp/graphdb',
+  $data_dir                  = '/var/lib/graphdb',
+  $log_dir                   = '/var/log/graphdb',
+  $pid_dir                   = $graphdb::params::pid_dir,
+  $install_dir               = '/opt/graphdb',
+  $manage_graphdb_user       = true,
+  $graphdb_user              = $graphdb::params::graphdb_user,
+  $graphdb_group             = $graphdb::params::graphdb_group,
+  $java_home                 = undef,
+  $restart_on_change         = $graphdb::params::restart_on_change,
+  $purge_data_dir            = $graphdb::params::purge_data_dir,
+  $archive_dl_timeout        = $graphdb::params::archive_dl_timeout,
+  $graphdb_download_user     = undef,
+  $graphdb_download_password = undef,
+  $graphdb_download_url      = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
 ) inherits graphdb::params {
 
   #### Validate parameters
 
   # ensure
-  if ! ($ensure in [ 'present', 'absent' ]) {
+  if !($ensure in [ 'present', 'absent' ]) {
     fail("\"${ensure}\" is not a valid ensure parameter value")
   }
 
-  if ($ensure  == 'present') {
-    if  (!$version or !$edition){
+  if ($ensure == 'present') {
+    if  (!$version or !$edition) {
       fail('"ensure" is set on present, you should provide "version" and "edition"')
     }
 
@@ -122,13 +134,18 @@ class graphdb (
       fail('This module supprort GraphDB version 7.0.0 and up')
     }
 
-    if ! ($edition in [ 'se', 'ee' ]) {
+    if !($edition in [ 'se', 'ee' ]) {
       fail("\"${edition}\" is not a valid edition parameter value")
     }
 
     # service status
-    if ! ($status in [ 'enabled', 'disabled', 'running', 'unmanaged' ]) {
+    if !($status in [ 'enabled', 'disabled', 'running', 'unmanaged' ]) {
       fail("\"${status}\" is not a valid status parameter value")
+    }
+
+    #basic auth credentials validation
+    if ($graphdb_download_user and !$graphdb_download_password) or (!$graphdb_download_user and $graphdb_download_password) {
+      fail("When using basic auth credentials you should provide both graphdb_download_user and graphdb_download_password")
     }
 
     validate_absolute_path($tmp_dir)

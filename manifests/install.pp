@@ -32,15 +32,19 @@ class graphdb::install {
       }
     }
 
-    file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $graphdb::log_dir, $instances_installation_dir]:
+    file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $graphdb::log_dir, $graphdb::pid_dir, $instances_installation_dir]:
       ensure => 'directory',
     }
 
     $package_url = "${graphdb::graphdb_download_url}/graphdb-${graphdb::edition}/${graphdb::version}/graphdb-${graphdb::edition}-${graphdb::version}-dist.zip"
     $unpacked_directory = "${dist_installation_dir}/graphdb-${graphdb::edition}-${graphdb::version}"
 
+    if $graphdb::graphdb_download_user {
+      $basic_auth_option = "-u ${graphdb::graphdb_download_user}:${graphdb::graphdb_download_password}"
+    }
+
     exec { "download-graphdb-${graphdb::edition}-${graphdb::version}-archive":
-      command => "rm -f ${graphdb::tmp_dir}/*.zip && curl --insecure -o ${archive_destination} ${package_url} 2> /dev/null",
+      command => "rm -f ${graphdb::tmp_dir}/*.zip && curl --insecure ${basic_auth_option} -o ${archive_destination} ${package_url} 2> /dev/null",
       creates => $archive_destination,
       timeout => $graphdb::archive_dl_timeout,
       require => [File[$graphdb::tmp_dir], Package['curl']],
@@ -52,7 +56,7 @@ class graphdb::install {
     }
 
   } else {
-    $purge_list = [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::log_dir]
+    $purge_list = [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::log_dir, $graphdb::pid_dir]
 
     if $graphdb::purge_data_dir {
       join($purge_list, $graphdb::data_dir)

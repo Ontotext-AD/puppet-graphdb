@@ -80,7 +80,7 @@ define graphdb::instance (
   $heap_size         = undef,
   $jolokia_secret    = undef,
   $logback_config    = undef,
-  $extra_properties  = { },
+  $extra_properties  = {},
   $java_opts         = [],
 ) {
 
@@ -97,13 +97,15 @@ define graphdb::instance (
   }
 
   if $heap_size {
-    $java_opts_final = concat($java_opts, ["-Xmx${heap_size}", "-Xms${heap_size}"])
+    $heap_size_array = ["-Xmx${heap_size}", "-Xms${heap_size}"]
+
+    if $external_url {
+      $java_opts_final = concat($java_opts, $heap_size_array, ["-Dgraphdb.workbench.external-url=${external_url}"])
+    } else {
+      $java_opts_final = concat($java_opts, $heap_size_array)
+    }
   } else {
     $java_opts_final = $java_opts
-  }
-
-  if $external_url {
-    $java_opts_final = concat($java_opts_final, ["-Dgraphdb.workbench.external-url=${external_url}"])
   }
 
   $service_name = "graphdb-${title}"
@@ -131,7 +133,8 @@ define graphdb::instance (
       notify => Service[$service_name],
     }
 
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir]:
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir
+    ]:
       ensure => 'directory',
       notify => Service[$service_name],
     }

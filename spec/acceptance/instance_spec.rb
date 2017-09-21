@@ -145,6 +145,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         its(:args) { should match /-DcustomOpt/ }
         its(:args) { should match /-Xmx257m/ }
         its(:args) { should match /-Xms257m/ }
+        its(:args) { should_not match /-Dgraphdb.workbench.external-url=http:\/\/test.com\/graphdb/ }
         its(:count) { should eq 1 }
       end
     end
