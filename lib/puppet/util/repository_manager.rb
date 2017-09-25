@@ -169,7 +169,7 @@ module Puppet
 
       def resolve_content_type(data_format)
         return DATA_TYPE_CONTENT_TYPE[data_format] if DATA_TYPE_CONTENT_TYPE.key?(data_format)
-        raise ArgumentError, "Uknown data format [#{data_format}], please check"
+        raise ArgumentError, "Unknown data format [#{data_format}], please check"
       end
     end
   end

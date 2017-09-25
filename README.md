@@ -116,6 +116,7 @@ graphdb::instance { 'graphdb-instance':
   jolokia_secret     => undef, # julokia secret for http jmx requests
   logback_config     => undef, # custom GraphDB logback log configuration
   extra_properties   => { }, # extra properties for graphdb.properties file
+  external_url       => undef, # graphDB external URL if GraphDB instance is accessed via proxy, e.g. https://ontotext.com/graphdb
   heap_size          => '2g', # GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
   java_opts          => [], # extra java opts for java process
 }

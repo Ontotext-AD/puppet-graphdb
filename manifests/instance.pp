@@ -50,7 +50,10 @@
 #   Time before GraphDB validator decides that the GraphDB instance is not running
 #
 # [*heap_size*]
-#   GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
+#   GraphDB java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
+#
+# [*external_url*]
+#   GraphDB external URL if GraphDB instance is accessed via proxy
 #
 # [*jolokia_secret*]
 #   GraphDB jolokia secret for http jmx requests
@@ -71,12 +74,13 @@ define graphdb::instance (
   $ensure            = $graphdb::ensure,
   $status            = $graphdb::status,
   $http_port         = 8080,
+  $external_url      = undef,
   $kill_timeout      = 180,
   $validator_timeout = 60,
   $heap_size         = undef,
   $jolokia_secret    = undef,
   $logback_config    = undef,
-  $extra_properties  = { },
+  $extra_properties  = {},
   $java_opts         = [],
 ) {
 
@@ -93,7 +97,13 @@ define graphdb::instance (
   }
 
   if $heap_size {
-    $java_opts_final = concat($java_opts, ["-Xmx${heap_size}", "-Xms${heap_size}"])
+    $heap_size_array = ["-Xmx${heap_size}", "-Xms${heap_size}"]
+
+    if $external_url {
+      $java_opts_final = concat($java_opts, $heap_size_array, ["-Dgraphdb.workbench.external-url=${external_url}"])
+    } else {
+      $java_opts_final = concat($java_opts, $heap_size_array)
+    }
   } else {
     $java_opts_final = $java_opts
   }
@@ -123,7 +133,8 @@ define graphdb::instance (
       notify => Service[$service_name],
     }
 
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir]:
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir
+    ]:
       ensure => 'directory',
       notify => Service[$service_name],
     }

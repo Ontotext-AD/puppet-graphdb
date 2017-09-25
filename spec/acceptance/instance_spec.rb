@@ -20,6 +20,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 				heap_size         => '256m',
+        external_url      => 'http://test.com/graphdb',
 				java_opts         => ['-DcustomOpt'],
 			 }
 		  EOS
@@ -95,6 +96,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         its(:args) { should match /-DcustomOpt/ }
         its(:args) { should match /-Xmx256m/ }
         its(:args) { should match /-Xms256m/ }
+        its(:args) { should match /-Dgraphdb.workbench.external-url=http:\/\/test.com\/graphdb/ }
         its(:count) { should eq 1 }
       end
 
@@ -143,6 +145,7 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
         its(:args) { should match /-DcustomOpt/ }
         its(:args) { should match /-Xmx257m/ }
         its(:args) { should match /-Xms257m/ }
+        its(:args) { should_not match /-Dgraphdb.workbench.external-url=http:\/\/test.com\/graphdb/ }
         its(:count) { should eq 1 }
       end
     end

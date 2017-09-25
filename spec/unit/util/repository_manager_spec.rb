@@ -212,7 +212,7 @@ describe 'RepositoryManager' do
     context 'with unknown data format' do
       it do
         expect { repository_manager.load_data('test_data', 'test', 'test_data_context', true, 60) }
-          .to raise_error(ArgumentError, 'Uknown data format [test], please check')
+          .to raise_error(ArgumentError, 'Unknown data format [test], please check')
       end
     end
 

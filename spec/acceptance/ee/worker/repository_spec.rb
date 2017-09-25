@@ -71,7 +71,7 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
 
     describe command("curl -f -m 30 --connect-timeout 20 -X GET 'http://#{fact('ipaddress')}:8080/repositories/test-repo/size'") do
       its(:exit_status) { should eq 22 }
-      its(:stderr) { should match /The requested URL returned error: 404 Not Found/ }
+      its(:stderr) { should match /The requested URL returned error: 404/ }
     end
   end
 end

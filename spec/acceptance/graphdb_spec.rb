@@ -2,8 +2,10 @@ require 'spec_helper_acceptance'
 
 describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
   graphdb_version = ENV['GRAPHDB_VERSION']
+  graphdb_download_user = ENV['GRAPHDB_DOWNLOAD_USER']
+  graphdb_download_password = ENV['GRAPHDB_DOWNLOAD_PASSWORD']
 
-  %w(ee se).each do |graphdb_edition|
+  %w[ee se].each do |graphdb_edition|
     context "#{graphdb_edition} installation" do
       let(:manifest) do
         <<-EOS
@@ -168,6 +170,29 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
       describe file('/bin/storage-tool') do
         it { should_not exist }
       end
+    end
+  end
+
+  context 'installation with auth credential' do
+    let(:manifest) do
+      <<-EOS
+       class{ 'graphdb':
+       version                   => '8.3.0-TR9',
+       edition                   => 'ee',
+       graphdb_download_user     => '#{graphdb_download_user}',
+       graphdb_download_password => '#{graphdb_download_password}',
+       graphdb_download_url      => 'http://maven.ontotext.com/content/repositories/owlim-releases/com/ontotext/graphdb',
+       }
+      EOS
+    end
+
+    it 'installs with defaults' do
+      apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true')
+      expect(apply_manifest(manifest, catch_failures: true, debug: ENV['DEBUG'] == 'true').exit_code).to be_zero
+    end
+
+    describe command('/opt/graphdb/dist/bin/graphdb -v') do
+      its(:stdout) { should contain('8.3.0-TR9') }
     end
   end
 end
