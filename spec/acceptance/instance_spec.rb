@@ -16,7 +16,6 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
 
 			 graphdb::instance { 'test':
   		 		license           => '/tmp/#{graphdb_edition}.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 				heap_size         => '256m',
@@ -125,7 +124,6 @@ describe 'graphdb::instance', unless: UNSUPPORTED_PLATFORMS.include?(fact('osfam
 
 			 graphdb::instance { 'test':
   		 		license           => '/tmp/#{graphdb_edition}.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 				heap_size         => '257m',

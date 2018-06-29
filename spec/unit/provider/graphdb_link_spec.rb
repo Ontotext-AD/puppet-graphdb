@@ -14,39 +14,10 @@ describe provider_class do
   let(:peer_master_repository_id) { 'peer_master' }
   let(:peer_master_endpoint) { "#{uri}/peer_master" }
   let(:peer_master_node_id) { 'peer-master' }
-  let(:jolokia_secret) { 'secret' }
 
   let(:catalog) { double 'catalog' }
 
   let(:master_instance) { double 'master_instance' }
-
-  context 'with unresolvable jolokia_secret' do
-    let :resource do
-      Puppet::Type::Graphdb_link.new(
-        name: 'foo',
-        master_repository_id: master_repository_id,
-        master_endpoint: master_endpoint,
-        worker_repository_id: worker_repository_id,
-        worker_endpoint: worker_endpoint,
-        replication_port: replication_port
-      )
-    end
-
-    let :provider do
-      provider_class.new(resource)
-    end
-
-    before do
-      allow_any_instance_of(Puppet::Type::Graphdb_link).to receive(:catalog) { catalog }
-      allow(catalog).to receive(:resources) { [master_instance] }
-      allow(master_instance).to receive(:type) { :component }
-      allow(master_instance).to receive(:[]).with(:http_port) { '90' }
-    end
-
-    it do
-      expect { provider.exists? }.to raise_error(Puppet::Error, /fail to resolve julokia secret/)
-    end
-  end
 
   context 'with ambiguous params' do
     let :resource do
@@ -126,7 +97,6 @@ describe provider_class do
         allow(catalog).to receive(:resources) { [master_instance] }
         allow(master_instance).to receive(:type) { :component }
         allow(master_instance).to receive(:[]).with(:http_port) { '80' }
-        allow(master_instance).to receive(:[]).with(:jolokia_secret) { jolokia_secret }
       end
 
       context 'validating existing link' do
@@ -196,7 +166,6 @@ describe provider_class do
         allow(catalog).to receive(:resources) { [master_instance] }
         allow(master_instance).to receive(:type) { :component }
         allow(master_instance).to receive(:[]).with(:http_port) { '80' }
-        allow(master_instance).to receive(:[]).with(:jolokia_secret) { jolokia_secret }
       end
 
       context 'validating existing link' do

@@ -15,7 +15,6 @@ describe 'graphdb::ee::backup_cron', unless: UNSUPPORTED_PLATFORMS.include?(fact
 
 			 graphdb::instance { 'master':
   		 		license           => '/tmp/ee.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 			 }
@@ -70,7 +69,6 @@ describe 'graphdb::ee::backup_cron', unless: UNSUPPORTED_PLATFORMS.include?(fact
 			graphdb::ee::backup_cron { 'backup-test':
 				master_endpoint   => "http://${::ipaddress}:8080",
 				master_repository => 'master',
-				jolokia_secret    => 'duper',
 				hour              => '4',
 				minute            => '20',
 			}

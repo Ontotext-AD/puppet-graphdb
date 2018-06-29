@@ -33,7 +33,6 @@ private
                                                                   resource[:master_repository_id],
                                                                   resource[:worker_endpoint],
                                                                   resource[:worker_repository_id],
-                                                                  resolve_julokia_secret,
                                                                   resource[:replication_port])
     elsif !resource[:peer_master_endpoint].nil? && !resource[:peer_master_repository_id].nil?
       node_id = if resource[:peer_master_node_id].nil?
@@ -45,7 +44,6 @@ private
                                                                   resource[:master_repository_id],
                                                                   resource[:peer_master_endpoint],
                                                                   resource[:peer_master_repository_id],
-                                                                  resolve_julokia_secret,
                                                                   node_id)
     else
       raise Puppet::Error, 'please ensure that you provide required worker link details(worker_endpoint and worker_repository_id)
@@ -53,21 +51,8 @@ private
     end
   end
 
-  def resolve_julokia_secret
-    port = resource[:master_endpoint].port.to_s
-    julokia_secret = nil
-    resource.catalog.resources.each do |resource|
-      julokia_secret = resource[:jolokia_secret] if check_resource_is_matching_master_instance?(resource, port)
-    end
-    if julokia_secret.nil?
-      raise Puppet::Error, 'fail to resolve julokia secret, please ensure that graphdb_link
-      	is defined on the same node as master graphdb instance'
-    end
-    return julokia_secret
-  end
-
   def check_resource_is_matching_master_instance?(resource, port)
-    return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port && !resource[:jolokia_secret].nil?
+    return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port?
     false
   end
 

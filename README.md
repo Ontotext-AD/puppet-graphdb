@@ -113,7 +113,6 @@ graphdb::instance { 'graphdb-instance':
   http_port          => 8080, # http port that GraphDB will use
   kill_timeout       => 180, # time before force kill of GraphDB process
   validator_timeout  => 60, # GraphDB repository validator timeout
-  jolokia_secret     => undef, # julokia secret for http jmx requests
   logback_config     => undef, # custom GraphDB logback log configuration
   extra_properties   => { }, # extra properties for graphdb.properties file
   external_url       => undef, # graphDB external URL if GraphDB instance is accessed via proxy, e.g. https://ontotext.com/graphdb
@@ -153,7 +152,6 @@ A master with one worker
 
  graphdb::instance { 'master':
    license        => '/tmp/ee.license',
-   jolokia_secret => 'duper',
    http_port      => 8080,
  }
 
@@ -241,7 +239,6 @@ node 'master1' {
 
   graphdb::instance { 'master1':
     license        => '/tmp/ee.license',
-    jolokia_secret => 'duper',
     http_port      => 8080,
   }
 
@@ -262,7 +259,6 @@ node 'master1' {
 node 'master2' {
   graphdb::instance { 'master2':
     license        => '/tmp/ee.license',
-    jolokia_secret => 'duper',
     http_port      => 9090,
   }
 
@@ -316,7 +312,6 @@ node 'master2' {
 graphdb::ee::backup_cron { 'backup-cronjob':
     master_endpoint   => "http://${::ipaddress}:8080",
     master_repository => 'master',
-    jolokia_secret    => 'duper',
     hour              => '4',
     minute            => '20',
 }

@@ -18,7 +18,7 @@ describe 'graphdb::ee::backup_cron', type: :define do
   end
 
   context 'with ensure set to present' do
-    let(:params) { { master_endpoint: 'http://test.com', master_repository: 'test', jolokia_secret: 'test secret' } }
+    let(:params) { { master_endpoint: 'http://test.com', master_repository: 'test' } }
 
     it { is_expected.to contain_graphdb__ee__backup_cron('test').that_requires('Class[graphdb]') }
     it do
@@ -42,7 +42,7 @@ describe 'graphdb::ee::backup_cron', type: :define do
     end
   end
   context 'with ensure set to absent' do
-    let(:params) { { ensure: 'absent', master_endpoint: 'http://test.com', master_repository: 'test', jolokia_secret: 'test secret' } }
+    let(:params) { { ensure: 'absent', master_endpoint: 'http://test.com', master_repository: 'test' } }
 
     it { is_expected.to contain_graphdb__ee__backup_cron('test').that_requires('Class[graphdb]') }
     it do

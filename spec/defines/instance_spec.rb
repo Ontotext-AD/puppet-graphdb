@@ -157,11 +157,10 @@ graphdb.license.file = /opt/graphdb/instances/test/license
       "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
     end
 
-    let(:params) { { license: 'license', jolokia_secret: 'test_jolokia_secret' } }
+    let(:params) { { license: 'license' } }
 
     it do
       is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
-        .with(content: /graphdb.jolokia.secret = test_jolokia_secret/)
     end
   end
 
@@ -175,27 +174,6 @@ graphdb.license.file = /opt/graphdb/instances/test/license
     it do
       is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
         .with(content: /test_property = test_property_value/)
-    end
-  end
-
-  describe 'with not valid params' do
-    let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
-    end
-    context 'not valid license' do
-      let(:params) { { license: 123 } }
-
-      it do
-        expect { is_expected.to contain_graphdb__instance(title) }.to raise_error(Puppet::ParseError)
-      end
-    end
-
-    context 'not valid jolokia_secret' do
-      let(:params) { { license: 'license', jolokia_secret: 123 } }
-
-      it do
-        expect { is_expected.to contain_graphdb__instance(title) }.to raise_error(Puppet::ParseError)
-      end
     end
   end
 end

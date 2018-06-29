@@ -20,12 +20,10 @@ module Puppet
 
       attr_reader :endpoint
       attr_reader :repository_id
-      attr_reader :jolokia_secret
 
-      def initialize(endpoint, repository_id, jolokia_secret = nil)
+      def initialize(endpoint, repository_id)
         @endpoint = endpoint
         @repository_id = repository_id
-        @jolokia_secret = jolokia_secret
       end
 
       def check_repository(timeout)
@@ -86,8 +84,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            body_data: body.to_json,
-                                                            auth: { user: '', password: jolokia_secret } },
+                                                            body_data: body.to_json },
                                                           { codes: [200] }, 0)
 
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] node id set to [#{node_id}].")
@@ -106,8 +103,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            body_data: body.to_json,
-                                                            auth: { user: '', password: jolokia_secret } },
+                                                            body_data: body.to_json },
                                                           { codes: [200] }, 0)
 
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] replication port set to [#{replication_port}].")

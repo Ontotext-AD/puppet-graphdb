@@ -55,9 +55,6 @@
 # [*external_url*]
 #   GraphDB external URL if GraphDB instance is accessed via proxy
 #
-# [*jolokia_secret*]
-#   GraphDB jolokia secret for http jmx requests
-#
 # [*logback_config*]
 #   GraphDB logback log configuration
 #
@@ -80,7 +77,6 @@ define graphdb::instance (
   $kill_timeout      = 180,
   $validator_timeout = 60,
   $heap_size         = undef,
-  $jolokia_secret    = undef,
   $logback_config    = undef,
   $extra_properties  = {},
   $java_opts         = [],
@@ -94,9 +90,6 @@ define graphdb::instance (
 
   if $ensure == 'present' {
     validate_string($license)
-    if $jolokia_secret {
-      validate_string($jolokia_secret)
-    }
   }
 
   if $heap_size {
@@ -165,12 +158,6 @@ define graphdb::instance (
       'graphdb.license.file'   => $licence_file_destination,
       'graphdb.connector.port' => $http_port,
       'graphdb.extra.plugins'  => $instance_plugins_dir,
-    }
-
-    if $jolokia_secret {
-      $final_graphdb_properties = merge($default_properties, { 'graphdb.jolokia.secret' => $jolokia_secret }, $extra_properties)
-    } else {
-      $final_graphdb_properties = merge($default_properties, $extra_properties)
     }
 
     file { "${instance_home_dir}/conf/graphdb.properties":

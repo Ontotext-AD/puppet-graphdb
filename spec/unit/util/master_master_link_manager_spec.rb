@@ -8,11 +8,10 @@ describe 'MasterMasterLinkManager' do
   let(:uri_peer_master) { URI('http://test.com/peer_master') }
   let(:master_repository) { 'master' }
   let(:peer_master_repository) { 'master' }
-  let(:jolokia_secret) { 'secret' }
   let(:peer_master_node_id) { 'peer_master' }
 
   let(:link_manager) do
-    Puppet::Util::MasterMasterLinkManager.new(uri_master, master_repository, uri_peer_master, peer_master_repository, jolokia_secret,
+    Puppet::Util::MasterMasterLinkManager.new(uri_master, master_repository, uri_peer_master, peer_master_repository,
                                               peer_master_node_id)
   end
 
@@ -25,8 +24,7 @@ describe 'MasterMasterLinkManager' do
         uri_master.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository}/SyncPeers"
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :get,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :get },
           { messages: [Regexp.escape("#{uri_peer_master}/repositories/#{peer_master_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -62,8 +60,7 @@ describe 'MasterMasterLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_peer_master}/repositories/#{peer_master_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -99,8 +96,7 @@ describe 'MasterMasterLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :post, body_data: body },
           { messages: [peer_master_node_id],
             codes: [200] }, 0
         ).once

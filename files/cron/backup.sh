@@ -2,7 +2,7 @@
 
 display_usage() {
     echo "This script triggers GraphDB backup"
-    echo -e "\nUsage:\n$0 <graphdb_master_endpoint> <graphdb_master_repository_id> <jolokia_secret> [<backup_id>] \n"
+    echo -e "\nUsage:\n$0 <graphdb_master_endpoint> <graphdb_master_repository_id> [<backup_id>] \n"
 }
 
 if [  $# -lt 3 ]; then
@@ -12,7 +12,6 @@ fi
 
 GRAPHDB_MASTER_ENDPOINT=$1
 GRAPHDB_MASTER_REPOSITORY_ID=$2
-JOLOKIA_SECRET=$3
 
 BACKUP_ID=$(date +%Y%d%m%H%M%S)
 if [[ -n $4 ]]; then
@@ -20,7 +19,7 @@ if [[ -n $4 ]]; then
 fi
 
 BODY="{\"type\":\"EXEC\",\"mbean\":\"ReplicationCluster:name=ClusterInfo/${GRAPHDB_MASTER_REPOSITORY_ID}\",\"operation\":\"backup\",\"arguments\":[\"${BACKUP_ID}\"]}"
-COMMAND="curl -f -s -X POST -u ':${JOLOKIA_SECRET}' -d "${BODY}" ${GRAPHDB_MASTER_ENDPOINT}/jolokia"
+COMMAND="curl -f -s -X POST -d "${BODY}" ${GRAPHDB_MASTER_ENDPOINT}/jolokia"
 
 echo -e "Backup creation triggered: [${BACKUP_ID}]"
 $COMMAND

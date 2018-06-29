@@ -25,9 +25,6 @@
 # [*master_repository*]
 #   GraphDB master repository.
 #
-# [*jolokia_secret*]
-#   GraphDB jolokia secret for http jmx requests
-#
 # [*backup_script_source*]
 #   The source of backup script
 #
@@ -36,7 +33,6 @@
 define graphdb::ee::backup_cron (
   $master_endpoint,
   $master_repository,
-  $jolokia_secret,
   $ensure               = $graphdb::ensure,
   $backup_script_source = 'puppet:///modules/graphdb/cron/backup.sh',
   $hour                 = undef,
@@ -59,7 +55,7 @@ define graphdb::ee::backup_cron (
 
   cron { $title:
     ensure   => $ensure,
-    command  => "${graphdb::install_dir}/${title} ${master_endpoint} ${master_repository} ${jolokia_secret} >> ${graphdb::install_dir}/${title}.log 2>&1",
+    command  => "${graphdb::install_dir}/${title} ${master_endpoint} ${master_repository} >> ${graphdb::install_dir}/${title}.log 2>&1",
     hour     => $hour,
     minute   => $minute,
     weekday  => $weekday,
