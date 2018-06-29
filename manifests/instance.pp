@@ -160,6 +160,8 @@ define graphdb::instance (
       'graphdb.extra.plugins'  => $instance_plugins_dir,
     }
 
+    $final_graphdb_properties = merge($default_properties, $extra_properties)
+
     file { "${instance_home_dir}/conf/graphdb.properties":
       ensure  => $ensure,
       content => template('graphdb/config/graphdb.properties.erb'),
