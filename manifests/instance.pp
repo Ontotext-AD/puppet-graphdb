@@ -69,6 +69,8 @@
 #   Array of java options to give to GraphDB java process
 #   example: ['-Xmx1g', '-Xms1g']
 #
+# [*protocol*]
+#   A string, either 'http' or 'https defining under what protocol to connect to GraphDB'
 define graphdb::instance (
   $license           = undef,
   $ensure            = $graphdb::ensure,
@@ -82,6 +84,7 @@ define graphdb::instance (
   $logback_config    = undef,
   $extra_properties  = {},
   $java_opts         = [],
+  $protocol          = 'http',
 ) {
 
   # ensure
@@ -177,7 +180,7 @@ define graphdb::instance (
     }
 
     graphdb_validator { $service_name:
-      endpoint  => "http://${::ipaddress}:${http_port}",
+      endpoint  => "${protocol}://${::ipaddress}:${http_port}",
       timeout   => $validator_timeout,
       subscribe => Service[$service_name]
     }

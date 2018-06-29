@@ -119,12 +119,13 @@ graphdb::instance { 'graphdb-instance':
   external_url       => undef, # graphDB external URL if GraphDB instance is accessed via proxy, e.g. https://ontotext.com/graphdb
   heap_size          => '2g', # GraphDB  java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
   java_opts          => [], # extra java opts for java process
+  protocol           => 'http', # https or http protocol, defaults to http
 }
 ```
 
 ### Cluster
 
-Optimum GraphDB EE cluster configuration 
+Optimum GraphDB EE cluster configuration
 
 1. Master worker linking parameters:
 * master_repository_id (**required**)
@@ -149,34 +150,83 @@ A master with one worker
    version => '7.1.0',
    edition => 'ee',
  }
- 
+
  graphdb::instance { 'master':
    license        => '/tmp/ee.license',
    jolokia_secret => 'duper',
    http_port      => 8080,
  }
- 
+
  graphdb::ee::master::repository { 'master':
    endpoint           => "http://${::ipaddress}:8080",
    repository_context => 'http://ontotext.com/pub/',
  }
- 
+
  graphdb::instance { 'worker':
    license   => '/tmp/ee.license',
    http_port => 8082,
  }
- 
+
  graphdb::ee::worker::repository { 'worker':
    endpoint           => "http://${::ipaddress}:8082",
    repository_context => 'http://ontotext.com/pub/',
  }
- 
+
  graphdb_link { 'master-worker':
    master_repository_id => 'master',
    master_endpoint      => "http://${::ipaddress}:8080",
    worker_repository_id => 'worker',
    worker_endpoint      => "http://${::ipaddress}:8082",
  }
+```
+
+A master with one worker (on the same machine), security turned on and https:
+
+```
+class{ 'graphdb':
+   version              => '8.6.0-RC9',
+   edition              => 'ee',
+}
+
+graphdb::instance { 'master': #Brings up the master
+    license           => '/tmp/ee.license',
+    extra_properties  => { 'graphdb.connector.SSLEnabled' => 'true', 'graphdb.connector.scheme' => 'https', 'graphdb.connector.secure' => 'true', 'graphdb.connector.keyFile' => '/home/graphdb/.keystore', 'graphdb.connector.keystorePass' => 'password', 'graphdb.connector.keyAlias' => 'graphdb', 'graphdb.connector.keyPass' => 'password', 'graphdb.auth.token.secret' => 'secret' },
+   http_port         => 8080,
+   protocol	       => 'https',
+}
+
+graphdb::ee::master::repository { 'master': #Creating master repo with name “master” , of course you can choose different name
+   endpoint            => "https://localhost:8080",
+   repository_context  => 'http://ontotext.com/pub/',
+   timeout             => 60,
+}
+
+graphdb::instance { 'worker': #Brings up the worker
+   license           => '/tmp/ee.license',
+   extra_properties  => { 'graphdb.connector.SSLEnabled' => 'true', 'graphdb.connector.scheme' => 'https', 'graphdb.connector.secure' => 'true', 'graphdb.connector.keyFile' => '/home/graphdb/.keystore', 'graphdb.connector.keystorePass' => 'password', 'graphdb.connector.keyAlias' => 'graphdb', 'graphdb.connector.keyPass' => 'password', 'graphdb.auth.token.secret' => 'secret' },
+   http_port         => 8082,
+   protocol	       => 'https',
+}
+
+graphdb::ee::worker::repository { 'worker':
+   endpoint            => "https://localhost:8082",
+   repository_context  => 'http://ontotext.com/pub/',
+   timeout             => 60,
+}
+
+graphdb_link { 'master-worker':
+   master_repository_id => 'master',
+   master_endpoint      => "https://localhost:8080",
+   worker_repository_id => 'worker',
+   worker_endpoint      => "https://localhost:8082",
+}
+
+exec { 'enable-security':
+  path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
+  command => "curl -k -X POST --header 'Content-Type: application/json' --header 'Accept: */*' -d 'true' 'https://localhost:8080/rest/security'",
+  cwd  => '/',
+  user => $graphdb::graphdb_user,
+}
 ```
 
 A two peered masters([split brain](http://graphdb.ontotext.com/documentation/enterprise/ee/cluster-failures.html?highlight=master%20master#split-brain))
@@ -341,7 +391,7 @@ The module has been tested on:
 * Ubuntu 12.04, 14.04
 
 Because of init.d/systemd/upstart support the module may run on other platforms, but it's not guaranteed.
-   
+
 ## Development
 
 Please see the [CONTRIBUTING.md](https://github.com/Ontotext-AD/puppet-graphdb/CONTRIBUTING.md) file for instructions regarding development environments and testing.
@@ -352,4 +402,4 @@ Please, use [email](mailto:graphdb-support@ontotext.com?Subject=GraphDB%20puppet
 
 ## License
 
-Please see the [LICENSE](https://github.com/Ontotext-AD/puppet-graphdb/LICENSE) 
+Please see the [LICENSE](https://github.com/Ontotext-AD/puppet-graphdb/LICENSE)

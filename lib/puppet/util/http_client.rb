@@ -34,6 +34,7 @@ module Puppet
         request.set_form_data(parameters[:body_params]) if parameters.key?(:body_params)
         request.content_type = parameters[:content_type] if parameters.key?(:content_type)
         request['Accept'] = parameters[:accept_type] if parameters.key?(:accept_type)
+        request['Authorization'] = "Basic YWRtaW46cm9vdA=="
 
         set_auth(request, parameters) if parameters.key?(:auth)
       end
@@ -62,6 +63,10 @@ module Puppet
 
       def self.perform_http_request(uri, request)
         http = Net::HTTP.new(uri.host, uri.port)
+        if uri.scheme == 'https'
+          http.use_ssl = (uri.scheme == 'https')
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
         http.open_timeout = 60 # in seconds
         http.read_timeout = 60 # in seconds
 
