@@ -15,7 +15,6 @@ describe 'graphdb::se::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact(
 
 			 graphdb::instance { 'test':
   		 		license           => '/tmp/se.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 			 }
@@ -50,7 +49,6 @@ describe 'graphdb::se::repository', unless: UNSUPPORTED_PLATFORMS.include?(fact(
 
 	  		 graphdb::instance { 'test':
 	  			license           => '/tmp/se.license',
-	  			jolokia_secret    => 'duper',
 	  			http_port         => 8080,
 	  			validator_timeout => #{graphdb_timeout},
 	  		 }

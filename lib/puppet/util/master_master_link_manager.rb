@@ -10,16 +10,14 @@ module Puppet
       attr_reader :master_repository_id
       attr_reader :peer_master_endpoint
       attr_reader :peer_master_repository_id
-      attr_reader :jolokia_secret
       attr_reader :peer_master_node_id
 
-      def initialize(master_endpoint, master_repository_id, peer_master_endpoint, peer_master_repository_id, jolokia_secret,
+      def initialize(master_endpoint, master_repository_id, peer_master_endpoint, peer_master_repository_id,
                      peer_master_node_id)
         @master_endpoint = master_endpoint
         @master_repository_id = master_repository_id
         @peer_master_endpoint = peer_master_endpoint
         @peer_master_repository_id = peer_master_repository_id
-        @jolokia_secret = jolokia_secret
         @peer_master_node_id = peer_master_node_id
       end
 
@@ -32,8 +30,7 @@ module Puppet
         expected_massage = Regexp.escape("#{peer_master_endpoint}/repositories/#{peer_master_repository_id}".gsub('/', '\/'))
 
         Puppet::Util::RequestManager.perform_http_request(uri,
-                                                          { method: :get,
-                                                            auth: { user: '', password: jolokia_secret } },
+                                                          { method: :get },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
       end
@@ -53,8 +50,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            body_data: body.to_json,
-                                                            auth: { user: '', password: jolokia_secret } },
+                                                            body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
       end
@@ -76,8 +72,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            body_data: body.to_json,
-                                                            auth: { user: '', password: jolokia_secret } },
+                                                            body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
       end

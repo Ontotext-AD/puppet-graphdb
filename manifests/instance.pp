@@ -55,9 +55,6 @@
 # [*external_url*]
 #   GraphDB external URL if GraphDB instance is accessed via proxy
 #
-# [*jolokia_secret*]
-#   GraphDB jolokia secret for http jmx requests
-#
 # [*logback_config*]
 #   GraphDB logback log configuration
 #
@@ -69,6 +66,8 @@
 #   Array of java options to give to GraphDB java process
 #   example: ['-Xmx1g', '-Xms1g']
 #
+# [*protocol*]
+#   A string, either 'http' or 'https defining under what protocol to connect to GraphDB'
 define graphdb::instance (
   $license           = undef,
   $ensure            = $graphdb::ensure,
@@ -78,10 +77,10 @@ define graphdb::instance (
   $kill_timeout      = 180,
   $validator_timeout = 60,
   $heap_size         = undef,
-  $jolokia_secret    = undef,
   $logback_config    = undef,
   $extra_properties  = {},
   $java_opts         = [],
+  $protocol          = 'http',
 ) {
 
   # ensure
@@ -91,9 +90,6 @@ define graphdb::instance (
 
   if $ensure == 'present' {
     validate_string($license)
-    if $jolokia_secret {
-      validate_string($jolokia_secret)
-    }
   }
 
   if $heap_size {
@@ -164,11 +160,7 @@ define graphdb::instance (
       'graphdb.extra.plugins'  => $instance_plugins_dir,
     }
 
-    if $jolokia_secret {
-      $final_graphdb_properties = merge($default_properties, { 'graphdb.jolokia.secret' => $jolokia_secret }, $extra_properties)
-    } else {
-      $final_graphdb_properties = merge($default_properties, $extra_properties)
-    }
+    $final_graphdb_properties = merge($default_properties, $extra_properties)
 
     file { "${instance_home_dir}/conf/graphdb.properties":
       ensure  => $ensure,
@@ -177,7 +169,7 @@ define graphdb::instance (
     }
 
     graphdb_validator { $service_name:
-      endpoint  => "http://${::ipaddress}:${http_port}",
+      endpoint  => "${protocol}://${::ipaddress}:${http_port}",
       timeout   => $validator_timeout,
       subscribe => Service[$service_name]
     }

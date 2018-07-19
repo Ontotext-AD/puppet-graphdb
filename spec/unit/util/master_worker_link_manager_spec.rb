@@ -8,11 +8,10 @@ describe 'MasterWorkerLinkManager' do
   let(:uri_worker) { URI('http://test.com/worker') }
   let(:master_repository) { 'master' }
   let(:worker_repository) { 'worker' }
-  let(:jolokia_secret) { 'secret' }
   let(:replication_port) { 9000 }
 
   let(:link_manager) do
-    Puppet::Util::MasterWorkerLinkManager.new(uri_master, master_repository, uri_worker, worker_repository, jolokia_secret,
+    Puppet::Util::MasterWorkerLinkManager.new(uri_master, master_repository, uri_worker, worker_repository,
                                               replication_port)
   end
 
@@ -25,8 +24,7 @@ describe 'MasterWorkerLinkManager' do
         uri_master.path = "/jolokia/read/ReplicationCluster:name=ClusterInfo!/#{master_repository}/NodeStatus"
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :get,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :get },
           { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -62,8 +60,7 @@ describe 'MasterWorkerLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -99,8 +96,7 @@ describe 'MasterWorkerLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body,
-            auth: { user: '', password: jolokia_secret } },
+          { method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once

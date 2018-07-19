@@ -10,7 +10,6 @@ describe provider_class do
   let(:repository_context) { 'test_context' }
   let(:timeout) { 0 }
   let(:replication_port) { 6000 }
-  let(:jolokia_secret) { 'secret' }
 
   let(:catalog) { double 'catalog' }
 
@@ -38,7 +37,6 @@ describe provider_class do
         allow(catalog).to receive(:resources) { [master_instance] }
         allow(master_instance).to receive(:type) { :component }
         allow(master_instance).to receive(:[]).with(:http_port) { '80' }
-        allow(master_instance).to receive(:[]).with(:jolokia_secret) { jolokia_secret }
       end
 
       it do

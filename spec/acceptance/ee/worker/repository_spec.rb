@@ -15,7 +15,6 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
 
 			 graphdb::instance { 'test':
   		 		license           => '/tmp/ee.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 			 }
@@ -49,7 +48,6 @@ describe 'graphdb::ee::worker::repository', unless: UNSUPPORTED_PLATFORMS.includ
 
 		  graphdb::instance { 'test':
 			 license           => '/tmp/ee.license',
-			 jolokia_secret    => 'duper',
 			 http_port         => 8080,
 			 validator_timeout => #{graphdb_timeout},
 		  }

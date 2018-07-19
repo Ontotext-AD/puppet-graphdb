@@ -15,7 +15,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
 			 graphdb::instance { 'master':
   		 		license           => '/tmp/ee.license',
-  				jolokia_secret    => 'duper',
   				http_port         => 8080,
 				validator_timeout => #{graphdb_timeout},
 			 }
@@ -72,7 +71,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
 		   graphdb::instance { 'master':
 				  license           => '/tmp/ee.license',
-				  jolokia_secret    => 'duper',
 				  http_port         => 8080,
 			  validator_timeout => #{graphdb_timeout},
 		   }
@@ -130,7 +128,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
        graphdb::instance { 'master1':
           license           => '/tmp/ee.license',
-          jolokia_secret    => 'duper',
           http_port         => 8080,
         validator_timeout => #{graphdb_timeout},
        }
@@ -144,7 +141,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
          graphdb::instance { 'master2':
             license           => '/tmp/ee.license',
-            jolokia_secret    => 'duper',
             http_port         => 9090,
           validator_timeout => #{graphdb_timeout},
          }
@@ -202,7 +198,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
       graphdb::instance { 'master1':
          license           => '/tmp/ee.license',
-         jolokia_secret    => 'duper',
          http_port         => 8080,
        validator_timeout => #{graphdb_timeout},
       }
@@ -216,7 +211,6 @@ describe 'graphdb::graphdb_link', unless: UNSUPPORTED_PLATFORMS.include?(fact('o
 
         graphdb::instance { 'master2':
            license           => '/tmp/ee.license',
-           jolokia_secret    => 'duper',
            http_port         => 9090,
          validator_timeout => #{graphdb_timeout},
         }
