@@ -8,7 +8,7 @@ puppet_version = ENV['PUPPET_VERSION']
 block_on hosts do |host|
   if host['platform'] =~ /ubuntu-(16.04)/
     # Workaround https://tickets.puppetlabs.com/browse/BKR-821
-    install_puppetlabs_release_repo(host, repo = 'pc1', opts = { release_apt_repo_url: 'http://apt.puppetlabs.com/' })
+    install_puppetlabs_release_repo(host, repo = 'pc1', opts = { release_apt_repo_url: 'http://apt.puppetlabs.com' })
 
     host.install_package("puppet-common=#{puppet_version}-2ubuntu0.1")
     host.install_package("puppet=#{puppet_version}-2ubuntu0.1")
