@@ -10,7 +10,7 @@ block_on hosts do |host|
     # Workaround https://tickets.puppetlabs.com/browse/BKR-821
     install_puppetlabs_release_repo(host, repo = 'pc1', opts = { release_apt_repo_url: 'http://apt.puppetlabs.com' })
 
-    host.install_package("puppet-common=#{puppet_version}-1xenial")
+    host.install_package("puppet-agent=#{puppet_version}-1xenial")
     configure_type_defaults_on(host)
   else
     install_puppet_on(host, version: puppet_version, puppet_agent_version: '1.1.0', default_action: 'gem_install')
