@@ -34,7 +34,6 @@ module Puppet
         request.set_form_data(parameters[:body_params]) if parameters.key?(:body_params)
         request.content_type = parameters[:content_type] if parameters.key?(:content_type)
         request['Accept'] = parameters[:accept_type] if parameters.key?(:accept_type)
-        request['Authorization'] = "Basic YWRtaW46cm9vdA=="
 
         set_auth(request, parameters) if parameters.key?(:auth)
       end
