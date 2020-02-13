@@ -220,6 +220,7 @@ graphdb_link { 'master-worker':
 }
 
 exec { 'enable-security':
+  require => graphdb::ee::worker::repository['worker'],
   path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
   command => "curl -k -X POST --header 'Content-Type: application/json' --header 'Accept: */*' -d 'true' 'https://localhost:8080/rest/security'",
   cwd  => '/',
