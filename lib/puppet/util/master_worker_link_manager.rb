@@ -51,6 +51,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
+                                                            content_type: "application/json",
                                                             body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
@@ -72,6 +73,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
+                                                            content_type: "application/json",
                                                             body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
