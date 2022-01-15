@@ -55,7 +55,7 @@ define graphdb::ee::backup_cron (
 
   cron { $title:
     ensure   => $ensure,
-    command  => "${graphdb::install_dir}/${title} ${master_endpoint} ${master_repository} >> ${graphdb::install_dir}/${title}.log 2>&1",
+    command  => "bash -l ${graphdb::install_dir}/${title} ${master_endpoint} ${master_repository} >> ${graphdb::install_dir}/${title}.log 2>&1",
     hour     => $hour,
     minute   => $minute,
     weekday  => $weekday,
