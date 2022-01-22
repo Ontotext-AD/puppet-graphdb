@@ -390,7 +390,7 @@ Because of init.d/systemd/upstart support the module may run on other platforms,
 
 ## Development
 
-Please see the [CONTRIBUTING.md](https://github.com/Ontotext-AD/puppet-graphdb/CONTRIBUTING.md) file for instructions regarding development environments and testing.
+Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for instructions regarding development environments and testing.
 
 ## Support
 
