@@ -1,11 +1,19 @@
-MethodLength:
+Metrics/MethodLength:
   CountComments: false
-  Max: 100
-Metrics/LineLength:
-  Max: 120
+  Max: 150
+Layout/LineLength:
+  Max: 200
 ParameterLists:
-  Max: 6
+  Max: 10
 Metrics/AbcSize:
   Max: 25
+Metrics/BlockLength:
+  Max: 100
 Metrics/CyclomaticComplexity:
-  Max: 10
+  Max: 20
+Metrics/ClassLength:
+  Max: 150
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'spec/**/*.rb'

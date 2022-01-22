@@ -1,5 +1,5 @@
-DISTRO ?= ubuntu-server-1404-x64
-GRAPHDB_VERSION ?= 8.6.0
+DISTRO ?= ubuntu-server-1604-x64
+GRAPHDB_VERSION ?= 9.10.1
 GRAPHDB_TIMEOUT ?= 120
 PUPPET_VERSION ?= 3.8.5
 DEBUG ?= false

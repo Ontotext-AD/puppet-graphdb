@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet-lint/tasks/puppet-lint'
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet_blacksmith/rake_tasks'
