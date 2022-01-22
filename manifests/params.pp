@@ -96,7 +96,7 @@ class graphdb::params {
     }
     'OpenSuSE': {
       $service_providers     = 'systemd'
-      if $::operatingsystem == 'OpenSuSE' and versioncmp($::operatingsystemmajrelease, '12') <= 0 {
+      if versioncmp($::operatingsystemmajrelease, '12') <= 0 {
         $systemd_service_path = '/lib/systemd/system'
       } else {
         $systemd_service_path = '/usr/lib/systemd/system'
