@@ -41,7 +41,9 @@ define graphdb::plugin (
     source => $source,
   }
   ~> exec { "unpack-graphdb-plugin-${title}":
-    command     => "rm -rf ${title} && unzip ${instance_plugins_dir}/${plugin_file_name} -d ${instance_plugins_dir}",
+    command     => "rm -rf ${instance_plugins_dir}/${title} && \
+                    unzip ${instance_plugins_dir}/${plugin_file_name} -d ${instance_plugins_dir} && \
+                    chown -R ${graphdb::graphdb_user}:${graphdb::graphdb_group} ${instance_plugins_dir}/${title}",
     refreshonly => true,
     require     => Package['unzip'],
     notify      => Service["graphdb-${instance}"],
