@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/util/master_worker_link_manager'
 require 'puppet/util/request_manager'
@@ -50,17 +52,16 @@ describe 'MasterWorkerLinkManager' do
 
         expect(result).to be true
         uri_master.path = '/jolokia'
-
         body = {
           'type' => 'EXEC',
           'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository}",
           'operation' => 'addClusterNode',
-          'arguments' => ["#{uri_worker}/repositories/#{worker_repository}", replication_port, 0, true]
+          'arguments' => ["#{uri_worker}/repositories/#{worker_repository}", replication_port, true]
         }.to_json
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body },
+          { content_type: 'application/json', method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -96,14 +97,14 @@ describe 'MasterWorkerLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body },
+          { content_type: 'application/json', method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_worker}/repositories/#{worker_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
       end
     end
 
-    context 'with unsuccessfully deketed link' do
+    context 'with unsuccessfully deleted link' do
       it 'should return false' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 

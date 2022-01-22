@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/util/master_master_link_manager'
 require 'puppet/util/request_manager'
@@ -60,7 +62,7 @@ describe 'MasterMasterLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body },
+          { content_type: 'application/json', method: :post, body_data: body },
           { messages: [Regexp.escape("#{uri_peer_master}/repositories/#{peer_master_repository}".gsub('/', '\/'))],
             codes: [200] }, 0
         ).once
@@ -96,14 +98,14 @@ describe 'MasterMasterLinkManager' do
 
         expect(Puppet::Util::RequestManager).to have_received(:perform_http_request).with(
           uri_master,
-          { method: :post, body_data: body },
+          { content_type: 'application/json', method: :post, body_data: body },
           { messages: [peer_master_node_id],
             codes: [200] }, 0
         ).once
       end
     end
 
-    context 'with unsuccessfully deketed link' do
+    context 'with unsuccessfully deleted link' do
       it 'should return false' do
         allow(Puppet::Util::RequestManager).to receive(:perform_http_request) { false }
 

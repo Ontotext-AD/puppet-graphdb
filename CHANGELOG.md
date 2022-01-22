@@ -17,6 +17,7 @@ __CHANGE__
 - Add debian 10 version in metadata.json
 - Many rubocop corrections : frozen_string_literal ... etc
 - Remove some file in spec/acceptance/nodesets (add debian 10)
+- Modify errors on master_master_link_manager_spec.rb and master_worker_link_manager_spec.rb
 
 ## [v0.5.2](https://github.com/Ontotext-AD/puppet-graphdb/releases/tag/0.5.2) (30 Nov 2020)
 
