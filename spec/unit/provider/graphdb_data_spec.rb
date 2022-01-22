@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/util/repository_manager'
 require 'puppet/util/data_type_extensions'

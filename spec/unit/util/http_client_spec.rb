@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'webmock/rspec'
 require 'uri'
@@ -46,7 +48,7 @@ describe 'HttpClient' do
             end
 
             it do
-              expect { call_attempt_http_request }.to raise_error(Puppet::Error, /Unrecoverable response recieved/)
+              expect { call_attempt_http_request }.to raise_error(Puppet::Error, /Unrecoverable response received/)
             end
           end
         end

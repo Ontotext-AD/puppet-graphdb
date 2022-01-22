@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'graphdb::service::upstart', type: :define do
@@ -6,15 +8,15 @@ describe 'graphdb::service::upstart', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk7',
-      ipaddress: '127.0.0.1'
+      machine_java_home: '/opt/jdk8',
+      ipaddress: '129.10.1.1'
     }
   end
 
   let(:title) { 'test' }
 
   let :pre_condition do
-    "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+    "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
   end
 
   context 'with ensure set to present' do
@@ -32,7 +34,7 @@ describe 'graphdb::service::upstart', type: :define do
     it { is_expected.to contain_file('/etc/init/graphdb-test.conf').with(content: /setuid graphdb/) }
     it { is_expected.to contain_file('/etc/init/graphdb-test.conf').with(content: /setgid graphdb/) }
 
-    it { is_expected.to contain_file('/etc/init/graphdb-test.conf').with(content: /JAVA_HOME=\/opt\/jdk7/) }
+    it { is_expected.to contain_file('/etc/init/graphdb-test.conf').with(content: /JAVA_HOME=\/opt\/jdk8/) }
     it { is_expected.to contain_file('/etc/init/graphdb-test.conf').with(content: /GRAPHDB_INSTALL_DIR=\/opt\/graphdb/) }
     it do
       is_expected.to contain_file('/etc/init/graphdb-test.conf')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'graphdb::instance', type: :define do
@@ -6,8 +8,8 @@ describe 'graphdb::instance', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk7',
-      ipaddress: '127.0.0.1'
+      machine_java_home: '/opt/jdk8',
+      ipaddress: '129.10.1.1'
     }
   end
 
@@ -15,7 +17,7 @@ describe 'graphdb::instance', type: :define do
 
   describe 'with minimum configuration' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
     context 'with ensure set to present' do
       let(:params) { { license: 'license' } }
@@ -71,7 +73,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
 ")
       end
       it {    is_expected.to contain_graphdb__service(title).with(ensure: 'present', status: 'enabled') }
-      it {    is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:8080') }
+      it {    is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://129.10.1.1:8080') }
     end
 
     context 'with ensure set to absent' do
@@ -82,13 +84,13 @@ graphdb.license.file = /opt/graphdb/instances/test/license
       it {    is_expected.to contain_file('/var/lib/graphdb/test').with(ensure: 'absent', force: true, backup: false, recurse: true) }
       it {    is_expected.to contain_file('/var/tmp/graphdb/test').with(ensure: 'absent', force: true, backup: false, recurse: true) }
       it {    is_expected.to contain_graphdb__service(title).with(ensure: 'absent') }
-      it {    is_expected.to_not contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:8080') }
+      it {    is_expected.to_not contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://129.10.1.1:8080') }
     end
   end
 
   describe 'with status set to disabled' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:params) { { license: 'license', status: 'disabled' } }
@@ -100,7 +102,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
 
   describe 'with custom http_port' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:params) { { license: 'license', http_port: 9090 } }
@@ -112,12 +114,12 @@ graphdb.license.file = /opt/graphdb/instances/test/license
               group: 'graphdb',
               content: /graphdb.connector.port = 9090/)
     end
-    it { is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://127.0.0.1:9090') }
+    it { is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://129.10.1.1:9090') }
   end
 
   describe 'with custom kill_timeout' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:params) { { license: 'license', kill_timeout: 300 } }
@@ -127,8 +129,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
           kernel: 'Linux',
           operatingsystem: 'Ubuntu',
           operatingsystemmajrelease: '6',
-          machine_java_home: '/opt/jdk7',
-          ipaddress: '127.0.0.1'
+          machine_java_home: '/opt/jdk8',
+          ipaddress: '129.10.1.1'
         }
       end
       it do
@@ -142,8 +144,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
           kernel: 'Linux',
           operatingsystem: 'Ubuntu',
           operatingsystemmajrelease: '16',
-          machine_java_home: '/opt/jdk7',
-          ipaddress: '127.0.0.1'
+          machine_java_home: '/opt/jdk8',
+          ipaddress: '129.10.1.1'
         }
       end
       it do
@@ -154,7 +156,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
 
   describe 'with custom jolokia_secret' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:params) { { license: 'license' } }
@@ -166,7 +168,7 @@ graphdb.license.file = /opt/graphdb/instances/test/license
 
   describe 'with extra_properties' do
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:params) { { license: 'license', extra_properties: { 'test_property' => 'test_property_value' } } }

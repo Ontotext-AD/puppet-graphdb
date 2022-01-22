@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'graphdb::install', type: :class do
   let :default_facts do
     {
       operatingsystem: 'Debian',
-      operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk7'
+      operatingsystemmajrelease: '10',
+      machine_java_home: '/opt/jdk8'
     }
   end
   describe 'with minimum configuration on Linux' do
@@ -13,15 +15,15 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Linux')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip'
     end
 
     let(:dest_file) do
-      '/var/tmp/graphdb/graphdb-ee-7.0.0.zip'
+      '/var/tmp/graphdb/graphdb-ee-9.10.1.zip'
     end
 
     it { is_expected.to contain_class('graphdb::install').that_requires('Class[graphdb]') }
@@ -31,7 +33,7 @@ describe 'graphdb::install', type: :class do
     end
 
     it do
-      is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
+      is_expected.to contain_exec('download-graphdb-ee-9.10.1-archive').with(
         command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
   															" #{download_url} 2> /dev/null",
         creates: dest_file,
@@ -43,7 +45,7 @@ describe 'graphdb::install', type: :class do
     it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
-  	' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
+  	' && mv /opt/graphdb/dist/graphdb-ee-9.10.1/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-9.10.1',
         refreshonly: true,
         require: ['File[/opt/graphdb]','Package[unzip]'],
         user: 'graphdb'
@@ -56,19 +58,19 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Darwin')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee' }"
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip'
     end
 
     let(:dest_file) do
-      '/var/tmp/graphdb/graphdb-ee-7.0.0.zip'
+      '/var/tmp/graphdb/graphdb-ee-9.10.1.zip'
     end
 
     it do
-      is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
+      is_expected.to contain_exec('download-graphdb-ee-9.10.1-archive').with(
         command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
     															  " #{download_url} 2> /dev/null",
         creates: dest_file,
@@ -84,19 +86,19 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Linux')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee', tmp_dir => '/tmp' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee', tmp_dir => '/tmp' }"
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip'
     end
 
     let(:dest_file) do
-      '/tmp/graphdb-ee-7.0.0.zip'
+      '/tmp/graphdb-ee-9.10.1.zip'
     end
 
     it do
-      is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
+      is_expected.to contain_exec('download-graphdb-ee-9.10.1-archive').with(
         command: "rm -f /tmp/*.zip && curl --insecure  -o #{dest_file}" \
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
@@ -108,7 +110,7 @@ describe 'graphdb::install', type: :class do
     it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
-        		' && mv /opt/graphdb/dist/graphdb-ee-7.0.0/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-7.0.0',
+        		' && mv /opt/graphdb/dist/graphdb-ee-9.10.1/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-9.10.1',
         refreshonly: true,
         require: ['File[/opt/graphdb]','Package[unzip]'],
         user: 'graphdb'
@@ -121,19 +123,19 @@ describe 'graphdb::install', type: :class do
       default_facts.merge(kernel: 'Linux')
     end
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee', install_dir => '/var/lib' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee', install_dir => '/var/lib' }"
     end
 
     let(:download_url) do
-      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/7.0.0/graphdb-ee-7.0.0-dist.zip'
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip'
     end
 
     let(:dest_file) do
-      '/var/tmp/graphdb/graphdb-ee-7.0.0.zip'
+      '/var/tmp/graphdb/graphdb-ee-9.10.1.zip'
     end
 
     it do
-      is_expected.to contain_exec('download-graphdb-ee-7.0.0-archive').with(
+      is_expected.to contain_exec('download-graphdb-ee-9.10.1-archive').with(
         command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
     													" #{download_url} 2> /dev/null",
         creates: dest_file,
@@ -145,7 +147,7 @@ describe 'graphdb::install', type: :class do
     it do
       is_expected.to contain_exec('unpack-graphdb-archive').with(
         command: "rm -rf /var/lib/dist && unzip #{dest_file} -d /var/lib/dist" \
-       		' && mv /var/lib/dist/graphdb-ee-7.0.0/* /var/lib/dist && rm -r /var/lib/dist/graphdb-ee-7.0.0',
+       		' && mv /var/lib/dist/graphdb-ee-9.10.1/* /var/lib/dist && rm -r /var/lib/dist/graphdb-ee-9.10.1',
         refreshonly: true,
         require: ['File[/var/lib]','Package[unzip]'],
         user: 'graphdb'
@@ -159,7 +161,7 @@ describe 'graphdb::install', type: :class do
     end
 
     let :pre_condition do
-      "class { 'graphdb': version => '7.0.0', edition => 'ee', ensure => 'absent' }"
+      "class { 'graphdb': version => '9.10.1', edition => 'ee', ensure => 'absent' }"
     end
 
     it { is_expected.to contain_user('graphdb').with(ensure: 'absent') }

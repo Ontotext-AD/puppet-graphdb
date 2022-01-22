@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'graphdb::tool_links', type: :class do
@@ -6,14 +8,14 @@ describe 'graphdb::tool_links', type: :class do
       kernel: 'Linux',
       operatingsystem: 'Debian',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk7'
+      machine_java_home: '/opt/jdk8'
     }
   end
 
   %w(present absent).each do |ensure_param|
     context "graphdb ensure set to #{ensure_param}" do
       let :pre_condition do
-        "class { 'graphdb': ensure => #{ensure_param}, version => '7.0.0', edition => 'ee' }"
+        "class { 'graphdb': ensure => #{ensure_param}, version => '9.10.1', edition => 'ee' }"
       end
 
       link_ensure = if ensure_param == 'present'

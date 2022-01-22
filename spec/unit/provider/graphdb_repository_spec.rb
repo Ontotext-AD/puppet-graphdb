@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/util/repository_manager'
 
@@ -44,12 +46,12 @@ describe provider_class do
                   .with(timeout).and_return(true)
         allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository)
                   .with(repository_template, repository_context, timeout) { true }
-        allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:set_repository_replication_port).with(replication_port) { true }
+        allow_any_instance_of(Puppet::Util::RepositoryManager).to receive(:define_repository_replication_port).with(replication_port) { true }
 
 
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?).once
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
-        expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:set_repository_replication_port).once
+        expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:define_repository_replication_port).once
 
         expect(provider.create).to be true
       end
@@ -120,7 +122,7 @@ describe provider_class do
 
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:repository_up?).once
         expect_any_instance_of(Puppet::Util::RepositoryManager).to receive(:create_repository).once
-        expect_any_instance_of(Puppet::Util::RepositoryManager).to_not receive(:set_repository_replication_port)
+        expect_any_instance_of(Puppet::Util::RepositoryManager).to_not receive(:define_repository_replication_port)
 
         expect(provider.create).to be true
       end

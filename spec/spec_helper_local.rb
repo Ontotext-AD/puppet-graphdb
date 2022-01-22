@@ -1,3 +1,9 @@
+# frozen_string_literal: true
+
+RSpec.configure do |c|
+  c.mock_with :rspec
+end
+
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
 
@@ -18,7 +24,6 @@ end
 RSpec.configure do |config|
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-  config.mock_with(:rspec)
   config.include PuppetlabsSpec::Files
   config.after :each do
     PuppetlabsSpec::Files.cleanup
@@ -37,7 +42,7 @@ shared_examples 'a mod class, without including apache' do
       kernel: 'Linux',
       osfamily: 'Debian',
       operatingsystem: 'Debian',
-      operatingsystemrelease: '6',
+      operatingsystemrelease: '8',
       operatingsystemmajrelease: nil,
       path: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       concat_basedir: '/dne',

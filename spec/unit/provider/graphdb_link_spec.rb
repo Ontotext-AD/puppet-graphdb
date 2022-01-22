@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'puppet/util/master_worker_link_manager'
 require 'puppet/util/master_master_link_manager'
