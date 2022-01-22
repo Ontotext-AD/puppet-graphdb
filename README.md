@@ -1,11 +1,6 @@
 GraphDB Puppet module
 ---------------------
 
-[![Build Status](https://jenkins.ontotext.com/buildStatus/icon?job=puppet-graphdb)](https://jenkins.ontotext.com/job/puppet-graphdb)
-[![Puppet Forge endorsed](https://img.shields.io/puppetforge/e/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)
-[![Puppet Forge Version](https://img.shields.io/puppetforge/v/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)
-[![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/ontotext/graphdb.svg)](https://forge.puppetlabs.com/ontotext/graphdb)
-
 #### Table of Contents
 
 1. [Module description - What the module does and why it is useful](#module-description)
@@ -305,16 +300,6 @@ node 'master2' {
     ...
     replication_port     => 0 # The port for replications that master and worker will use; default: 0
     ...
-}
-```
-
-##### Setup backup cron job
-```
-graphdb::ee::backup_cron { 'backup-cronjob':
-    master_endpoint   => "http://${::ipaddress}:8080",
-    master_repository => 'master',
-    hour              => '4',
-    minute            => '20',
 }
 ```
 
