@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Puppet
   module Util
     # File operation related utils
     class FileUtils
-      @slash = '[\\\\/]'.freeze
-      @name = '[^\\\\/]+'.freeze
+      @slash = '[\\\\/]'
+      @name = '[^\\\\/]+'
       @regexes = {
         windows: Regexp.new(/^(([A-Z]:#{@slash})|(#{@slash}#{@slash}#{@name}#{@slash}#{@name})
         |(#{@slash}#{@slash}\?#{@slash}#{@name}))/i),

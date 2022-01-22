@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/master_master_link_manager'
 require 'puppet/util/master_worker_link_manager'
@@ -28,6 +30,7 @@ private
     if !resource[:worker_endpoint].nil? && !resource[:peer_master_endpoint].nil?
       raise Puppet::Error, 'you should provide worker_endpoint or peer_master_endpoint, but not both'
     end
+
     if !resource[:worker_endpoint].nil? && !resource[:worker_repository_id].nil?
       @link_manager ||= Puppet::Util::MasterWorkerLinkManager.new(resource[:master_endpoint],
                                                                   resource[:master_repository_id],
@@ -53,6 +56,7 @@ private
 
   def check_resource_is_matching_master_instance?(resource, port)
     return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port?
+
     false
   end
 
@@ -73,6 +77,7 @@ private
   def check_resource_is_matching_master_repository?(resource, endpoint, repository_id)
     return true if resource.type == :component && (!resource[:repository_id].nil? && !resource[:endpoint].nil?) &&
                    (resource[:repository_id] == repository_id && resource[:endpoint].to_s == endpoint.to_s)
+
     false
   end
 end

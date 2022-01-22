@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 
 require 'timeout'
@@ -50,6 +52,7 @@ module Puppet
 
         return false unless matches_status_codes?(response, expectations[:codes])
         return matches_expected_messages?(response, expectations[:messages]) if expectations.key?(:messages)
+
         true
       end
 

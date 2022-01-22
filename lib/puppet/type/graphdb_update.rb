@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'uri'
 
 Puppet::Type.newtype(:graphdb_update) do
@@ -71,6 +73,7 @@ Puppet::Type.newtype(:graphdb_update) do
   autorequire(:graphdb_repository) do
     repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
+
       res if res[:endpoint] == self[:endpoint] && res[:repository_id] == self[:repository_id]
     end
     repositories.collect do |res|

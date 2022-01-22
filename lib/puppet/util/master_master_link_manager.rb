@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/request_manager'
 require 'json'
@@ -41,8 +43,8 @@ module Puppet
         uri = master_endpoint.dup
         uri.path = '/jolokia'
         body = {
-          'type'      => 'EXEC',
-          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
+          'type' => 'EXEC',
+          'mbean' => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
           'operation' => 'addSyncPeer',
           'arguments' => [peer_master_node_id, "#{peer_master_endpoint}/repositories/#{peer_master_repository_id}"]
         }
@@ -50,7 +52,7 @@ module Puppet
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            content_type: "application/json",
+                                                            content_type: 'application/json',
                                                             body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)
@@ -65,15 +67,15 @@ module Puppet
         expected_massage = Regexp.escape(peer_master_node_id.gsub('/', '\/'))
 
         body = {
-          'type'      => 'EXEC',
-          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
+          'type' => 'EXEC',
+          'mbean' => "ReplicationCluster:name=ClusterInfo/#{master_repository_id}",
           'operation' => 'removeSyncPeer',
           'arguments' => [peer_master_node_id]
         }
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            content_type: "application/json",
+                                                            content_type: 'application/json',
                                                             body_data: body.to_json },
                                                           { messages: [expected_massage],
                                                             codes: [200] }, 0)

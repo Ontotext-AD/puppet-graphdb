@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 
 require 'uri'
@@ -73,6 +75,7 @@ Puppet::Type.newtype(:graphdb_data) do
         value.each do |data|
           if data.is_a?(Hash)
             raise(ArgumentError, 'you should provide data content through content') unless data.key?('content')
+
             if !data.key?('format') && resource.value(:data_format).nil?
               raise(ArgumentError,
                     "you should provide data format for #{data['content']} through format or data_format")
@@ -139,6 +142,7 @@ Puppet::Type.newtype(:graphdb_data) do
             unless data_source.key?('source')
               raise(ArgumentError, "you should provide source through source: #{data_source}")
             end
+
             check_absolute_source_path(data_source['source'])
           else
             check_absolute_source_path(data_source)
@@ -209,6 +213,7 @@ Puppet::Type.newtype(:graphdb_data) do
   autorequire(:graphdb_repository) do
     repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
+
       res if res[:endpoint] == self[:endpoint] && res[:repository_id] == self[:repository_id]
     end
     repositories.collect do |res|

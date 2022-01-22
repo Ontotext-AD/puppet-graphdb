@@ -15,6 +15,7 @@ __CHANGE__
 - Remove useless condition in params.pp 
 - Remove oldest versions in metadata.json
 - Add debian 10 version in metadata.json
+- Many rubocop corrections : frozen_string_literal ... etc
 
 ## [v0.5.2](https://github.com/Ontotext-AD/puppet-graphdb/releases/tag/0.5.2) (30 Nov 2020)
 

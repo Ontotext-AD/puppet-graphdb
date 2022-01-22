@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'puppet/util/request_manager'
 require 'puppet/exceptions/request_fail'
@@ -71,40 +73,40 @@ module Puppet
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] creation passed.")
       end
 
-      def set_node_id(node_id)
+      def define_node_id(node_id)
         Puppet.debug "Trying to set node id [#{endpoint}/repositories/#{repository_id}] to [#{node_id}]"
         uri = endpoint.dup
         uri.path = '/jolokia'
         body = {
-          'type'      => 'write',
-          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
+          'type' => 'write',
+          'mbean' => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
           'attribute' => 'NodeID',
-          'value'     => node_id
+          'value' => node_id
         }
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            content_type: "application/json",
+                                                            content_type: 'application/json',
                                                             body_data: body.to_json },
                                                           { codes: [200] }, 0)
 
         Puppet.notice("Repository [#{endpoint}/repositories/#{repository_id}] node id set to [#{node_id}].")
       end
 
-      def set_repository_replication_port(replication_port)
+      def define_repository_replication_port(replication_port)
         Puppet.debug "Trying to set repository replication port [#{endpoint}/repositories/#{repository_id}] to [#{replication_port}]"
         uri = endpoint.dup
         uri.path = '/jolokia'
         body = {
-          'type'      => 'write',
-          'mbean'     => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
+          'type' => 'write',
+          'mbean' => "ReplicationCluster:name=ClusterInfo/#{repository_id}",
           'attribute' => 'MasterReplicationPort',
-          'value'     => replication_port
+          'value' => replication_port
         }
 
         Puppet::Util::RequestManager.perform_http_request(uri,
                                                           { method: :post,
-                                                            content_type: "application/json",
+                                                            content_type: 'application/json',
                                                             body_data: body.to_json },
                                                           { codes: [200] }, 0)
 
@@ -167,6 +169,7 @@ module Puppet
 
       def resolve_content_type(data_format)
         return DATA_TYPE_CONTENT_TYPE[data_format] if DATA_TYPE_CONTENT_TYPE.key?(data_format)
+
         raise ArgumentError, "Unknown data format [#{data_format}], please check"
       end
     end

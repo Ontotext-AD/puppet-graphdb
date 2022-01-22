@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Puppet
   module Util
     # Constant map contaning file extension with their matching format
@@ -16,6 +18,7 @@ module Puppet
 
       def self.[](extension)
         raise ArgumentError, "Unknown file extensions: #{extension}" unless key?(extension)
+
         @DATA_TYPE_EXT[extension]
       end
 

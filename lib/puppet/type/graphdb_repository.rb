@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:graphdb_repository) do
   @doc = 'Creates GraphDB repository'
 
@@ -77,6 +79,7 @@ Puppet::Type.newtype(:graphdb_repository) do
   autorequire(:graphdb_validator) do
     validators = catalog.resources.select do |res|
       next unless res.type == :graphdb_validator
+
       res if res[:endpoint] == self[:endpoint]
     end
     validators.collect do |res|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:graphdb_validator) do
   @doc = 'Checks whether GraphDB instance is running'
 
@@ -44,6 +46,7 @@ Puppet::Type.newtype(:graphdb_validator) do
   autorequire(:service) do
     repositories = catalog.resources.select do |res|
       next unless res.type == :service
+
       res if res[:name] == self[:name]
     end
     repositories.collect do |res|

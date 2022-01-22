@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 
 module Puppet
@@ -40,6 +42,7 @@ module Puppet
 
       def self.resolve_method(parameters)
         raise ArgumentError, 'You must pass method in parameters' unless parameters.key?(:method)
+
         parameters[:method]
       end
 
@@ -77,7 +80,7 @@ module Puppet
         end
 
         if FATAL_RESPONSE_CODES.include?(response.code)
-          err_message = "Unrecoverable response recieved: [#{response.code}]"
+          err_message = "Unrecoverable response received: [#{response.code}]"
           err_message += " with body: [#{response.body}]" unless response.body.nil?
           raise Puppet::Error, err_message
         end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', '..', '..'))
 require 'uri'
 
@@ -99,6 +101,7 @@ Puppet::Type.newtype(:graphdb_link) do
   autorequire(:graphdb_repository) do
     repositories = catalog.resources.select do |res|
       next unless res.type == :graphdb_repository
+
       res if (res[:endpoint] == self[:master_endpoint] && res[:repository_id] == self[:master_repository_id]) ||
              (res[:endpoint] == self[:worker_endpoint] && res[:repository_id] == self[:worker_repository_id]) ||
              (res[:endpoint] == self[:peer_master_endpoint] && res[:repository_id] == self[:peer_master_repository_id])

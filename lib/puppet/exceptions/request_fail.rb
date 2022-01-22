@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Puppet
   module Exceptions
     # Exceptions trown when given request fails

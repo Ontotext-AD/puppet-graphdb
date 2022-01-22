@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #
 # generate_java_opts_string.rb
 #
