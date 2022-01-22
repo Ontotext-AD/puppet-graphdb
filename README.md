@@ -1,5 +1,9 @@
-GraphDB Puppet module
+GraphDB Puppet module (fork)
 ---------------------
+
+[![Puppet Forge endorsed](https://img.shields.io/puppetforge/e/phaedriel/graphdb.svg)](https://forge.puppetlabs.com/phaedriel/graphdb)
+[![Puppet Forge Version](https://img.shields.io/puppetforge/v/phaedriel/graphdb.svg)](https://forge.puppetlabs.com/phaedriel/graphdb)
+[![Puppet Forge Downloads](https://img.shields.io/puppetforge/dt/phaedriel/graphdb.svg)](https://forge.puppetlabs.com/phaedriel/graphdb)
 
 #### Table of Contents
 
@@ -359,7 +363,7 @@ graphdb_data { 'test-data':
 }
 ```
 
-For more information about syntax, please, check [here](lib/puppet/type/graphdb_data.rb).
+For more information about syntax, please, check [here](https://github.com/Ontotext-AD/puppet-graphdb/blob/master/lib/puppet/type/graphdb_data.rb).
 
 ## Limitations
 
@@ -375,7 +379,7 @@ Because of init.d/systemd/upstart support the module may run on other platforms,
 
 ## Development
 
-Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for instructions regarding development environments and testing.
+Please see the [CONTRIBUTING.md](https://github.com/Ontotext-AD/puppet-graphdb/blob/master/CONTRIBUTING.md) file for instructions regarding development environments and testing.
 
 ## Support
 
@@ -383,4 +387,4 @@ Please, use [email](mailto:graphdb-support@ontotext.com?Subject=GraphDB%20puppet
 
 ## License
 
-Please see the [LICENSE](https://github.com/Ontotext-AD/puppet-graphdb/LICENSE)
+Please see the [LICENSE](https://github.com/Ontotext-AD/puppet-graphdb/blob/master/LICENSE)
