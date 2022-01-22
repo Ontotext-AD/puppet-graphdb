@@ -1,13 +1,12 @@
 {
-  "name": "ontotext-graphdb",
-  "version": "0.4.0",
-  "source": "https://github.com/Ontotext-AD/puppet-graphdb",
+  "name": "phaedriel-graphdb",
+  "version": "0.5.3",
+  "source": "https://github.com/phaedriel/puppet-graphdb",
   "author": "ontotext",
   "license": "Apache-2.0",
   "summary": "Module for managing and configuring GraphDB instances",
-  "description": "Module for managing and configuring GraphDB instances",
-  "project_page": "https://github.com/Ontotext-AD/puppet-graphdb",
-  "issues_url": "https://github.com/Ontotext-AD/puppet-graphdb/issues",
+  "project_page": "https://github.com/phaedriel/puppet-graphdb",
+  "issues_url": "https://github.com/phaedriel/puppet-graphdb/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
