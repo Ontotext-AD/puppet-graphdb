@@ -1,10 +1,10 @@
 {
   "name": "phaedriel-graphdb",
   "version": "0.6.0",
-  "source": "https://github.com/phaedriel/puppet-graphdb",
   "author": "ontotext",
-  "license": "Apache-2.0",
   "summary": "Module for managing and configuring GraphDB instances",
+  "license": "Apache-2.0",
+  "source": "https://github.com/phaedriel/puppet-graphdb",
   "project_page": "https://github.com/Ontotext-AD/puppet-graphdb",
   "issues_url": "https://github.com/Ontotext-AD/puppet-graphdb/issues",
   "dependencies": [
@@ -49,5 +49,8 @@
       "name": "ruby",
       "version_requirement": ">= 2.0.0"
     }
-  ]
+  ],
+  "pdk-version": "2.3.0",
+  "template-url": "pdk-default#2.3.0",
+  "template-ref": "tags/2.3.0-0-g8aaceff"
 }
