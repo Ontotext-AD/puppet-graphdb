@@ -8,7 +8,7 @@ describe 'graphdb::tool_links', type: :class do
       kernel: 'Linux',
       operatingsystem: 'Debian',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk8'
+      graphdb_java_home: '/opt/jdk8'
     }
   end
 

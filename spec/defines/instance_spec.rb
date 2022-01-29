@@ -8,7 +8,7 @@ describe 'graphdb::instance', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk8',
+      graphdb_java_home: '/opt/jdk8',
       ipaddress: '129.10.1.1'
     }
   end
@@ -128,8 +128,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
         {
           kernel: 'Linux',
           operatingsystem: 'Ubuntu',
-          operatingsystemmajrelease: '6',
-          machine_java_home: '/opt/jdk8',
+          operatingsystemmajrelease: '12',
+          graphdb_java_home: '/opt/jdk8',
           ipaddress: '129.10.1.1'
         }
       end
@@ -143,8 +143,8 @@ graphdb.license.file = /opt/graphdb/instances/test/license
         {
           kernel: 'Linux',
           operatingsystem: 'Ubuntu',
-          operatingsystemmajrelease: '16',
-          machine_java_home: '/opt/jdk8',
+          operatingsystemmajrelease: '20',
+          graphdb_java_home: '/opt/jdk8',
           ipaddress: '129.10.1.1'
         }
       end

@@ -8,7 +8,7 @@ describe 'graphdb::data', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk8',
+      graphdb_java_home: '/opt/jdk8',
       ipaddress: '129.10.1.1'
     }
   end
@@ -35,7 +35,7 @@ describe 'graphdb::data', type: :define do
     end
     it do
       is_expected.to contain_file('/var/tmp/graphdb/test/test.zip')
-        .with(ensure: 'present',
+        .with(ensure: 'file',
               source: 'test.zip',
               owner: 'graphdb',
               group: 'graphdb',

@@ -96,31 +96,30 @@
 #   puppet:// resource or file:/ for local packages
 #
 class graphdb (
-  $version                   = undef,
-  $edition                   = undef,
-  $ensure                    = $graphdb::params::ensure,
-  $status                    = $graphdb::params::status,
-  $tmp_dir                   = '/var/tmp/graphdb',
-  $data_dir                  = '/var/lib/graphdb',
-  $log_dir                   = '/var/log/graphdb',
-  $pid_dir                   = $graphdb::params::pid_dir,
-  $install_dir               = '/opt/graphdb',
-  $manage_graphdb_user       = true,
-  $graphdb_user              = $graphdb::params::graphdb_user,
-  $graphdb_group             = $graphdb::params::graphdb_group,
-  $java_home                 = undef,
-  $restart_on_change         = $graphdb::params::restart_on_change,
-  $purge_data_dir            = $graphdb::params::purge_data_dir,
-  $archive_dl_timeout        = $graphdb::params::archive_dl_timeout,
-  $graphdb_download_user     = undef,
-  $graphdb_download_password = undef,
-  $graphdb_download_url      = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
-) inherits graphdb::params {
-
+  String $version                             = undef,
+  String $edition                             = undef,
+  String $ensure                              = 'present',
+  String $status                              = 'enabled',
+  String $tmp_dir                             = '/var/tmp/graphdb',
+  String $data_dir                            = '/var/lib/graphdb',
+  String $log_dir                             = '/var/log/graphdb',
+  String $pid_dir                             = '/var/run/graphdb',
+  String $install_dir                         = '/opt/graphdb',
+  Boolean $manage_graphdb_user                = true,
+  Optional[String] $graphdb_user, # hiera value
+  Optional[String] $graphdb_group, # hiera value
+  Optional[String] $java_home                 = undef,
+  Boolean $restart_on_change                  = true,
+  Boolean $purge_data_dir                     = false,
+  Integer $archive_dl_timeout                 = 600,
+  Optional[String] $graphdb_download_user     = undef,
+  Optional[String] $graphdb_download_password = undef,
+  String $graphdb_download_url                = 'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb',
+) {
   #### Validate parameters
 
   # ensure
-  if !($ensure in [ 'present', 'absent' ]) {
+  if !($ensure in ['present', 'absent']) {
     fail("\"${ensure}\" is not a valid ensure parameter value")
   }
 
@@ -131,15 +130,21 @@ class graphdb (
 
     # version
     if versioncmp($version, '7.0.0') < 0 {
-      fail('This module supprort GraphDB version 7.0.0 and up')
+      fail('This module support GraphDB version 7.0.0 and up')
     }
 
-    if !($edition in [ 'se', 'ee' ]) {
+    if !($edition in ['se', 'ee']) {
       fail("\"${edition}\" is not a valid edition parameter value")
     }
 
+    # kernel
+    $kernel = $facts['kernel']
+    if !($kernel in ['Linux', 'Darwin', 'OpenBSD']) {
+      fail("\"${module_name}\" provides no user/group default value for \"${kernel}\"")
+    }
+
     # service status
-    if !($status in [ 'enabled', 'disabled', 'running', 'unmanaged' ]) {
+    if !($status in ['enabled', 'disabled', 'running', 'unmanaged']) {
       fail("\"${status}\" is not a valid status parameter value")
     }
 
@@ -163,10 +168,10 @@ class graphdb (
       validate_absolute_path($java_home)
       $java_location = $java_home
     }
-    elsif $::machine_java_home {
-      $java_location = $::machine_java_home
+    elsif $facts['graphdb_java_home'] {
+      $java_location = $facts['graphdb_java_home']
     } else {
-      $java_location = '/usr/lib/jvm/java-8-oracle'
+      $java_location = '/usr/lib/jvm/java-8-openjdk-amd64'
     }
   }
 
@@ -182,5 +187,4 @@ class graphdb (
   } else {
     Graphdb::Instance <| |> -> Class['graphdb::install']
   }
-
 }

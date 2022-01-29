@@ -19,14 +19,18 @@
 #   time to flush on shutdown.
 #   default: 180
 #
-define graphdb::service($ensure, $status, $java_opts = [], $kill_timeout = 180) {
-  require graphdb::params
+define graphdb::service (
+  String $ensure,
+  String $status,
+  Array $java_opts      = [],
+  Integer $kill_timeout = 180
+) {
+  require graphdb::service::params
 
   #### Service management
 
   # set params: in operation
   if $ensure == 'present' {
-
     case $status {
       # make sure service is currently running, start it on boot
       'enabled': {
@@ -56,13 +60,12 @@ define graphdb::service($ensure, $status, $java_opts = [], $kill_timeout = 180) 
         fail("\"${status}\" is an unknown service status value")
       }
     }
-
   } else {
     $service_ensure = 'stopped'
     $service_enable = false
   }
 
-  case $graphdb::params::service_providers {
+  case $graphdb::service::params::service_provider {
     'init': {
       graphdb::service::init { $title:
         ensure         => $ensure,
@@ -90,9 +93,7 @@ define graphdb::service($ensure, $status, $java_opts = [], $kill_timeout = 180) 
       }
     }
     default: {
-      fail("Unknown service provider ${graphdb::params::service_providers}")
+      fail("Unknown service provider ${graphdb::service::params::service_provider}")
     }
-
   }
-
 }

@@ -6,15 +6,14 @@ describe 'graphdb', type: :class do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
-        facts.merge(machine_java_home: '/opt/jdk8')
+        facts.merge(graphdb_java_home: '/opt/jdk8')
       end
 
       describe 'with minimum configuration' do
         let(:params) { { version: '9.10.1', edition: 'ee' } }
 
-        it { is_expected.to contain_class('graphdb::params') }
-        it {   is_expected.to contain_package('unzip') }
-        it {   is_expected.to contain_user('graphdb').with(ensure: 'present', comment: 'graphdb service user') }
+        it { is_expected.to contain_package('unzip') }
+        it { is_expected.to contain_user('graphdb').with(ensure: 'present', comment: 'graphdb service user') }
         it do
           is_expected.to contain_file('/opt/graphdb')
             .with(ensure: 'directory', owner: 'graphdb', group: 'graphdb')
@@ -146,4 +145,18 @@ describe 'graphdb', type: :class do
       end
     end
   end
+
+  context 'unknown kernel' do
+    let :facts do
+      {
+        kernel: 'unknown',
+        operatingsystem: 'Debian',
+        operatingsystemmajrelease: '6'
+      }
+    end
+    it do
+      expect { is_expected.to contain_class('graphdb') }.to raise_error(Puppet::ParseError)
+    end
+  end
+
 end

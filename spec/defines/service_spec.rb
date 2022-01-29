@@ -6,7 +6,7 @@ describe 'graphdb::service', type: :define do
   let :default_facts do
     {
       kernel: 'Linux',
-      machine_java_home: '/opt/jdk8'
+      graphdb_java_home: '/opt/jdk8'
     }
   end
 
@@ -31,19 +31,19 @@ describe 'graphdb::service', type: :define do
           is_expected.to contain_graphdb__service__upstart(title).with(
             ensure: 'present',
             service_ensure: service_status[0],
-            service_enable: service_status[1]
+            service_enable: service_status[1],
           )
         end
       end
 
       context "with ensure set to: [absent] and status set to: [#{status_param}]" do
-        let(:params) { { ensure: 'absent', status:  status_param } }
+        let(:params) { { ensure: 'absent', status: status_param } }
 
         it do
           is_expected.to contain_graphdb__service__upstart(title).with(
             ensure: 'absent',
             service_ensure: 'stopped',
-            service_enable: false
+            service_enable: false,
           )
         end
       end
@@ -53,25 +53,25 @@ describe 'graphdb::service', type: :define do
       let(:facts) { default_facts.merge(operatingsystem: 'Debian', operatingsystemmajrelease: '10') }
 
       context "with ensure set to: [present] and status set to: [#{status_param}]" do
-        let(:params) { { ensure: 'present', status:  status_param } }
+        let(:params) { { ensure: 'present', status: status_param } }
 
         it do
           is_expected.to contain_graphdb__service__systemd(title).with(
             ensure: 'present',
             service_ensure: service_status[0],
-            service_enable: service_status[1]
+            service_enable: service_status[1],
           )
         end
       end
 
       context "with ensure set to: [absent] and status set to: [#{status_param}]" do
-        let(:params) { { ensure: 'absent', status:  status_param } }
+        let(:params) { { ensure: 'absent', status: status_param } }
 
         it do
           is_expected.to contain_graphdb__service__systemd(title).with(
             ensure: 'absent',
             service_ensure: 'stopped',
-            service_enable: false
+            service_enable: false,
           )
         end
       end
@@ -87,7 +87,7 @@ describe 'graphdb::service', type: :define do
           is_expected.to contain_graphdb__service__init(title).with(
             ensure: 'present',
             service_ensure: service_status[0],
-            service_enable: service_status[1]
+            service_enable: service_status[1],
           )
         end
       end
@@ -99,7 +99,7 @@ describe 'graphdb::service', type: :define do
           is_expected.to contain_graphdb__service__init(title).with(
             ensure: 'absent',
             service_ensure: 'stopped',
-            service_enable: false
+            service_enable: false,
           )
         end
       end

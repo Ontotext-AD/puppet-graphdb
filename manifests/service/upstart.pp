@@ -22,8 +22,13 @@
 #   time to flush on shutdown.
 #   default: 180
 #
-define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $java_opts = [], $kill_timeout = 180) {
-
+define graphdb::service::upstart (
+  String $ensure,
+  Boolean $service_enable,
+  Optional[String] $service_ensure  = undef,
+  Array $java_opts                  = [],
+  Integer $kill_timeout             = 180
+) {
   $final_java_opts = generate_java_opts_string($java_opts)
 
   File {
@@ -57,5 +62,4 @@ define graphdb::service::upstart($ensure, $service_ensure, $service_enable, $jav
     provider  => 'upstart',
     hasstatus => true,
   }
-
 }

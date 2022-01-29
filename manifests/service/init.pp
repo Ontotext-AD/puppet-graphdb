@@ -17,8 +17,12 @@
 #   Array of java options to give to GraphDB java process
 #   example: ['-Xmx1g', '-Xms1g']
 #
-define graphdb::service::init($ensure, $service_ensure, $service_enable, $java_opts = []) {
-
+define graphdb::service::init (
+  String $ensure,
+  Boolean $service_enable,
+  Optional[String] $service_ensure  = undef,
+  Array $java_opts                  = [],
+) {
   $final_java_opts = generate_java_opts_string($java_opts)
 
   File {
@@ -53,5 +57,4 @@ define graphdb::service::init($ensure, $service_ensure, $service_enable, $java_o
     hasstatus => true,
     require   => File[$graphdb::pid_dir],
   }
-
 }

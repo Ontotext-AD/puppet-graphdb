@@ -8,7 +8,7 @@ describe 'graphdb::ee::master::repository', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '6',
-      machine_java_home: '/opt/jdk8',
+      graphdb_java_home: '/opt/jdk8',
       ipaddress: '129.10.1.1'
     }
   end

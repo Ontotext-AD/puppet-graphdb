@@ -1,5 +1,2 @@
---tty
 --color
 --format documentation
---format RspecJunitFormatter
---out rspec.xml

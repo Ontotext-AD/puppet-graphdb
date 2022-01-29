@@ -68,23 +68,26 @@
 #
 # [*protocol*]
 #   A string, either 'http' or 'https defining under what protocol to connect to GraphDB'
+#
+# [*jolokia_link*]
+#   Add jolokia.xml link
 define graphdb::instance (
-  $license           = undef,
-  $ensure            = $graphdb::ensure,
-  $status            = $graphdb::status,
-  $http_port         = 8080,
-  $external_url      = undef,
-  $kill_timeout      = 180,
-  $validator_timeout = 60,
-  $heap_size         = undef,
-  $logback_config    = undef,
-  $extra_properties  = {},
-  $java_opts         = [],
-  $protocol          = 'http',
+  Optional[String] $license         = undef,
+  String $ensure                    = $graphdb::ensure,
+  String $status                    = $graphdb::status,
+  Integer $http_port                = 8080,
+  Optional[String] $external_url    = undef,
+  Integer $kill_timeout             = 180,
+  Integer $validator_timeout        = 60,
+  Optional[String] $heap_size       = undef,
+  Optional[String] $logback_config  = undef,
+  Hash $extra_properties            = {},
+  Array $java_opts                  = [],
+  String $protocol                  = 'http',
+  Boolean $jolokia_link             = versioncmp($graphdb::ensure, '9.10.0') > -1,
 ) {
-
   # ensure
-  if !($ensure in [ 'present', 'absent' ]) {
+  if !($ensure in ['present', 'absent']) {
     fail("\"${ensure}\" is not a valid ensure parameter value")
   }
 
@@ -129,10 +132,10 @@ define graphdb::instance (
       notify => Service[$service_name],
     }
 
-    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_conf_dir, $instance_log_dir
-    ]:
-      ensure => 'directory',
-      notify => Service[$service_name],
+    file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir,
+      $instance_temp_dir, $instance_conf_dir, $instance_log_dir]:
+        ensure => 'directory',
+        notify => Service[$service_name],
     }
 
     if $logback_config {
@@ -152,6 +155,13 @@ define graphdb::instance (
       target => "${graphdb::install_dir}/dist/conf/tools-logback.xml",
     }
 
+    if $jolokia_link {
+      file { "${instance_conf_dir}/jolokia.xml":
+        ensure => 'link',
+        target => "${graphdb::install_dir}/dist/conf/jolokia.xml",
+      }
+    }
+
     $default_properties = {
       'graphdb.home.data'      => "${graphdb::data_dir}/${title}",
       'graphdb.home.logs'      => $instance_log_dir,
@@ -168,10 +178,11 @@ define graphdb::instance (
       notify  => Service[$service_name],
     }
 
+    $ipaddress = $facts['ipaddress'] # lint:ignore:legacy_facts
     graphdb_validator { $service_name:
-      endpoint  => "${protocol}://${::ipaddress}:${http_port}",
+      endpoint  => "${protocol}://${ipaddress}:${http_port}",
       timeout   => $validator_timeout,
-      subscribe => Service[$service_name]
+      subscribe => Service[$service_name],
     }
   } else {
     file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_log_dir]:
@@ -187,7 +198,6 @@ define graphdb::instance (
     status       => $status,
     java_opts    => $java_opts_final,
     kill_timeout => $kill_timeout,
-    subscribe    => Exec['unpack-graphdb-archive']
+    subscribe    => Exec['unpack-graphdb-archive'],
   }
-
 }

@@ -4,7 +4,6 @@
 # Not meant to be used directly.
 #
 class graphdb::tool_links {
-
   if ($graphdb::ensure  == 'present') {
     File {
       owner => $graphdb::graphdb_user,

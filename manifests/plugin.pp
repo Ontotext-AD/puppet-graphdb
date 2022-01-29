@@ -25,11 +25,10 @@
 #   The source of GraphDB plugin.
 #
 define graphdb::plugin (
-  $instance,
-  $ensure = $graphdb::ensure,
-  $source = undef,
+  String $instance,
+  String $ensure            = $graphdb::ensure,
+  Optional[String] $source  = undef,
 ) {
-
   require graphdb
 
   $instance_plugins_dir = "${graphdb::data_dir}/${instance}/plugins"
@@ -48,5 +47,4 @@ define graphdb::plugin (
     require     => Package['unzip'],
     notify      => Service["graphdb-${instance}"],
   }
-
 }

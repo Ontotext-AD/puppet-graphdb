@@ -8,7 +8,7 @@ describe 'graphdb::service::systemd', type: :define do
       kernel: 'Linux',
       operatingsystem: 'Ubuntu',
       operatingsystemmajrelease: '16',
-      machine_java_home: '/opt/jdk8',
+      graphdb_java_home: '/opt/jdk8',
       ipaddress: '129.10.1.1'
     }
   end

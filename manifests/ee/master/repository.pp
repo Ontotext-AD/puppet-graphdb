@@ -33,18 +33,22 @@
 #
 # For other properties, please, check: {GraphDB documentation}[http://graphdb.ontotext.com/documentation/enterprise/configuring-a-repository.html?highlight=repository#configuration-parameters]
 #
+# [*repository_id*]
+#   Repository ID
+# [*repository_label*]
+#   Repository title
+#
 define graphdb::ee::master::repository (
-  $endpoint,
-  $repository_context,
-  $ensure              = $graphdb::ensure,
-  $repository_template = "${module_name}/repository/master.ttl.erb",
-  $repository_id       = $title,
-  $repository_label    = 'GraphDB EE master repository',
-  $replication_port    = 0,
-  $node_id             = "${endpoint}/repositories/${repository_id}",
-  $timeout             = 60,
+  String $endpoint,
+  String $repository_context,
+  String $ensure              = $graphdb::ensure,
+  String $repository_template = "${module_name}/repository/master.ttl.erb",
+  String $repository_id       = $title,
+  String $repository_label    = 'GraphDB EE master repository',
+  Integer $replication_port   = 0,
+  String $node_id             = "${endpoint}/repositories/${repository_id}",
+  Integer $timeout            = 60,
 ) {
-
   graphdb_repository { $title:
     ensure              => $ensure,
     repository_id       => $repository_id,
@@ -55,5 +59,4 @@ define graphdb::ee::master::repository (
     node_id             => $node_id,
     timeout             => $timeout,
   }
-
 }

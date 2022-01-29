@@ -63,17 +63,17 @@
 #   default: 200
 #
 define graphdb::data (
-  $endpoint,
-  $repository,
-  $exists_query,
-  $data = undef,
-  $source = undef,
-  $archive = undef,
-  $data_format = undef,
-  $context = 'null',
-  $overwrite = false,
-  $exists_expected_response = true,
-  $timeout = 200,
+  String $endpoint,
+  String $repository,
+  String $exists_query,
+  Optional[String] $data            = undef,
+  Optional[String] $source          = undef,
+  Optional[String] $archive         = undef,
+  Optional[String] $data_format     = undef,
+  String $context                   = 'null',
+  Boolean $overwrite                = false,
+  Boolean $exists_expected_response = true,
+  Integer $timeout                  = 200,
 ) {
   require graphdb
 
@@ -83,7 +83,7 @@ define graphdb::data (
   }
 
   Exec {
-    path => [ '/bin', '/usr/bin', '/usr/local/bin' ],
+    path => ['/bin', '/usr/bin', '/usr/local/bin'],
     cwd  => '/',
     user => $graphdb::graphdb_user,
   }
@@ -99,7 +99,7 @@ define graphdb::data (
     }
 
     file { $archive_destination:
-      ensure  => 'present',
+      ensure  => file,
       source  => $archive,
       require => File[$archive_base],
       notify  => Exec["unpack-archive-source-${title}"],

@@ -1,6 +1,6 @@
 {
   "name": "phaedriel-graphdb",
-  "version": "0.6.0",
+  "version": "0.7.0-alpha",
   "author": "ontotext",
   "summary": "Module for managing and configuring GraphDB instances",
   "license": "Apache-2.0",
@@ -29,14 +29,13 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "8",
         "10"
       ]
     },
     {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "16.04"
+        "20.04"
       ]
     }
   ],
@@ -49,5 +48,8 @@
       "name": "ruby",
       "version_requirement": ">= 2.0.0"
     }
-  ]
+  ],
+  "pdk-version": "2.2.0",
+  "template-url": "pdk-default#2.2.0",
+  "template-ref": "tags/2.2.0-0-g2381db6"
 }

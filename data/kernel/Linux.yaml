@@ -1,0 +1,3 @@
+---
+graphdb::graphdb_user: 'graphdb'
+graphdb::graphdb_group: 'graphdb'

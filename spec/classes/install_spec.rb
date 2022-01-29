@@ -7,7 +7,7 @@ describe 'graphdb::install', type: :class do
     {
       operatingsystem: 'Debian',
       operatingsystemmajrelease: '10',
-      machine_java_home: '/opt/jdk8'
+      graphdb_java_home: '/opt/jdk8'
     }
   end
   describe 'with minimum configuration on Linux' do

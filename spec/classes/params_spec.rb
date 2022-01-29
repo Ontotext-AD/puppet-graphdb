@@ -2,25 +2,12 @@
 
 require 'spec_helper'
 
-describe 'graphdb::params', type: :class do
+describe 'graphdb::service::params', type: :class do
   on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) { facts }
 
-      it { is_expected.to contain_class('graphdb::params') }
-    end
-  end
-
-  context 'unknown kernel' do
-    let :facts do
-      {
-        kernel: 'unknown',
-        operatingsystem: 'Debian',
-        operatingsystemmajrelease: '6'
-      }
-    end
-    it do
-      expect { is_expected.to contain_class('graphdb::params') }.to raise_error(Puppet::ParseError)
+      it { is_expected.to contain_class('graphdb::service::params') }
     end
   end
 

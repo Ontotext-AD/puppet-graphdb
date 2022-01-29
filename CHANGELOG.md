@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.7.0]
+
+- pdk convert and adaptation (Gemfile, ...)
+- add parameters type + comments
+- change data.pp ensure  => 'present' to ensure  => file, (and modify data_spec.rb)
+- Add facter graphdb_java_home (used code : https://github.com/puppetlabs/puppetlabs-java/blob/main/lib/facter/java_default_home.rb)
+- Remove facts.d JAVA_HOME.sh
+- Add jolokia.xml link in instance.pp (version >= 9.10.0)
+- Move params.pp in service::params.pp
+- ...
+
 ## [v0.6.0](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.6.0) (22 Jan 2022)
 
 __UPGRADE__
