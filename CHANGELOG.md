@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [v0.7.1](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.71)
+## [v0.7.1](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.7.1)
 
 - Correction WARN Missing jolokia-access.xml in graphdb.home.conf
 `[WARN ] 2022-01-28 14:25:40,918 [main | c.o.f.j.JolokiaAgentServlet] Missing jolokia-access.xml in graphdb.home.conf location /opt/graphdb/instances/instance/conf for servlet, switching to default policy`
