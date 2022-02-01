@@ -69,8 +69,8 @@
 # [*protocol*]
 #   A string, either 'http' or 'https defining under what protocol to connect to GraphDB'
 #
-# [*jolokia_link*]
-#   Add jolokia.xml link
+# [*jolokia_access_link*]
+#   Add jolokia-access.xml link
 define graphdb::instance (
   Optional[String] $license         = undef,
   String $ensure                    = $graphdb::ensure,
@@ -84,7 +84,7 @@ define graphdb::instance (
   Hash $extra_properties            = {},
   Array $java_opts                  = [],
   String $protocol                  = 'http',
-  Boolean $jolokia_link             = versioncmp($graphdb::ensure, '9.10.0') > -1,
+  Boolean $jolokia_access_link      = versioncmp($graphdb::ensure, '9.10.0') > -1,
 ) {
   # ensure
   if !($ensure in ['present', 'absent']) {
@@ -155,10 +155,10 @@ define graphdb::instance (
       target => "${graphdb::install_dir}/dist/conf/tools-logback.xml",
     }
 
-    if $jolokia_link {
-      file { "${instance_conf_dir}/jolokia.xml":
+    if $jolokia_access_link {
+      file { "${instance_conf_dir}/jolokia-access.xml":
         ensure => 'link',
-        target => "${graphdb::install_dir}/dist/conf/jolokia.xml",
+        target => "${graphdb::install_dir}/dist/conf/jolokia-access.xml",
       }
     }
 

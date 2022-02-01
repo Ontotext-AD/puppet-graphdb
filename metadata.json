@@ -1,11 +1,11 @@
 {
   "name": "phaedriel-graphdb",
-  "version": "0.7.0-alpha",
+  "version": "0.7.1-alpha",
   "author": "ontotext",
   "summary": "Module for managing and configuring GraphDB instances",
   "license": "Apache-2.0",
   "source": "https://github.com/phaedriel/puppet-graphdb",
-  "project_page": "https://github.com/Ontotext-AD/puppet-graphdb",
+  "project_page": "https://github.com/phaedriel/puppet-graphdb",
   "issues_url": "https://github.com/Ontotext-AD/puppet-graphdb/issues",
   "dependencies": [
     {
