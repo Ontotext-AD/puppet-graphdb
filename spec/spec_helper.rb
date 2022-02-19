@@ -14,22 +14,26 @@ include RspecPuppetFacts
 default_facts = {
   puppetversion: Puppet.version,
   facterversion: Facter.version,
+  ipaddress: "172.16.254.254",
+  ipaddress6: "FE80:0000:0000:0000:AAAA:AAAA:AAAA",
+  is_pe: false,
+  macaddress: "AA:AA:AA:AA:AA:AA",
 }
 
-default_fact_files = [
-  File.expand_path(File.join(File.dirname(__FILE__), 'default_facts.yml')),
-  File.expand_path(File.join(File.dirname(__FILE__), 'default_module_facts.yml')),
-]
+# default_fact_files = [
+#   File.expand_path(File.join(File.dirname(__FILE__), 'default_facts.yml')),
+#   File.expand_path(File.join(File.dirname(__FILE__), 'default_module_facts.yml')),
+# ]
 
-default_fact_files.each do |f|
-  next unless File.exist?(f) && File.readable?(f) && File.size?(f)
+# default_fact_files.each do |f|
+#   next unless File.exist?(f) && File.readable?(f) && File.size?(f)
 
-  begin
-    default_facts.merge!(YAML.safe_load(File.read(f), [], [], true))
-  rescue => e
-    RSpec.configuration.reporter.message "WARNING: Unable to load #{f}: #{e}"
-  end
-end
+#   begin
+#     default_facts.merge!(YAML.safe_load(File.read(f), [], [], true))
+#   rescue => e
+#     RSpec.configuration.reporter.message "WARNING: Unable to load #{f}: #{e}"
+#   end
+# end
 
 # read default_facts and merge them over what is provided by facterdb
 default_facts.each do |fact, value|

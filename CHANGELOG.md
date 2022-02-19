@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.7.2](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.7.2)
+
+- Correction "Unable to load default_facts.yml: wrong number of arguments ..." during bundle exec rake spec
+- "Rollback" Gemfile
+- Add Dockerfile 
+
 ## [v0.7.1](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.7.1)
 
 - Correction WARN Missing jolokia-access.xml in graphdb.home.conf

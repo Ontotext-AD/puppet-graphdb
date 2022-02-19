@@ -46,3 +46,4 @@
 /.sync.yml
 /.devcontainer/
 /data_next/
+/Dockerfile

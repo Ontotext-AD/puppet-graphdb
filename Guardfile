@@ -10,7 +10,7 @@ guard :rspec, cmd: 'rspec --color --format=documentation' do
   watch('spec/spec_helper.rb') { 'spec' }
 end
 
-guard :rubocop do
-  watch(/.+\.rb$/)
-  watch(%r{(?:.+\/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
-end
+# guard :rubocop do
+#   watch(/.+\.rb$/)
+#   watch(%r{(?:.+\/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
+# end

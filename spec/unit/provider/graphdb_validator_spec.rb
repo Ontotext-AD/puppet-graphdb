@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'webmock'
 require 'webmock/rspec'
 
 provider_class = Puppet::Type.type(:graphdb_validator).provider(:graphdb_validator)

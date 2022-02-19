@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'webmock'
 require 'webmock/rspec'
 require 'uri'
 require 'puppet/util/http_client'

@@ -23,7 +23,7 @@ GraphDB Puppet module (fork)
 This module sets up [GraphDB](http://graphdb.ontotext.com/) instances with additional resource for
 repository creation, data loading, updates, backups, and more.
 
-This module has been tested against all major versions of GraphDB 7.* and 8.*
+This module has been tested on GraphDB 9.10.*
 
 ## Setup
 
@@ -46,7 +46,7 @@ Declare the top-level `graphdb` class and set up an instance:
 
 ```puppet
 class{ 'graphdb':
-  version              => '7.1.0',
+  version              => '9.10.2',
   edition              => 'SE',
 }
 
@@ -72,7 +72,7 @@ class { 'graphdb':
 
 ```puppet
 class { 'graphdb':
-  version              => '7.1.0',
+  version              => '9.10.2',
   edition              => 'SE',
   status               => 'disabled'
 }
@@ -85,7 +85,7 @@ This can be overridden globally with the following option:
 
 ```puppet
 class { 'graphdb':
-  version              => '7.1.0',
+  version              => '9.10.2',
   edition              => 'SE',
   restart_on_change    => false,
 }
@@ -143,7 +143,7 @@ Optimum GraphDB EE cluster configuration
 
 A master with one worker
 
-```
+```puppet
  class { 'graphdb':
    version => '7.1.0',
    edition => 'ee',
@@ -179,7 +179,7 @@ A master with one worker
 
 A master with one worker (on the same machine), security turned on and https:
 
-```
+```puppet
 class{ 'graphdb':
    version              => '8.6.0-RC9',
    edition              => 'ee',
@@ -229,7 +229,7 @@ exec { 'enable-security':
 
 A two peered masters([split brain](http://graphdb.ontotext.com/documentation/enterprise/ee/cluster-failures.html?highlight=master%20master#split-brain))
 
-```
+```puppet
 node 'master1' {
 
   class { 'graphdb':
@@ -367,13 +367,11 @@ For more information about syntax, please, check [here](https://github.com/Ontot
 
 ## Limitations
 
-This module has been built on and tested against Puppet 3.2 and higher.
+This module has been built on and tested against Puppet 6 and higher.
 
 The module has been tested on:
 
-* Debian 7/8
-* CentOS 6/7
-* Ubuntu 12.04, 14.04
+* Debian 10
 
 Because of init.d/systemd/upstart support the module may run on other platforms, but it's not guaranteed.
 
