@@ -57,6 +57,9 @@
 # [*install_dir*]
 #   String. GraphDB distribution location
 #
+# [*import_dir*]
+#   String. GraphDB import location
+#
 # [*manage_graphdb_user*]
 #   Boolean. Whether this module manages GraphDB user
 #
@@ -105,6 +108,7 @@ class graphdb (
   String $log_dir                             = '/var/log/graphdb',
   String $pid_dir                             = '/var/run/graphdb',
   String $install_dir                         = '/opt/graphdb',
+  String $import_dir                          = "${install_dir}/import",
   Boolean $manage_graphdb_user                = true,
   Optional[String] $graphdb_user, # hiera value
   Optional[String] $graphdb_group, # hiera value
@@ -156,6 +160,7 @@ class graphdb (
     validate_absolute_path($tmp_dir)
     validate_absolute_path($data_dir)
     validate_absolute_path($install_dir)
+    validate_absolute_path($import_dir)
 
     validate_bool($manage_graphdb_user)
 
@@ -170,7 +175,8 @@ class graphdb (
     }
     elsif $facts['graphdb_java_home'] {
       $java_location = $facts['graphdb_java_home']
-    } else {
+    }
+    else {
       $java_location = '/usr/lib/jvm/java-8-openjdk-amd64'
     }
   }

@@ -70,6 +70,7 @@ graphdb.extra.plugins = /var/lib/graphdb/test/plugins
 graphdb.home.data = /var/lib/graphdb/test
 graphdb.home.logs = /var/log/graphdb/test
 graphdb.license.file = /opt/graphdb/instances/test/license
+graphdb.workbench.importDirectory = /opt/graphdb/import
 ")
       end
       it {    is_expected.to contain_graphdb__service(title).with(ensure: 'present', status: 'enabled') }

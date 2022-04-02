@@ -168,6 +168,7 @@ define graphdb::instance (
       'graphdb.license.file'   => $licence_file_destination,
       'graphdb.connector.port' => $http_port,
       'graphdb.extra.plugins'  => $instance_plugins_dir,
+      'graphdb.workbench.importDirectory' => $graphdb::import_dir,
     }
 
     $final_graphdb_properties = merge($default_properties, $extra_properties)

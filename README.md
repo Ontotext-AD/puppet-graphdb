@@ -280,7 +280,7 @@ node 'master2' {
 
 ##### GraphDB Master repository options can be given
 
-```
+```puppet
  graphdb::ee::master::repository { 'master':
 ...
   $repository_template = "${module_name}/repository/master.ttl.erb", # ttl template to use as source for repository creation template
@@ -298,7 +298,7 @@ node 'master2' {
 
 ##### Link specific options can be given
 
-```
+```puppet
  graphdb_link { 'master-worker':
     ...
     replication_port     => 0 # The port for replications that master and worker will use; default: 0
@@ -312,7 +312,7 @@ node 'master2' {
 
 Example performs update(`update_query`) on the give repository(`repository_id`), but only if the ask query(`exists_query`) doesn't return true(`exists_expected_response`).
 
-```
+```puppet
  graphdb_update { 'update':
     repository_id            => 'repository',
     endpoint                 => "http://${::ipaddress}:8080",
@@ -331,7 +331,7 @@ Example triggers import of archive with data(`archive`), but only if ask query(`
 You can include multiple files into archive in various formats, but keep file extension relative to data format.
 Also keep in mind that data import operation takes time, adjust timeout according to data size.
 
-```
+```puppet
 graphdb::data{ 'data-zip':
     repository          => 'test-repo',
     endpoint            => "http://${::ipaddress}:8080",
@@ -346,7 +346,7 @@ You can also provide data source(`data_source`) which can be a file or directory
 If you keep the file extension relative to data format you data providing data format(`data_format`) is not required.
 Also keep in mind that data import operation takes time, adjust timeout according to data size.
 
-```
+```puppet
 graphdb_data { 'test-data':
     repository_id       => 'test-repo',
     endpoint            => "http://${::ipaddress}:8080",

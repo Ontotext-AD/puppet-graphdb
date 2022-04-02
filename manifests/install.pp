@@ -15,6 +15,7 @@ class graphdb::install {
   $archive_destination = "${graphdb::tmp_dir}/graphdb-${graphdb::edition}-${graphdb::version}.zip"
   $dist_installation_dir = "${graphdb::install_dir}/dist"
   $instances_installation_dir = "${graphdb::install_dir}/instances"
+  $import_installation_dir = $graphdb::import_dir
 
   if $graphdb::ensure == 'present' {
     File {
@@ -32,7 +33,7 @@ class graphdb::install {
     }
 
     file { [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::data_dir, $graphdb::log_dir,
-      $graphdb::pid_dir, $instances_installation_dir]:
+      $graphdb::pid_dir, $instances_installation_dir, $import_installation_dir]:
         ensure => 'directory',
     }
 
@@ -65,7 +66,7 @@ class graphdb::install {
       require     => [File[$graphdb::install_dir], Package['unzip']],
     }
   } else {
-    $purge_list = [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::log_dir, $graphdb::pid_dir]
+    $purge_list = [$graphdb::install_dir, $graphdb::tmp_dir, $graphdb::log_dir, $graphdb::pid_dir, $graphdb::import_dir]
 
     if $graphdb::purge_data_dir {
       join($purge_list, $graphdb::data_dir)

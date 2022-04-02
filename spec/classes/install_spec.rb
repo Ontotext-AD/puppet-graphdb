@@ -155,6 +155,43 @@ describe 'graphdb::install', type: :class do
     end
   end
 
+  describe 'with minimum configuration and custom import_dir' do
+    let :facts do
+      default_facts.merge(kernel: 'Linux')
+    end
+    let :pre_condition do
+      "class { 'graphdb': version => '9.10.1', edition => 'ee', import_dir => '/var/lib/import' }"
+    end
+
+    let(:download_url) do
+      'http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip'
+    end
+
+    let(:dest_file) do
+      '/var/tmp/graphdb/graphdb-ee-9.10.1.zip'
+    end
+
+    it do
+      is_expected.to contain_exec('download-graphdb-ee-9.10.1-archive').with(
+        command: "rm -f /var/tmp/graphdb/*.zip && curl --insecure  -o #{dest_file}" \
+    													" #{download_url} 2> /dev/null",
+        creates: dest_file,
+        timeout: 600,
+        require: ['File[/var/tmp/graphdb]', 'Package[curl]'],
+        user: 'graphdb'
+      )
+    end
+    it do
+      is_expected.to contain_exec('unpack-graphdb-archive').with(
+        command: "rm -rf /opt/graphdb/dist && unzip #{dest_file} -d /opt/graphdb/dist" \
+       		' && mv /opt/graphdb/dist/graphdb-ee-9.10.1/* /opt/graphdb/dist && rm -r /opt/graphdb/dist/graphdb-ee-9.10.1',
+        refreshonly: true,
+        require: ['File[/opt/graphdb]','Package[unzip]'],
+        user: 'graphdb'
+      )
+    end
+  end
+
   describe 'with minimum configuration and ensure set to absent' do
     let :facts do
       default_facts.merge(kernel: 'Linux')
@@ -166,7 +203,7 @@ describe 'graphdb::install', type: :class do
 
     it { is_expected.to contain_user('graphdb').with(ensure: 'absent') }
     it { is_expected.to contain_file('/opt/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
-    it {  is_expected.to contain_file('/var/log/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
-    it {  is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+    it { is_expected.to contain_file('/var/log/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
+    it { is_expected.to contain_file('/var/tmp/graphdb').with(ensure: 'absent', force: true, backup: false, recurse: true) }
   end
 end
