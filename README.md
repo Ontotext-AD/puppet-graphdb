@@ -22,7 +22,7 @@ GraphDB Puppet module (fork)
 This module sets up [GraphDB](http://graphdb.ontotext.com/) instances with additional resource for
 repository creation, data loading, updates, backups, and more.
 
-This module has been tested on GraphDB 9.10.*
+This module has been tested on GraphDB 9.10.*, 9.11.0, 10.0.0
 
 ## Setup
 
@@ -41,12 +41,27 @@ This module has been tested on GraphDB 9.10.*
 
 ### Beginning with GraphDB
 
+#### Version 10.0.0
+Declare the top-level `graphdb` class and set up an instance:
+
+```puppet
+# Since 10.0.0, "edition" paramater is useless.
+class{ 'graphdb':
+  version              => '10.0.0',
+}
+
+graphdb::instance { 'graphdb-instance':
+   license           => '/home/graphdb/graphdb.license',
+}
+```
+
+#### Version 9 and before
 Declare the top-level `graphdb` class and set up an instance:
 
 ```puppet
 class{ 'graphdb':
   version              => '9.10.2',
-  edition              => 'SE',
+  edition              => 'se',
 }
 
 graphdb::instance { 'graphdb-instance':
@@ -72,7 +87,7 @@ class { 'graphdb':
 ```puppet
 class { 'graphdb':
   version              => '9.10.2',
-  edition              => 'SE',
+  edition              => 'se',
   status               => 'disabled'
 }
 ```
@@ -85,7 +100,7 @@ This can be overridden globally with the following option:
 ```puppet
 class { 'graphdb':
   version              => '9.10.2',
-  edition              => 'SE',
+  edition              => 'se',
   restart_on_change    => false,
 }
 ```

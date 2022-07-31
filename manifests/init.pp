@@ -100,7 +100,7 @@
 #
 class graphdb (
   String $version                             = undef,
-  String $edition                             = undef,
+  Optional[String] $edition                   = undef,
   String $ensure                              = 'present',
   String $status                              = 'enabled',
   String $tmp_dir                             = '/var/tmp/graphdb',
@@ -128,8 +128,8 @@ class graphdb (
   }
 
   if ($ensure == 'present') {
-    if  (!$version or !$edition) {
-      fail('"ensure" is set on present, you should provide "version" and "edition"')
+    if (!$version) {
+      fail('"ensure" is set on present, you should provide "version"')
     }
 
     # version
@@ -137,8 +137,10 @@ class graphdb (
       fail('This module support GraphDB version 7.0.0 and up')
     }
 
-    if !($edition in ['se', 'ee']) {
-      fail("\"${edition}\" is not a valid edition parameter value")
+    if versioncmp($version, '10') < 0 {
+      if !($edition in ['se', 'ee']) {
+        fail("\"${edition}\" is not a valid edition parameter value")
+      }
     }
 
     # kernel
