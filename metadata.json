@@ -1,6 +1,6 @@
 {
   "name": "phaedriel-graphdb",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "author": "ontotext",
   "summary": "Module for managing and configuring GraphDB instances",
   "license": "Apache-2.0",
@@ -29,7 +29,8 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "10"
+        "10",
+        "11"
       ]
     },
     {

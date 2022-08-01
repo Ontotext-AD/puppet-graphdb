@@ -12,7 +12,6 @@ class graphdb::install {
     user => $graphdb::graphdb_user,
   }
 
-  $archive_destination = "${graphdb::tmp_dir}/graphdb-${graphdb::edition}-${graphdb::version}.zip"
   $dist_installation_dir = "${graphdb::install_dir}/dist"
   $instances_installation_dir = "${graphdb::install_dir}/instances"
   $import_installation_dir = $graphdb::import_dir
@@ -37,10 +36,21 @@ class graphdb::install {
         ensure => 'directory',
     }
 
-    $_package_url_path="${graphdb::graphdb_download_url}/graphdb-${graphdb::edition}/${graphdb::version}"
-    $_package_url_file="graphdb-${graphdb::edition}-${graphdb::version}-dist.zip"
-    $package_url = "${_package_url_path}/${_package_url_file}"
-    $unpacked_directory = "${dist_installation_dir}/graphdb-${graphdb::edition}-${graphdb::version}"
+    if versioncmp($graphdb::version, '10') < 0 {
+      # URL example graphdb 9.10.1 : http://maven.ontotext.com/content/groups/all-onto/com/ontotext/graphdb/graphdb-ee/9.10.1/graphdb-ee-9.10.1-dist.zip
+      $archive_destination = "${graphdb::tmp_dir}/graphdb-${graphdb::edition}-${graphdb::version}.zip"
+      $_package_url_path="${graphdb::graphdb_download_url}/graphdb-${graphdb::edition}/${graphdb::version}"
+      $_package_url_file="graphdb-${graphdb::edition}-${graphdb::version}-dist.zip"
+      $package_url = "${_package_url_path}/${_package_url_file}"
+      $unpacked_directory = "${dist_installation_dir}/graphdb-${graphdb::edition}-${graphdb::version}"
+    } else {
+      # URL example graphdb 10.0.0  : https://maven.ontotext.com/repository/owlim-releases/com/ontotext/graphdb/graphdb/10.0.0/graphdb-10.0.0-dist.zip
+      $archive_destination = "${graphdb::tmp_dir}/graphdb-${graphdb::version}.zip"
+      $_package_url_path="${graphdb::graphdb_download_url}/graphdb/${graphdb::version}"
+      $_package_url_file="graphdb-${graphdb::version}-dist.zip"
+      $package_url = "${_package_url_path}/${_package_url_file}"
+      $unpacked_directory = "${dist_installation_dir}/graphdb-${graphdb::version}"
+    }
 
     if $graphdb::graphdb_download_user {
       $basic_auth_option = "-u ${graphdb::graphdb_download_user}:${graphdb::graphdb_download_password}"
@@ -54,7 +64,7 @@ class graphdb::install {
     $_unpack_cmd_2="unzip ${archive_destination} -d ${dist_installation_dir}"
     $_unpack_cmd_3="mv ${unpacked_directory}/* ${dist_installation_dir}"
     $_unpack_cmd_4="rm -r ${unpacked_directory}"
-    exec { "download-graphdb-${graphdb::edition}-${graphdb::version}-archive":
+    exec { "download ${_package_url_file}":
       command => "${_download_cmd_rm} && ${_download_cmd_curl}",
       creates => $archive_destination,
       timeout => $graphdb::archive_dl_timeout,
