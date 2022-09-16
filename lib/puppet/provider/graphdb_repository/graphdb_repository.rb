@@ -41,11 +41,11 @@ Puppet::Type.type(:graphdb_repository).provide(:graphdb_repository) do
 
   def repository_manager
     @repository_manager ||= Puppet::Util::RepositoryManager.new(resource[:endpoint], resource[:repository_id])
-   end
+  end
 
   def check_resource_is_matching_master?(resource, port)
     return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port
 
     false
-   end
+  end
 end

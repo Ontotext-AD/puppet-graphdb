@@ -24,7 +24,7 @@ Puppet::Type.type(:graphdb_link).provide(:graphdb_link) do
     link_manager.delete_link
   end
 
-private
+  private
 
   def link_manager
     if !resource[:worker_endpoint].nil? && !resource[:peer_master_endpoint].nil?
@@ -55,8 +55,7 @@ private
   end
 
   def check_resource_is_matching_master_instance?(resource, port)
-    return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port?
-
+    return true if resource.type == :component && !resource[:http_port].nil? && resource[:http_port].to_s == port
     false
   end
 
@@ -71,7 +70,7 @@ private
       raise Puppet::Error, 'fail to resolve node id, please ensure that graphdb_link
         is defined on the same node as master graphdb repository or provide peer_master_node_id'
     end
-    return node_id
+    node_id
   end
 
   def check_resource_is_matching_master_repository?(resource, endpoint, repository_id)

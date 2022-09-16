@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.8.1](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.8.1)
+
+- Rubocop corrections
+- Add parameter $validator_test_enabled in instance.pp to disable this test (enabled by default)
+
 ## [v0.8.0](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.8.0)
 
 - Installation graphdb v10 (remove edition in url and directory)

@@ -49,6 +49,9 @@
 # [*validator_timeout*]
 #   Time before GraphDB validator decides that the GraphDB instance is not running
 #
+# [*validator_test_enabled*]
+#   GraphDB validator
+#
 # [*heap_size*]
 #   GraphDB java heap size given by -Xmx parameter. Note heap_size parameter will also set xms=xmx
 #
@@ -79,6 +82,7 @@ define graphdb::instance (
   Optional[String] $external_url    = undef,
   Integer $kill_timeout             = 180,
   Integer $validator_timeout        = 60,
+  Boolean $validator_test_enabled   = true,
   Optional[String] $heap_size       = undef,
   Optional[String] $logback_config  = undef,
   Hash $extra_properties            = {},
@@ -179,11 +183,13 @@ define graphdb::instance (
       notify  => Service[$service_name],
     }
 
-    $ipaddress = $facts['ipaddress'] # lint:ignore:legacy_facts
-    graphdb_validator { $service_name:
-      endpoint  => "${protocol}://${ipaddress}:${http_port}",
-      timeout   => $validator_timeout,
-      subscribe => Service[$service_name],
+    if $validator_test_enabled {
+      $ipaddress = $facts['ipaddress'] # lint:ignore:legacy_facts
+      graphdb_validator { $service_name:
+        endpoint  => "${protocol}://${ipaddress}:${http_port}",
+        timeout   => $validator_timeout,
+        subscribe => Service[$service_name],
+      }
     }
   } else {
     file { [$instance_home_dir, $instance_data_dir, $instance_plugins_dir, $instance_temp_dir, $instance_log_dir]:

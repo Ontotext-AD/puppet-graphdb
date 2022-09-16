@@ -25,7 +25,7 @@ Puppet::Type.type(:graphdb_data).provide(:graphdb_data) do
     end
   end
 
-private
+  private
 
   def handle_data(data)
     data.each do |curr_data|

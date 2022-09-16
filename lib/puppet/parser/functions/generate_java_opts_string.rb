@@ -13,10 +13,10 @@ This function java opts string from given array.
     generate_java_opts_string(['-Xmx1g','-Xms2g','-Dwell'])
 
 Will return: "-Xmx1g \
-			  -Xms2g \
-              -Dwell"
-			  EOS
-             ) do |arguments|
+        -Xms2g \
+        -Dwell"
+        EOS
+      ) do |arguments|
 
     raise(ArgumentError, 'generate_java_opts_string(): Wrong number of arguments ' \
       "given (#{arguments.size} for 1)") if arguments.empty?
