@@ -179,7 +179,7 @@ define graphdb::instance (
 
     file { "${instance_home_dir}/conf/graphdb.properties":
       ensure  => $ensure,
-      content => template('graphdb/config/graphdb.properties.erb'),
+      content => Sensitive(template('graphdb/config/graphdb.properties.erb')),
       notify  => Service[$service_name],
     }
 

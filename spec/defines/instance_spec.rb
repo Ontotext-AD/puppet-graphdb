@@ -65,13 +65,13 @@ describe 'graphdb::instance', type: :define do
                 notify:  "Service[graphdb-#{title}]",
                 owner: 'graphdb',
                 group: 'graphdb',
-                content: "graphdb.connector.port = 8080
+                content: sensitive("graphdb.connector.port = 8080
 graphdb.extra.plugins = /var/lib/graphdb/test/plugins
 graphdb.home.data = /var/lib/graphdb/test
 graphdb.home.logs = /var/log/graphdb/test
 graphdb.license.file = /opt/graphdb/instances/test/license
 graphdb.workbench.importDirectory = /opt/graphdb/import
-")
+"))
       end
       it {    is_expected.to contain_graphdb__service(title).with(ensure: 'present', status: 'enabled') }
       it {    is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://129.10.1.1:8080') }
@@ -113,7 +113,7 @@ graphdb.workbench.importDirectory = /opt/graphdb/import
         .with(ensure: 'present',
               owner: 'graphdb',
               group: 'graphdb',
-              content: /graphdb.connector.port = 9090/)
+              content: sensitive(/graphdb.connector.port = 9090/))
     end
     it { is_expected.to contain_graphdb_validator("graphdb-#{title}").with(endpoint: 'http://129.10.1.1:9090') }
   end
@@ -176,7 +176,7 @@ graphdb.workbench.importDirectory = /opt/graphdb/import
 
     it do
       is_expected.to contain_file('/opt/graphdb/instances/test/conf/graphdb.properties')
-        .with(content: /test_property = test_property_value/)
+        .with(content: sensitive(/test_property = test_property_value/))
     end
   end
 end

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v0.8.2](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.8.2)
+
+- Drop debian 10 (metadata.json)
+- Use Sensitive for graphdb.properties
+
 ## [v0.8.1](https://github.com/phaedriel/puppet-graphdb/releases/tag/v0.8.1)
 
 - Rubocop corrections
